@@ -194,10 +194,10 @@ class TaskDetailsPage extends StatelessWidget {
             ),
             RichText(
                 text: const TextSpan(children: <TextSpan>[
-                  TextSpan(text: 'Mo ta: ', style: TextStyle(color: Colors.red)),
-                  TextSpan(
-                      text: '    hello2', style: TextStyle(color: Colors.blue)),
-                ])),
+              TextSpan(text: 'Mo ta: ', style: TextStyle(color: Colors.red)),
+              TextSpan(
+                  text: '    hello2', style: TextStyle(color: Colors.blue)),
+            ])),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -353,7 +353,7 @@ class TaskDetailsPage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         margin:
-                        const EdgeInsets.only(top: 10, left: 16, right: 16),
+                            const EdgeInsets.only(top: 10, left: 16, right: 16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: const BorderRadius.all(
@@ -388,54 +388,29 @@ class TaskDetailsPage extends StatelessWidget {
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.access_time,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("9:30 AM - 3:30 PM"),
-                              ],
+                            RowItem(
+                                icon: Icons.access_time,
+                                text: "9:30 AM - 3:30 PM"),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            RowItem(
+                              icon: Icons.calendar_month_outlined,
+                              text: "28-08-2023 - 31-08-2023",
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_month_outlined,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("28-08-2023 - 31-08-2023"),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.person_outline_outlined,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("Nguyễn Thành Luân")
-                              ],
+                            RowItem(
+                              icon: Icons.person_outline_outlined,
+                              text: "Nguyễn Thành Luân",
                             ),
                           ],
                         ),
                       ),
                       Container(
                         margin:
-                        const EdgeInsets.only(top: 20, left: 16, right: 16),
+                            const EdgeInsets.only(top: 20, left: 16, right: 16),
                         child: const Row(
                           children: <Widget>[
                             Icon(
@@ -454,7 +429,7 @@ class TaskDetailsPage extends StatelessWidget {
                       ),
                       Container(
                         margin:
-                        const EdgeInsets.only(left: 20, top: 10, right: 20),
+                            const EdgeInsets.only(left: 20, top: 10, right: 20),
                         child: const Text(
                           "Làm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng",
                           softWrap: true,
@@ -491,7 +466,7 @@ class TaskDetailsPage extends StatelessWidget {
               children: [
                 // Nội dung của Tab 1
                 ListView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.all(16),
                   children: listItem,
                 ),
@@ -552,12 +527,35 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       color: Colors.white,
       child: _tabBar,
-      padding: EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 5),
     );
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+class RowItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const RowItem({super.key, required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(text),
+      ],
+    );
   }
 }
