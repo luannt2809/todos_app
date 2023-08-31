@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -21,18 +22,15 @@ class _HomePageState extends State<HomePage> {
     final double h = MediaQuery.of(context).size.height;
     initializeDateFormatting("vi_VN", null);
 
-    List<Widget> listDemoCV = [
-      itemLisCV(
-          context, "Công việc 1", "9:30 AM - 15:30 PM", "30/8/2023 - 30/8/2023"),
-      itemLisCV(
-          context, "Công việc 2", "9:30 AM - 15:30 PM", "30/8/2023 - 30/8/2023"),
-      itemLisCV(
-          context, "Công việc 3", "9:30 AM - 15:30 PM", "30/8/2023 - 30/8/2023"),
-      itemLisCV(
-          context, "Công việc 4", "9:30 AM - 15:30 PM", "30/8/2023 - 30/8/2023"),
-      itemLisCV(
-          context, "Công việc 5", "9:30 AM - 15:30 PM", "30/8/2023 - 30/8/2023"),
-    ];
+    Future<List<dynamic>> fetchApi() async {
+      Dio dio = Dio();
+
+      var response =
+          await dio.get("http://192.168.1.44:3000/api/congviec/list");
+      print(response.data.toString());
+
+      return response.data;
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,12 +108,50 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Expanded(
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  children: listDemoCV,
-                ),
-              ),
+                  child: FutureBuilder<List<dynamic>>(
+                future: fetchApi(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        // format time
+                        String formatTime(String time) {
+                          DateTime dateTime = DateTime.parse(time);
+                          String formattedTime =
+                              DateFormat.jm().format(dateTime);
+                          return formattedTime;
+                        }
+
+                        // format date
+                        String formatDate(String date) {
+                          String formattedDate = date.split("T")[0];
+                          return formattedDate;
+                        }
+
+                        return itemLisCV(
+                            context,
+                            snapshot.data![index]['TieuDe'],
+                            "${formatTime(snapshot.data![index]['GioBatDau']
+                                    .toString())} - ${formatTime(snapshot.data![index]['GioKetThuc']
+                                    .toString())}",
+                            // ngaybatdau - ngayketthuc
+                            "${formatDate(snapshot.data![index]['NgayBatDau']
+                                    .toString())} - ${formatDate(snapshot.data![index]['NgayBatDau']
+                                    .toString())}", snapshot.data![index]['MaCV']);
+                      },
+                      itemCount: snapshot.data!.length,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 16),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                    );
+                  }
+                },
+              )),
             ],
           ),
         ),
@@ -140,7 +176,7 @@ class TimeDisplayWidget extends StatelessWidget {
   }
 }
 
-Widget itemLisCV(BuildContext context, String tieuDe, String gio, String ngay) {
+Widget itemLisCV(BuildContext context, String tieuDe, String gio, String ngay, int id) {
   return Padding(
     padding: const EdgeInsets.only(top: 16.0),
     child: GestureDetector(
@@ -148,7 +184,7 @@ Widget itemLisCV(BuildContext context, String tieuDe, String gio, String ngay) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const TaskDetailsPage(),
+            builder: (context) => TaskDetailsPage(maCV: id),
           ),
         );
       },

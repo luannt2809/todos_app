@@ -1,323 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:todos_app/models/CongViec.dart';
 
 class TaskDetailsPage extends StatelessWidget {
-  const TaskDetailsPage({super.key});
-
+  final int maCV;
+  const TaskDetailsPage({super.key, required this.maCV});
+  
   @override
   Widget build(BuildContext context) {
-    List<Widget> listItem = [
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text("Công việc 4"),
-                ),
-                Text(
-                  "2023-08-23 09:58:31.970",
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người làm: Nguyễn Thành Luân")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người giao: Giám đốc 1")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Đang thực hiện",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-                Text(
-                  "80%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Mô tả: ",
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "Cập nhật lại giờ kết thúc của công việc 4 lần 2",
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-      Container(
-        margin: const EdgeInsets.only(top: 20),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Expanded(
-                  child: Text("Công việc 4"),
-                ),
-                Text(
-                  "2023-08-23 09:58:31.970",
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người làm: Nguyễn Thành Luân")
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người giao: Giám đốc 1")
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Đang thực hiện",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-                Text(
-                  "80%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            RichText(
-                text: const TextSpan(children: <TextSpan>[
-              TextSpan(text: 'Mo ta: ', style: TextStyle(color: Colors.red)),
-              TextSpan(
-                  text: '    hello2', style: TextStyle(color: Colors.blue)),
-            ])),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Mô tả: ",
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "Cập nhật lại giờ kết thúc của công việc 4 lần 2",
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text("Công việc 4"),
-                ),
-                Text(
-                  "2023-08-23 09:58:31.970",
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người làm: Nguyễn Thành Luân")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline_outlined,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Người giao: Giám đốc 1")
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Đang thực hiện",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-                Text(
-                  "80%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.green,
-                      fontSize: 15),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Mô tả: ",
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "Cập nhật lại giờ kết thúc của công việc 4 lần 2",
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    ];
+    print(maCV);
+
+    Future<dynamic> fetchApi() async {
+      Dio dio = Dio();
+
+      var response =
+      await dio.get("http://192.168.1.44:3000/api/congviec/$maCV");
+      print(response.data.toString());
+
+      return response;
+    }
 
     return DefaultTabController(
       length: 2,
@@ -342,138 +43,136 @@ class TaskDetailsPage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        margin:
-                            const EdgeInsets.only(top: 10, left: 16, right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      margin:
+                          const EdgeInsets.only(top: 10, left: 16, right: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 2),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text("Công việc 4"),
-                                ),
-                                Text(
-                                  "Đang thực hiện",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.green,
-                                      fontSize: 15),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            RowItem(
-                                icon: Icons.access_time,
-                                text: "9:30 AM - 3:30 PM"),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            RowItem(
-                              icon: Icons.calendar_month_outlined,
-                              text: "28-08-2023 - 31-08-2023",
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            RowItem(
-                              icon: Icons.person_outline_outlined,
-                              text: "Nguyễn Thành Luân",
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(top: 20, left: 16, right: 16),
-                        child: const Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.description,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Nội dung",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text("Công việc 4"),
+                              ),
+                              Text(
+                                "Đang thực hiện",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.green,
+                                    fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          RowItem(
+                              icon: Icons.access_time,
+                              text: "9:30 AM - 3:30 PM"),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          RowItem(
+                            icon: Icons.calendar_month_outlined,
+                            text: "28-08-2023 - 31-08-2023",
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          RowItem(
+                            icon: Icons.person_outline_outlined,
+                            text: "Nguyễn Thành Luân",
+                          ),
+                        ],
                       ),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, top: 10, right: 20),
-                        child: const Text(
-                          "Làm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng",
-                          softWrap: true,
-                        ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 20, left: 16, right: 16),
+                      child: const Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.description,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Nội dung",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 14,
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 20, top: 10, right: 20),
+                      child: const Text(
+                        "Làm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng",
+                        softWrap: true,
                       ),
+                    ),
+                    const SizedBox(
+                      height: 14,
+                    ),
+                  ],
+                ),
+              ),
+              SliverPersistentHeader(
+                delegate: _SliverAppBarDelegate(
+                  TabBar(
+                    isScrollable: true,
+                    labelPadding: const EdgeInsets.only(left: 20, right: 20),
+                    indicatorColor: Colors.orangeAccent,
+                    labelColor: Colors.deepOrangeAccent,
+                    unselectedLabelColor: Colors.grey,
+                    indicator: CircleTabIndicator(
+                        color: Colors.deepOrangeAccent, radius: 4),
+                    tabs: const [
+                      Tab(text: 'Nhật ký'),
+                      Tab(text: 'Công việc khác'),
                     ],
                   ),
                 ),
-                SliverPersistentHeader(
-                  delegate: _SliverAppBarDelegate(
-                    TabBar(
-                      isScrollable: true,
-                      labelPadding: const EdgeInsets.only(left: 20, right: 20),
-                      indicatorColor: Colors.orangeAccent,
-                      labelColor: Colors.deepOrangeAccent,
-                      unselectedLabelColor: Colors.grey,
-                      indicator: CircleTabIndicator(
-                          color: Colors.deepOrangeAccent, radius: 4),
-                      tabs: const [
-                        Tab(text: 'Nhật ký'),
-                        Tab(text: 'Công việc khác'),
-                      ],
-                    ),
-                  ),
-                  pinned: true,
-                )
-              ];
-            },
-            body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                // Nội dung của Tab 1
-                ListView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  children: listItem,
-                ),
-                // Nội dung của Tab 2
-                const Center(child: Text('Tab 2 Content')),
-              ],
-            ),
+                pinned: true,
+              )
+            ];
+          },
+          body: TabBarView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              // Nội dung của Tab 1
+              ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                // children: listItem,
+              ),
+              // Nội dung của Tab 2
+              const Center(child: Text('Tab 2 Content')),
+            ],
           ),
         ),
       ),
