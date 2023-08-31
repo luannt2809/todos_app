@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:todos_app/screens/userscreen.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatelessWidget {
@@ -13,14 +13,14 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: w,
           height: h,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 50),
+                  margin: const EdgeInsets.symmetric(vertical: 50),
                   child: Center(
                     child: Image.asset(
                       "assets/images/logo.png",
@@ -30,11 +30,11 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      TextField(
+                      const TextField(
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
@@ -44,10 +44,10 @@ class LoginPage extends StatelessWidget {
                             hintText: "Tên người dùng"),
                         cursorColor: Colors.deepOrangeAccent,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      TextField(
+                      const TextField(
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
@@ -57,19 +57,19 @@ class LoginPage extends StatelessWidget {
                             hintText: "Mật khẩu"),
                         cursorColor: Colors.deepOrangeAccent,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(
                             foregroundColor: Colors.orange),
-                        child: Text(
+                        child: const Text(
                           "Quên mật khẩu?",
                           style: TextStyle(color: Colors.orange),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SizedBox(
@@ -91,13 +91,13 @@ class LoginPage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return HomePage();
+                                    return const UserScreen();
                                   },
                                 ),
                               );
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             "Đăng nhập",
                             style: TextStyle(fontSize: 16),
                           ),
