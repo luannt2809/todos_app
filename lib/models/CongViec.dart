@@ -1,5 +1,5 @@
 class CongViec {
-  int? maCV;
+  int maCV;
   String? tieuDe;
   String? noiDung;
   String? gioBatDau;
@@ -14,7 +14,7 @@ class CongViec {
   int? kieu;
 
   CongViec(
-      {this.maCV,
+      {required this.maCV,
       this.tieuDe,
       this.noiDung,
       this.gioBatDau,

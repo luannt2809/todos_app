@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
+import 'package:todos_app/services/api/apiConfig.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -33,38 +34,59 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Future<void> addTask() async {
     String tieuDe = tieuDeCtrl.text;
     String noiDung = noiDungCtrl.text;
-    String ngayBD = ngayBDCtrl.text;
-    String ngayKT = ngayKTCtrl.text;
+    String ngayBD = DateFormat("yyyy-MM-dd").format(_selectStartDate);
+    String ngayKT = DateFormat("yyyy-MM-dd").format(_selectEndDate);
+    // String gioBD = DateFormat('hh:mm').format(DateTime.parse(gioBDCtrl.text)).toString();
+    // String gioKT = DateFormat('hh:mm').format(DateTime.parse(gioKTCtrl.text)).toString();
     String gioBD = gioBDCtrl.text;
     String gioKT = gioKTCtrl.text;
     String trangThai = trangThaiCtrl.text;
     String tienDo = tienDoCtrl.text;
-    String ghiChu = ghiChuCtrl.text;
+    String? ghiChu = ghiChuCtrl.text.isEmpty ? null : ghiChuCtrl.text;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maNguoiLam = prefs.getInt("maND");
 
     String msg = "";
-    try {
-      Response response =
-          await dio.post("http://192.168.1.23:3000/api/congviec/insert", data: {
-        tieuDe,
-        noiDung,
-        gioBD,
-        gioKT,
-        ngayBD,
-        ngayKT,
-        trangThai,
-        tienDo,
-        ghiChu,
-        maNguoiLam
-      });
 
-      if(response.statusCode == 200){
-        msg = response.data.toString();
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.badResponse) {
-        msg = "${e.response?.data}";
+    resetData() {
+      tieuDeCtrl.text = "";
+      noiDungCtrl.text = "";
+      ngayBDCtrl.text = "";
+      ngayKTCtrl.text = "";
+      gioBDCtrl.text = "";
+      gioKTCtrl.text = "";
+      trangThaiCtrl.text = "";
+      tienDoCtrl.text = "";
+      ghiChuCtrl.text = "";
+    }
+
+    if(tieuDe.isEmpty || noiDung.isEmpty || ngayBD.isEmpty || ngayKT.isEmpty || gioBD.isEmpty || gioKT.isEmpty || trangThai.isEmpty || tienDo.isEmpty){
+      msg = "Vui lòng nhập đủ thông tin công việc";
+      resetData();
+    } else {
+      try {
+        Response response =
+        await dio.post("${ApiConfig.BASE_URL}/congviec/insert", data: {
+          'TieuDe': tieuDe,
+          'NoiDung': noiDung,
+          'GioBatDau': gioBD,
+          'GioKetThuc': gioKT,
+          'NgayBatDau': ngayBD,
+          'NgayKetThuc': ngayKT,
+          'TrangThai': trangThai,
+          'TienDo': tienDo,
+          'GhiChu': ghiChu,
+          'MaNguoiLam': maNguoiLam
+        });
+
+        if (response.statusCode == 200) {
+          msg = response.data.toString();
+          Navigator.pop(context);
+        }
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.badResponse) {
+          msg = "${e.response?.data}";
+        }
       }
     }
 
@@ -136,10 +158,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       MyTextFormField(
                         controller: ngayBDCtrl,
                         text: "Ngày bắt đầu",
-                        hintText: DateFormat.yMd().format(_selectStartDate),
+                        hintText:
+                            DateFormat('dd-MM-yyyy').format(_selectStartDate),
                         widget: IconButton(
                           onPressed: () {
-                            _getDateStartFromUser();
+                            // _getDateStartFromUser();
+                            _getDateFromUser(isStartDate: true);
                           },
                           icon: const Icon(Icons.calendar_month_outlined),
                           color: Colors.grey,
@@ -148,10 +172,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       MyTextFormField(
                         controller: ngayKTCtrl,
                         text: "Ngày kết thúc",
-                        hintText: DateFormat.yMd().format(_selectEndDate),
+                        hintText:
+                            DateFormat('dd-MM-yyyy').format(_selectEndDate),
                         widget: IconButton(
                           onPressed: () {
-                            _getDateEndFromUser();
+                            _getDateFromUser(isStartDate: false);
                           },
                           icon: const Icon(Icons.calendar_month_outlined),
                           color: Colors.grey,
@@ -210,6 +235,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               _selectedTrangThai = newValue!;
+                              trangThaiCtrl.text = newValue;
                             });
                           },
                           items: listTrangThai.map<DropdownMenuItem<String>>(
@@ -275,61 +301,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  _getDateStartFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-            data: ThemeData.light().copyWith(
-              primaryColor: Colors.deepOrangeAccent,
-              colorScheme:
-                  const ColorScheme.light(primary: Colors.deepOrangeAccent),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-            ),
-            child: child!);
-      },
-    );
-    if (_pickerDate != null) {
-      setState(() {
-        _selectStartDate = _pickerDate;
-        ngayBDCtrl.text = _selectStartDate.toString();
-      });
-    } else {
-      print("Có lỗi xảy ra");
-    }
-  }
-
-  _getDateEndFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-            data: ThemeData.light().copyWith(
-              primaryColor: Colors.deepOrangeAccent,
-              colorScheme:
-                  const ColorScheme.light(primary: Colors.deepOrangeAccent),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-            ),
-            child: child!);
-      },
-    );
-    if (_pickerDate != null) {
-      setState(() {
-        _selectEndDate = _pickerDate;
-      });
-    } else {
-      print("Có lỗi xảy ra");
-    }
-  }
-
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
     String _formatedTime = pickerTime.format(context);
@@ -339,12 +310,53 @@ class _AddTaskPageState extends State<AddTaskPage> {
     } else if (isStartTime == true) {
       setState(() {
         _startTime = _formatedTime;
+        gioBDCtrl.text = _formatedTime;
       });
     } else if (isStartTime == false) {
       setState(() {
         _endTime = _formatedTime;
+        gioKTCtrl.text = _formatedTime;
       });
     }
+  }
+
+  _getDateFromUser({required bool isStartDate}) async {
+    DateTime? pickerDate = await _showDatePicker();
+    print(pickerDate.toString());
+    if (pickerDate == null) {
+      print("Date cancel");
+    } else if (isStartDate == true) {
+      setState(() {
+        _selectStartDate = pickerDate;
+        ngayBDCtrl.text = DateFormat('dd-MM-yyyy').format(_selectStartDate);
+      });
+    } else if (isStartDate == false) {
+      setState(() {
+        _selectEndDate = pickerDate;
+        ngayKTCtrl.text = DateFormat('dd-MM-yyyy').format(_selectEndDate);
+      });
+    }
+  }
+
+  _showDatePicker() async {
+    return showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now().subtract(
+          const Duration(days: 0),
+        ),
+        lastDate: DateTime(2025),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.deepOrangeAccent,
+                colorScheme:
+                    const ColorScheme.light(primary: Colors.deepOrangeAccent),
+                buttonTheme:
+                    const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              ),
+              child: child!);
+        });
   }
 
   _showTimePicker() async {

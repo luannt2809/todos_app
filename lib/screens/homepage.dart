@@ -1,7 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/models/CongViec.dart';
 import 'package:todos_app/screens/addtaskpage.dart';
 import 'package:todos_app/screens/taskdetailspage.dart';
@@ -18,6 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime _selectStartDate = DateTime.now();
+  TextEditingController ngayBDCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final double w = MediaQuery.of(context).size.width;
@@ -95,6 +98,43 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10,),
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.only(left: 14),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFeeeeee),
+                        border: Border.all(color: Colors.white, width: 1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextFormField(
+                              autofocus: false,
+                              cursorColor: Colors.grey,
+                              decoration: InputDecoration(
+                                hintText: DateFormat('dd-MM-yyyy').format(_selectStartDate),
+                                focusedBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              // _getDateStartFromUser();
+                              _getDateFromUser();
+                            },
+                            icon: const Icon(Icons.calendar_month_outlined),
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -118,11 +158,11 @@ class _HomePageState extends State<HomePage> {
                           String formatDate(String date) {
                             DateTime parsedDate = DateTime.parse(date);
                             String formattedDate =
-                                DateFormat('d/M/y').format(parsedDate);
+                                DateFormat('dd/MM/y').format(parsedDate);
                             return formattedDate;
                           }
 
-                          return itemLisCV(
+                          return itemListCV(
                               context,
                               snapshot.data![index].tieuDe.toString(),
                               snapshot.data![index].noiDung.toString(),
@@ -147,9 +187,7 @@ class _HomePageState extends State<HomePage> {
                       //   ),
                       // );
                       return const Center(
-                        child: Text(
-                          "Chưa có công việc"
-                        ),
+                        child: Text("Chưa có công việc"),
                       );
                     }
                   },
@@ -161,6 +199,34 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  _getDateFromUser() async {
+    DateTime? _pickerDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: Colors.deepOrangeAccent,
+              colorScheme:
+              const ColorScheme.light(primary: Colors.deepOrangeAccent),
+              buttonTheme:
+              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child!);
+      },
+    );
+    if (_pickerDate != null) {
+      setState(() {
+        _selectStartDate = _pickerDate;
+        ngayBDCtrl.text = _selectStartDate.toString();
+      });
+    } else {
+      print("Có lỗi xảy ra");
+    }
+  }
 }
 
 class TimeDisplayWidget extends StatelessWidget {
@@ -170,7 +236,8 @@ class TimeDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting("vi_VN", null);
 
-    String formattedDate = DateFormat('MMMM dd, y', 'vi').format(DateTime.now());
+    String formattedDate =
+        DateFormat('MMMM dd, y', 'vi').format(DateTime.now());
 
     return Text(
       formattedDate.toUpperCase(),
@@ -179,7 +246,7 @@ class TimeDisplayWidget extends StatelessWidget {
   }
 }
 
-Widget itemLisCV(
+Widget itemListCV(
     BuildContext context,
     String tieuDe,
     String noiDung,
@@ -199,6 +266,7 @@ Widget itemLisCV(
           MaterialPageRoute(
             builder: (context) => TaskDetailsPage(
               congViec: CongViec(
+                maCV: int.parse(id),
                 tieuDe: tieuDe,
                 noiDung: noiDung,
                 trangThai: trangThai,
