@@ -1,24 +1,52 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/CongViec.dart';
+import 'package:todos_app/services/api/api_congviec.dart';
 
-class TaskDetailsPage extends StatelessWidget {
-  final int maCV;
-  const TaskDetailsPage({super.key, required this.maCV});
-  
+class TaskDetailsPage extends StatefulWidget {
+  // final String maCV;
+  final CongViec congViec;
+  final String gio;
+  final String ngay;
+
+  const TaskDetailsPage(
+      {super.key,
+      required this.congViec,
+      required this.gio,
+      required this.ngay});
+
   @override
-  Widget build(BuildContext context) {
-    print(maCV);
+  State<TaskDetailsPage> createState() => _TaskDetailsPageState();
+}
 
-    Future<dynamic> fetchApi() async {
+class _TaskDetailsPageState extends State<TaskDetailsPage> {
+  String hoTen = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
+  Future<dynamic> getUser() async {
+    try {
       Dio dio = Dio();
 
-      var response =
-      await dio.get("http://192.168.1.44:3000/api/congviec/$maCV");
-      print(response.data.toString());
+      Response response = await dio.get(
+          "http://192.168.1.23:3000/api/nguoidung/${widget.congViec.maNguoiLam}");
 
-      return response;
+      setState(() {
+        hoTen = response.data[0]['HoTen'];
+      });
+    } catch (e) {
+      print(e);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // print(maCV);
 
     return DefaultTabController(
       length: 2,
@@ -68,42 +96,56 @@ class TaskDetailsPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Expanded(
-                                child: Text("Công việc 4"),
+                                child: Text(widget.congViec.tieuDe.toString()),
                               ),
                               Text(
-                                "Đang thực hiện",
-                                style: TextStyle(
+                                widget.congViec.trangThai.toString(),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.green,
                                     fontSize: 15),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          RowItem(
-                              icon: Icons.access_time,
-                              text: "9:30 AM - 3:30 PM"),
-                          SizedBox(
+                          Row(
+                            children: [
+                              Expanded(
+                                child: RowItem(
+                                  icon: Icons.access_time,
+                                  text: widget.gio,
+                                ),
+                              ),
+                              Text(
+                                "${widget.congViec.tienDo}%",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.deepOrange,
+                                    fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
                             height: 10,
                           ),
                           RowItem(
                             icon: Icons.calendar_month_outlined,
-                            text: "28-08-2023 - 31-08-2023",
+                            text: widget.ngay,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           RowItem(
                             icon: Icons.person_outline_outlined,
-                            text: "Nguyễn Thành Luân",
+                            text: hoTen,
                           ),
                         ],
                       ),
@@ -130,8 +172,37 @@ class TaskDetailsPage extends StatelessWidget {
                     Container(
                       margin:
                           const EdgeInsets.only(left: 20, top: 10, right: 20),
-                      child: const Text(
-                        "Làm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng\nLàm chức năng đăng nhập, đăng ký cho ứng dụng",
+                      child: Text(
+                        widget.congViec.noiDung.toString(),
+                        softWrap: true,
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 20, left: 16, right: 16),
+                      child: const Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.notes,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Ghi chú",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 20, top: 10, right: 20),
+                      child: Text(
+                        widget.congViec.ghiChu.toString() == "null"
+                            ? "Không có ghi chú"
+                            : widget.congViec.ghiChu.toString(),
                         softWrap: true,
                       ),
                     ),

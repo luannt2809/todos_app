@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -15,6 +18,68 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _selectedTrangThai = 'Chờ nhận';
+
+  Dio dio = Dio();
+  TextEditingController tieuDeCtrl = TextEditingController();
+  TextEditingController noiDungCtrl = TextEditingController();
+  TextEditingController ngayBDCtrl = TextEditingController();
+  TextEditingController ngayKTCtrl = TextEditingController();
+  TextEditingController gioBDCtrl = TextEditingController();
+  TextEditingController gioKTCtrl = TextEditingController();
+  TextEditingController trangThaiCtrl = TextEditingController();
+  TextEditingController tienDoCtrl = TextEditingController();
+  TextEditingController ghiChuCtrl = TextEditingController();
+
+  Future<void> addTask() async {
+    String tieuDe = tieuDeCtrl.text;
+    String noiDung = noiDungCtrl.text;
+    String ngayBD = ngayBDCtrl.text;
+    String ngayKT = ngayKTCtrl.text;
+    String gioBD = gioBDCtrl.text;
+    String gioKT = gioKTCtrl.text;
+    String trangThai = trangThaiCtrl.text;
+    String tienDo = tienDoCtrl.text;
+    String ghiChu = ghiChuCtrl.text;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maNguoiLam = prefs.getInt("maND");
+
+    String msg = "";
+    try {
+      Response response =
+          await dio.post("http://192.168.1.23:3000/api/congviec/insert", data: {
+        tieuDe,
+        noiDung,
+        gioBD,
+        gioKT,
+        ngayBD,
+        ngayKT,
+        trangThai,
+        tienDo,
+        ghiChu,
+        maNguoiLam
+      });
+
+      if(response.statusCode == 200){
+        msg = response.data.toString();
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
+        msg = "${e.response?.data}";
+      }
+    }
+
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    // hide keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +123,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const MyTextFormField(
-                          text: "Tiêu đề", hintText: "Tiêu đề"),
-                      const MyTextFormField(
-                          text: "Nội dung", hintText: "Nội dung"),
                       MyTextFormField(
+                        text: "Tiêu đề",
+                        hintText: "Tiêu đề",
+                        controller: tieuDeCtrl,
+                      ),
+                      MyTextFormField(
+                        text: "Nội dung",
+                        hintText: "Nội dung",
+                        controller: noiDungCtrl,
+                      ),
+                      MyTextFormField(
+                        controller: ngayBDCtrl,
                         text: "Ngày bắt đầu",
                         hintText: DateFormat.yMd().format(_selectStartDate),
                         widget: IconButton(
@@ -74,6 +146,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         ),
                       ),
                       MyTextFormField(
+                        controller: ngayKTCtrl,
                         text: "Ngày kết thúc",
                         hintText: DateFormat.yMd().format(_selectEndDate),
                         widget: IconButton(
@@ -88,6 +161,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         children: <Widget>[
                           Expanded(
                             child: MyTextFormField(
+                              controller: gioBDCtrl,
                               text: "Giờ bắt đầu",
                               hintText: _startTime,
                               widget: IconButton(
@@ -104,6 +178,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           ),
                           Expanded(
                             child: MyTextFormField(
+                              controller: gioKTCtrl,
                               text: "Giờ kết thúc",
                               hintText: _endTime,
                               widget: IconButton(
@@ -118,6 +193,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         ],
                       ),
                       MyTextFormField(
+                        controller: trangThaiCtrl,
                         text: "Trạng thái",
                         hintText: _selectedTrangThai,
                         widget: DropdownButton(
@@ -146,12 +222,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           ).toList(),
                         ),
                       ),
-                      const MyTextFormField(
+                      MyTextFormField(
+                        controller: tienDoCtrl,
                         text: "Tiến độ",
                         hintText: "Tiến độ",
                         inputType: TextInputType.number,
                       ),
-                      const MyTextFormField(
+                      MyTextFormField(
+                        controller: ghiChuCtrl,
                         text: "Ghi chú",
                         hintText: "Ghi chú",
                       ),
@@ -165,7 +243,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             height: 45,
                             width: 150,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: addTask,
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                     Colors.deepOrangeAccent),
@@ -218,6 +296,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (_pickerDate != null) {
       setState(() {
         _selectStartDate = _pickerDate;
+        ngayBDCtrl.text = _selectStartDate.toString();
       });
     } else {
       print("Có lỗi xảy ra");
@@ -289,5 +368,3 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 }
-
-
