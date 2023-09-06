@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:todos_app/models/CongViec.dart';
 import 'package:todos_app/screens/addtaskpage.dart';
 import 'package:todos_app/screens/taskdetailspage.dart';
 import 'package:todos_app/screens/updatetaskpage.dart';
+import 'package:todos_app/services/api/api_congviec.dart';
 import 'package:todos_app/themes/styles.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -20,17 +22,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final double w = MediaQuery.of(context).size.width;
     final double h = MediaQuery.of(context).size.height;
-    initializeDateFormatting("vi_VN", null);
-
-    Future<List<dynamic>> fetchApi() async {
-      Dio dio = Dio();
-
-      var response =
-          await dio.get("http://192.168.1.44:3000/api/congviec/list");
-      print(response.data.toString());
-
-      return response.data;
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -108,50 +99,62 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Expanded(
-                  child: FutureBuilder<List<dynamic>>(
-                future: fetchApi(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<dynamic>> snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        // format time
-                        String formatTime(String time) {
-                          DateTime dateTime = DateTime.parse(time);
-                          String formattedTime =
-                              DateFormat.jm().format(dateTime);
-                          return formattedTime;
-                        }
+                child: FutureBuilder<List<CongViec>>(
+                  future: ApiCongViec.getAllCongViecByMaND(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<CongViec>> snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          // format time
+                          String formatTime(String time) {
+                            DateTime dateTime = DateTime.parse(time);
+                            String formattedTime =
+                                DateFormat.jm().format(dateTime);
+                            return formattedTime;
+                          }
 
-                        // format date
-                        String formatDate(String date) {
-                          String formattedDate = date.split("T")[0];
-                          return formattedDate;
-                        }
+                          // format date
+                          String formatDate(String date) {
+                            DateTime parsedDate = DateTime.parse(date);
+                            String formattedDate =
+                                DateFormat('d/M/y').format(parsedDate);
+                            return formattedDate;
+                          }
 
-                        return itemLisCV(
-                            context,
-                            snapshot.data![index]['TieuDe'],
-                            "${formatTime(snapshot.data![index]['GioBatDau']
-                                    .toString())} - ${formatTime(snapshot.data![index]['GioKetThuc']
-                                    .toString())}",
-                            // ngaybatdau - ngayketthuc
-                            "${formatDate(snapshot.data![index]['NgayBatDau']
-                                    .toString())} - ${formatDate(snapshot.data![index]['NgayBatDau']
-                                    .toString())}", snapshot.data![index]['MaCV']);
-                      },
-                      itemCount: snapshot.data!.length,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 16),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(color: Colors.deepOrangeAccent,),
-                    );
-                  }
-                },
-              )),
+                          return itemLisCV(
+                              context,
+                              snapshot.data![index].tieuDe.toString(),
+                              snapshot.data![index].noiDung.toString(),
+                              "${formatTime(snapshot.data![index].gioBatDau.toString())} - ${formatTime(snapshot.data![index].gioKetThuc.toString())}",
+                              // ngaybatdau - ngayketthuc
+                              "${formatDate(snapshot.data![index].ngayBatDau.toString())} - ${formatDate(snapshot.data![index].ngayKetThuc.toString())}",
+                              snapshot.data![index].trangThai.toString(),
+                              snapshot.data![index].tienDo!.toDouble(),
+                              snapshot.data![index].ghiChu.toString(),
+                              snapshot.data![index].maNguoiLam!.toInt(),
+                              snapshot.data![index].maCV.toString());
+                        },
+                        itemCount: snapshot.data!.length,
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16),
+                      );
+                    } else {
+                      // return const Center(
+                      //   child: CircularProgressIndicator(
+                      //     color: Colors.deepOrangeAccent,
+                      //   ),
+                      // );
+                      return const Center(
+                        child: Text(
+                          "Chưa có công việc"
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -167,7 +170,7 @@ class TimeDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting("vi_VN", null);
 
-    String formattedDate = DateFormat.yMMMMd().format(DateTime.now());
+    String formattedDate = DateFormat('MMMM dd, y', 'vi').format(DateTime.now());
 
     return Text(
       formattedDate.toUpperCase(),
@@ -176,7 +179,17 @@ class TimeDisplayWidget extends StatelessWidget {
   }
 }
 
-Widget itemLisCV(BuildContext context, String tieuDe, String gio, String ngay, int id) {
+Widget itemLisCV(
+    BuildContext context,
+    String tieuDe,
+    String noiDung,
+    String gio,
+    String ngay,
+    String trangThai,
+    double tienDo,
+    String ghiChu,
+    int maNguoiLam,
+    String id) {
   return Padding(
     padding: const EdgeInsets.only(top: 16.0),
     child: GestureDetector(
@@ -184,7 +197,18 @@ Widget itemLisCV(BuildContext context, String tieuDe, String gio, String ngay, i
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskDetailsPage(maCV: id),
+            builder: (context) => TaskDetailsPage(
+              congViec: CongViec(
+                tieuDe: tieuDe,
+                noiDung: noiDung,
+                trangThai: trangThai,
+                tienDo: tienDo,
+                ghiChu: ghiChu,
+                maNguoiLam: maNguoiLam,
+              ),
+              gio: gio,
+              ngay: ngay,
+            ),
           ),
         );
       },

@@ -14,7 +14,7 @@ class MyTextFormField extends StatelessWidget {
         required this.hintText,
         this.controller,
         this.widget,
-        this.inputType,});
+        this.inputType});
 
   @override
   Widget build(BuildContext context) {
