@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/screens/userscreen.dart';
+import 'package:todos_app/services/api/apiConfig.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,33 +24,37 @@ class _LoginPageState extends State<LoginPage> {
     String msg = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    try {
-      Response response =
-          await dio.post('http://192.168.1.23:3000/api/nguoidung/login', data: {
-        'TenNguoiDung': username,
-        'MatKhau': passwd,
-      });
+    if(username.isEmpty || passwd.isEmpty){
+      msg = "Vui lòng nhập đủ thông tin";
+    } else {
+      try {
+        Response response =
+        await dio.post('${ApiConfig.BASE_URL}/nguoidung/login', data: {
+          'TenNguoiDung': username,
+          'MatKhau': passwd,
+        });
 
-      if (response.statusCode == 200) {
+        if (response.statusCode == 200) {
 
-        msg = response.data['msg'];
-        await prefs.setInt("maND", response.data['maND']);
+          msg = response.data['msg'];
+          await prefs.setInt("maND", response.data['maND']);
 
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) {
-                return const UserScreen();
-              },
-            ),
-          );
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) {
+                  return const UserScreen();
+                },
+              ),
+            );
+          }
         }
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.badResponse) {
-        msg = "${e.response?.data}";
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.badResponse) {
+          msg = "${e.response?.data}";
+        }
       }
     }
 
