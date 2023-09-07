@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/screens/userscreen.dart';
-import 'package:todos_app/services/api/apiConfig.dart';
+import 'package:todos_app/services/api/api_config.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {

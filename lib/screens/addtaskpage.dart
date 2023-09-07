@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
-import 'package:todos_app/services/api/apiConfig.dart';
+import 'package:todos_app/services/api/api_config.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -20,7 +20,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _endTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _selectedTrangThai = 'Chờ nhận';
 
-  Dio dio = Dio();
   TextEditingController tieuDeCtrl = TextEditingController();
   TextEditingController noiDungCtrl = TextEditingController();
   TextEditingController ngayBDCtrl = TextEditingController();
@@ -32,56 +31,39 @@ class _AddTaskPageState extends State<AddTaskPage> {
   TextEditingController ghiChuCtrl = TextEditingController();
 
   Future<void> addTask() async {
-    String tieuDe = tieuDeCtrl.text;
-    String noiDung = noiDungCtrl.text;
-    String ngayBD = DateFormat("yyyy-MM-dd").format(_selectStartDate);
-    String ngayKT = DateFormat("yyyy-MM-dd").format(_selectEndDate);
-    // String gioBD = DateFormat('hh:mm').format(DateTime.parse(gioBDCtrl.text)).toString();
-    // String gioKT = DateFormat('hh:mm').format(DateTime.parse(gioKTCtrl.text)).toString();
-    String gioBD = gioBDCtrl.text;
-    String gioKT = gioKTCtrl.text;
-    String trangThai = trangThaiCtrl.text;
-    String tienDo = tienDoCtrl.text;
-    String? ghiChu = ghiChuCtrl.text.isEmpty ? null : ghiChuCtrl.text;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maNguoiLam = prefs.getInt("maND");
 
     String msg = "";
 
-    resetData() {
-      tieuDeCtrl.text = "";
-      noiDungCtrl.text = "";
-      ngayBDCtrl.text = "";
-      ngayKTCtrl.text = "";
-      gioBDCtrl.text = "";
-      gioKTCtrl.text = "";
-      trangThaiCtrl.text = "";
-      tienDoCtrl.text = "";
-      ghiChuCtrl.text = "";
-    }
-
-    if(tieuDe.isEmpty || noiDung.isEmpty || ngayBD.isEmpty || ngayKT.isEmpty || gioBD.isEmpty || gioKT.isEmpty || trangThai.isEmpty || tienDo.isEmpty){
+    if (tieuDeCtrl.text.isEmpty ||
+        noiDungCtrl.text.isEmpty ||
+        ngayBDCtrl.text.isEmpty ||
+        ngayKTCtrl.text.isEmpty ||
+        gioBDCtrl.text.isEmpty ||
+        gioKTCtrl.text.isEmpty ||
+        trangThaiCtrl.text.isEmpty ||
+        tienDoCtrl.text.isEmpty) {
       msg = "Vui lòng nhập đủ thông tin công việc";
-      resetData();
     } else {
       try {
         Response response =
-        await dio.post("${ApiConfig.BASE_URL}/congviec/insert", data: {
-          'TieuDe': tieuDe,
-          'NoiDung': noiDung,
-          'GioBatDau': gioBD,
-          'GioKetThuc': gioKT,
-          'NgayBatDau': ngayBD,
-          'NgayKetThuc': ngayKT,
-          'TrangThai': trangThai,
-          'TienDo': tienDo,
-          'GhiChu': ghiChu,
+            await ApiConfig.dio.post("${ApiConfig.BASE_URL}/congviec/insert", data: {
+          'TieuDe': tieuDeCtrl.text,
+          'NoiDung': noiDungCtrl.text,
+          'GioBatDau': gioBDCtrl.text,
+          'GioKetThuc': gioKTCtrl.text,
+          'NgayBatDau': DateFormat("yyyy-MM-dd").format(_selectStartDate),
+          'NgayKetThuc': DateFormat("yyyy-MM-dd").format(_selectEndDate),
+          'TrangThai': trangThaiCtrl.text,
+          'TienDo': tienDoCtrl.text,
+          'GhiChu': ghiChuCtrl.text,
           'MaNguoiLam': maNguoiLam
         });
 
         if (response.statusCode == 200) {
           msg = response.data.toString();
-          Navigator.pop(context);
+          Navigator.pop(context, ['Reload']);
         }
       } on DioException catch (e) {
         if (e.type == DioExceptionType.badResponse) {
@@ -119,7 +101,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         elevation: 0,
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(context, ["Reload"]);
           },
           child: const Icon(
             Icons.arrow_back_ios,
@@ -304,7 +286,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
     String _formatedTime = pickerTime.format(context);
-    print(_formatedTime);
     if (pickerTime == null) {
       print("Time canceled");
     } else if (isStartTime == true) {
@@ -363,9 +344,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return showTimePicker(
       initialEntryMode: TimePickerEntryMode.dial,
       context: context,
-      initialTime: TimeOfDay(
-          hour: int.parse(_startTime.split(":")[0]),
-          minute: int.parse(_startTime.split(":")[1].split(" ")[0])),
+      // initialTime: TimeOfDay(
+      //     hour: int.parse(_startTime.split(":")[0]),
+      //     minute: int.parse(_startTime.split(":")[1].split(" ")[0])),
+      initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(
             data: ThemeData.light().copyWith(
