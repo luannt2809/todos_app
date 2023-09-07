@@ -2,21 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/models/CongViec.dart';
-import 'package:todos_app/services/api/apiConfig.dart';
-import 'package:todos_app/services/api/api_congviec.dart';
+import 'package:todos_app/services/api/api_config.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class TaskDetailsPage extends StatefulWidget {
-  // final String maCV;
   final CongViec congViec;
-  final String gio;
-  final String ngay;
 
-  const TaskDetailsPage(
-      {super.key,
-      required this.congViec,
-      required this.gio,
-      required this.ngay});
+  const TaskDetailsPage({super.key, required this.congViec});
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -34,9 +26,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
   Future<dynamic> getUser() async {
     try {
-      Dio dio = Dio();
-
-      Response response = await dio
+      Response response = await ApiConfig.dio
           .get("${ApiConfig.BASE_URL}/nguoidung/${widget.congViec.maNguoiLam}");
 
       setState(() {
@@ -48,8 +38,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<List<dynamic>> getListLogCV() async {
-    Dio dio = Dio();
-    var response = await dio.get("${ApiConfig.BASE_URL}/logcongviec/${widget.congViec.maCV}");
+    var response = await ApiConfig.dio
+        .get("${ApiConfig.BASE_URL}/logcongviec/${widget.congViec.maCV}");
 
     final List<dynamic> listLogCV = response.data;
 
@@ -67,7 +57,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           elevation: 0,
           leading: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context, ["Reload"]);
             },
             child: const Icon(
               Icons.arrow_back_ios,
@@ -82,9 +72,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           centerTitle: true,
         ),
         body: NestedScrollView(
-          physics: MediaQuery.of(context).orientation == Orientation.portrait
-              ? const NeverScrollableScrollPhysics()
-              : const BouncingScrollPhysics(),
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverToBoxAdapter(
@@ -121,7 +108,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               Expanded(
                                 child: RowItem(
                                   icon: Icons.access_time,
-                                  text: widget.gio,
+                                  text:
+                                      "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioBatDau.toString()))} - "
+                                      "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioKetThuc.toString()))}",
                                 ),
                               ),
                               Text(
@@ -138,7 +127,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ),
                           RowItem(
                             icon: Icons.calendar_month_outlined,
-                            text: widget.ngay,
+                            text:
+                                "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayBatDau.toString()))} - "
+                                "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()))}",
                           ),
                           const SizedBox(
                             height: 10,
@@ -164,7 +155,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ),
                           Text(
                             "Nội dung",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
@@ -191,7 +183,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ),
                           Text(
                             "Ghi chú",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
@@ -245,11 +238,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       itemBuilder: (BuildContext context, int index) {
                         // item
                         return itemListLogCV(
-                            widget.congViec.tieuDe.toString(),
+                            snapshot.data![index]['TieuDe'].toString(),
                             snapshot.data![index]['ThoiGian'].toString(),
                             hoTen,
-                            widget.congViec.trangThai.toString(),
-                            widget.congViec.tienDo!.toDouble(),
+                            snapshot.data![index]['TrangThai'].toString(),
+                            snapshot.data![index]['TienDo'].toDouble(),
                             snapshot.data![index]['MoTa'].toString(),
                             context);
                       },
