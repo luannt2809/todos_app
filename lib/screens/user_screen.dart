@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todos_app/screens/homepage.dart';
-import 'package:todos_app/screens/notifypage.dart';
-import 'package:todos_app/screens/profilepage.dart';
+import 'package:todos_app/screens/home_page.dart';
+import 'package:todos_app/screens/notify_page.dart';
+import 'package:todos_app/screens/profile_page.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});

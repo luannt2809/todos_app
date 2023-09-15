@@ -2,9 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todos_app/screens/userscreen.dart';
-import 'package:todos_app/services/api/api_config.dart';
-import 'homepage.dart';
+import 'package:todos_app/screens/user_screen.dart';
+import 'package:todos_app/services/config/api_config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

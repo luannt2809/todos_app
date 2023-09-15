@@ -1,5 +1,5 @@
 class CongViec {
-  int maCV;
+  int? maCV;
   String? tieuDe;
   String? noiDung;
   String? gioBatDau;
@@ -12,9 +12,10 @@ class CongViec {
   int? maNguoiLam;
   int? maNguoiGiao;
   int? kieu;
+  String? error;
 
   CongViec(
-      {required this.maCV,
+      {this.maCV,
       this.tieuDe,
       this.noiDung,
       this.gioBatDau,
@@ -26,7 +27,7 @@ class CongViec {
       this.ghiChu,
       this.maNguoiLam,
       this.maNguoiGiao,
-      this.kieu});
+      this.kieu, this.error});
 
   factory CongViec.fromJson(Map<String, dynamic> json) {
     return CongViec(
@@ -43,6 +44,7 @@ class CongViec {
       maNguoiLam: json['MaNguoiLam'],
       maNguoiGiao: json['MaNguoiGiao'],
       kieu: json['Kieu'],
+      error: json['error']
     );
   }
 
@@ -62,5 +64,9 @@ class CongViec {
     data['MaNguoiGiao'] = this.maNguoiGiao;
     data['Kieu'] = this.kieu;
     return data;
+  }
+
+  CongViec.withError(String message) {
+    error = message;
   }
 }

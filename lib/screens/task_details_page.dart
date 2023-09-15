@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todos_app/models/CongViec.dart';
-import 'package:todos_app/services/api/api_config.dart';
+import 'package:todos_app/models/cong_viec.dart';
+import 'package:todos_app/services/config/api_config.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class TaskDetailsPage extends StatefulWidget {
@@ -273,9 +273,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
 class CircleTabIndicator extends Decoration {
   final Color color;
-  double radius;
+  final double radius;
 
-  CircleTabIndicator({required this.color, required this.radius});
+  const CircleTabIndicator({required this.color, required this.radius});
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {

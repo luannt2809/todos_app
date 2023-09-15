@@ -4,21 +4,31 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
-import 'package:todos_app/services/api/api_config.dart';
+import 'package:todos_app/models/cong_viec.dart';
+import 'package:todos_app/services/config/api_config.dart';
 
-class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({super.key});
+class UpdateTaskPage extends StatefulWidget {
+  final CongViec congViec;
+
+  const UpdateTaskPage({super.key, required this.congViec});
 
   @override
-  State<AddTaskPage> createState() => _AddTaskPageState();
+  State<UpdateTaskPage> createState() => _UpdateTaskPageState();
 }
 
-class _AddTaskPageState extends State<AddTaskPage> {
+class _UpdateTaskPageState extends State<UpdateTaskPage> {
   DateTime _selectStartDate = DateTime.now();
   DateTime _selectEndDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _selectedTrangThai = 'Chờ nhận';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fillDataCongViec();
+  }
 
   TextEditingController tieuDeCtrl = TextEditingController();
   TextEditingController noiDungCtrl = TextEditingController();
@@ -30,7 +40,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
   TextEditingController tienDoCtrl = TextEditingController();
   TextEditingController ghiChuCtrl = TextEditingController();
 
-  Future<void> addTask() async {
+  fillDataCongViec() {
+    tieuDeCtrl.text = widget.congViec.tieuDe.toString();
+    noiDungCtrl.text = widget.congViec.noiDung.toString();
+    ngayBDCtrl.text = DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.congViec.ngayBatDau.toString()));
+    ngayKTCtrl.text = DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()));
+    gioBDCtrl.text = DateFormat("hh:mm a").format(DateTime.parse(widget.congViec.gioBatDau.toString())).toString();
+    gioKTCtrl.text = DateFormat("hh:mm a").format(DateTime.parse(widget.congViec.gioBatDau.toString())).toString();
+    trangThaiCtrl.text = widget.congViec.trangThai.toString();
+    tienDoCtrl.text = widget.congViec.tienDo.toString();
+    ghiChuCtrl.text = widget.congViec.ghiChu.toString();
+  }
+
+  Future<void> updateTask() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maNguoiLam = prefs.getInt("maND");
 
@@ -47,8 +69,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
       msg = "Vui lòng nhập đủ thông tin công việc";
     } else {
       try {
-        Response response =
-            await ApiConfig.dio.post("${ApiConfig.BASE_URL}/congviec/insert", data: {
+        Response response = await ApiConfig.dio
+            .put("${ApiConfig.BASE_URL}/congviec/update/${widget.congViec.maCV}", data: {
           'TieuDe': tieuDeCtrl.text,
           'NoiDung': noiDungCtrl.text,
           'GioBatDau': gioBDCtrl.text,
@@ -110,7 +132,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
         ),
         title: const Text(
-          "Thêm công việc",
+          "Cập nhật công việc",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -140,11 +162,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       MyTextFormField(
                         controller: ngayBDCtrl,
                         text: "Ngày bắt đầu",
-                        hintText:
-                            DateFormat('dd-MM-yyyy').format(_selectStartDate),
+                        hintText: DateFormat.yMd().format(_selectStartDate),
                         widget: IconButton(
                           onPressed: () {
-                            // _getDateStartFromUser();
                             _getDateFromUser(isStartDate: true);
                           },
                           icon: const Icon(Icons.calendar_month_outlined),
@@ -154,8 +174,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       MyTextFormField(
                         controller: ngayKTCtrl,
                         text: "Ngày kết thúc",
-                        hintText:
-                            DateFormat('dd-MM-yyyy').format(_selectEndDate),
+                        hintText: DateFormat.yMd().format(_selectEndDate),
                         widget: IconButton(
                           onPressed: () {
                             _getDateFromUser(isStartDate: false);
@@ -251,7 +270,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             height: 45,
                             width: 150,
                             child: ElevatedButton(
-                              onPressed: addTask,
+                              onPressed: updateTask,
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                     Colors.deepOrangeAccent),

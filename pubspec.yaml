@@ -43,6 +43,10 @@ dependencies:
   flutter_localization: ^0.1.13
   shared_preferences: ^2.2.1
   syncfusion_flutter_sliders: ^22.2.12
+  flutter_bloc:
+  bloc:
+  equatable:
+  meta:
 
 dev_dependencies:
   flutter_test:
