@@ -207,15 +207,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ),
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
-                  TabBar(
+                  const TabBar(
                     isScrollable: true,
-                    labelPadding: const EdgeInsets.only(left: 20, right: 20),
+                    labelPadding: EdgeInsets.only(left: 20, right: 20),
                     indicatorColor: Colors.orangeAccent,
                     labelColor: Colors.deepOrangeAccent,
                     unselectedLabelColor: Colors.grey,
                     indicator: CircleTabIndicator(
                         color: Colors.deepOrangeAccent, radius: 4),
-                    tabs: const [
+                    tabs: [
                       Tab(text: 'Nhật ký'),
                       Tab(text: 'Công việc khác'),
                     ],

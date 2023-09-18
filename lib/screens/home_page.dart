@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:todos_app/bloc/add_task_page/add_task_page_bloc.dart';
+import 'package:todos_app/bloc/delete_task/delete_task_bloc.dart';
 import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
+import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/screens/add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
@@ -36,11 +39,11 @@ class _HomePageState extends State<HomePage> {
 
     try {
       Response response = await ApiConfig.dio
-          .delete("${ApiConfig.BASE_URL}/congviec/delete/${maCV}");
+          .delete("${ApiConfig.BASE_URL}/congviec/delete/$maCV");
 
       if (response.statusCode == 200) {
         msg = response.data.toString();
-        setState(() {});
+        getData();
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
@@ -75,11 +78,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text(state.error!),
               );
             } else if (state is HomePageLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.deepOrangeAccent,
-                ),
-              );
+              return circularProgressIndicator();
             } else if (state is GetListTaskEmpty) {
               return SafeArea(
                 child: SizedBox(
@@ -152,8 +151,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               const Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TimeDisplayWidget(),
                     SizedBox(
@@ -161,9 +159,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Text(
                       "Hôm nay",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ],
                 ),
@@ -175,8 +172,10 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                        const AddTaskPage(),
+                        builder: (context) => BlocProvider(
+                          create: (context) => AddTaskPageBloc(),
+                          child: const AddTaskPage(),
+                        ),
                       ),
                     ).then((value) {
                       // if (value != null && value[0] == 'Reload') {
@@ -187,12 +186,10 @@ class _HomePageState extends State<HomePage> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                    MaterialStateProperty.all(
-                        Colors.deepOrangeAccent),
+                        MaterialStateProperty.all(Colors.deepOrangeAccent),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
@@ -212,8 +209,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 14),
             decoration: BoxDecoration(
               color: const Color(0xFFeeeeee),
-              border:
-              Border.all(color: Colors.white, width: 1),
+              border: Border.all(color: Colors.white, width: 1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -223,14 +219,12 @@ class _HomePageState extends State<HomePage> {
                     autofocus: false,
                     cursorColor: Colors.grey,
                     decoration: InputDecoration(
-                      hintText: DateFormat('dd/MM/yyyy')
-                          .format(_selectStartDate),
-                      focusedBorder:
-                      const UnderlineInputBorder(
+                      hintText:
+                          DateFormat('dd/MM/yyyy').format(_selectStartDate),
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                      enabledBorder:
-                      const UnderlineInputBorder(
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
                     ),
@@ -241,8 +235,7 @@ class _HomePageState extends State<HomePage> {
                     // _getDateStartFromUser();
                     _getDateFromUser();
                   },
-                  icon: const Icon(
-                      Icons.calendar_month_outlined),
+                  icon: const Icon(Icons.calendar_month_outlined),
                   color: Colors.grey,
                 ),
               ],
@@ -260,7 +253,7 @@ class _HomePageState extends State<HomePage> {
     //     []; sửa thành ->
     homePageBloc.add(GetTaskList(
         startDate:
-        DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
+            DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
   }
 
   // List<CongViec> list = [];
@@ -389,9 +382,10 @@ class _HomePageState extends State<HomePage> {
                           "Bạn có xác nhận xoá công việc này không ?"),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () async {
-                            await deleteTask(
-                                int.parse(congViec.maCV.toString()));
+                          onPressed: () {
+                            BlocProvider.of<DeleteTaskBloc>(context).add(
+                                DeleteTask(
+                                    int.parse(congViec.maCV.toString())));
                           },
                           child: const Text(
                             "Xác nhận",
