@@ -4,6 +4,7 @@ import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/services/config/api_config.dart';
 
 class CongViecProvider {
+  // get list task
   Future<List<CongViec>> getAllCongViecByMaND(String startDate) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maND = prefs.getInt("maND");
@@ -20,5 +21,76 @@ class CongViecProvider {
       }
       return [CongViec.withError(e.toString())];
     }
+  }
+
+  // add task
+  Future<Response> addTask(
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maNguoiLam = prefs.getInt("maND");
+
+    Response response = await ApiConfig.dio
+        .post("${ApiConfig.BASE_URL}/congviec/insert", data: {
+      'TieuDe': tieuDe,
+      'NoiDung': noiDung,
+      'GioBatDau': gioBD,
+      'GioKetThuc': gioKT,
+      'NgayBatDau': ngayBD,
+      'NgayKetThuc': ngayKT,
+      'TrangThai': trangThai,
+      'TienDo': tienDo,
+      'GhiChu': ghiChu,
+      'MaNguoiLam': maNguoiLam
+    });
+
+    return response;
+  }
+
+  // update task
+  Future<Response> updateTask(
+      int maCV,
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maNguoiLam = prefs.getInt("maND");
+
+    Response response = await ApiConfig.dio
+        .put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {
+      'TieuDe': tieuDe,
+      'NoiDung': noiDung,
+      'GioBatDau': gioBD,
+      'GioKetThuc': gioKT,
+      'NgayBatDau': ngayBD,
+      'NgayKetThuc': ngayKT,
+      'TrangThai': trangThai,
+      'TienDo': tienDo,
+      'GhiChu': ghiChu,
+      'MaNguoiLam': maNguoiLam
+    });
+
+    return response;
+  }
+
+  // delete task
+  Future<Response> deleteTask(int maCV) async {
+    Response response = await ApiConfig.dio
+        .delete("${ApiConfig.BASE_URL}/congviec/delete/$maCV");
+
+    return response;
   }
 }
