@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/screens/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:todos_app/services/notification/notification_services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationServices().initNotification();
   runApp(const MyApp());
 }
 

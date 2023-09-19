@@ -5,6 +5,7 @@ import 'package:todos_app/bloc/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
+import 'package:todos_app/services/notification/notification_services.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -259,6 +260,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                         trangThaiCtrl.text,
                                                     tienDo: tienDoCtrl.text,
                                                     ghiChu: ghiChuCtrl.text));
+                                            final deadline =
+                                                DateTime(2023, 9, 19, 16, 57);
+                                            NotificationServices()
+                                                .showNotification(
+                                                    0,
+                                                    "Da den han",
+                                                    "Phai hoan thanh gap",
+                                                    deadline);
                                           }
                                         },
                                         style: ButtonStyle(
