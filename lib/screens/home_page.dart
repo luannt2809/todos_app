@@ -1,17 +1,15 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/bloc/delete_task/delete_task_bloc.dart';
 import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
+import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/screens/add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
 import 'package:todos_app/screens/update_task_page.dart';
-import 'package:todos_app/services/config/api_config.dart';
 import 'package:todos_app/themes/styles.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,35 +30,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     getData();
     super.initState();
-  }
-
-  Future<void> deleteTask(int maCV) async {
-    String msg = "";
-
-    try {
-      Response response = await ApiConfig.dio
-          .delete("${ApiConfig.BASE_URL}/congviec/delete/$maCV");
-
-      if (response.statusCode == 200) {
-        msg = response.data.toString();
-        getData();
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.badResponse) {
-        msg = "${e.response?.data}";
-      }
-    }
-
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-
-    Navigator.pop(context, ['Reload']);
   }
 
   @override
@@ -376,34 +345,57 @@ class _HomePageState extends State<HomePage> {
                 onPressed: (BuildContext context) {
                   showDialog(
                     context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text("Xác nhận"),
-                      content: const Text(
-                          "Bạn có xác nhận xoá công việc này không ?"),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            BlocProvider.of<DeleteTaskBloc>(context).add(
-                                DeleteTask(
-                                    int.parse(congViec.maCV.toString())));
-                          },
-                          child: const Text(
-                            "Xác nhận",
-                            style: TextStyle(
-                                color: Colors.deepOrangeAccent, fontSize: 16),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, ['Reload']);
-                          },
-                          child: const Text(
-                            "Huỷ",
-                            style: TextStyle(
-                                color: Colors.deepOrangeAccent, fontSize: 16),
-                          ),
-                        ),
-                      ],
+                    builder: (BuildContext context) => BlocProvider(
+                      create: (context) => DeleteTaskBloc(),
+                      child: BlocConsumer<DeleteTaskBloc, DeleteTaskState>(
+                        listener: (context, state) {
+                          if (state is DeleteTaskError) {
+                            toast("Error: ${state.error}");
+                            Navigator.of(context).pop();
+                          } else if (state is DeletedTask) {
+                            toast(state.msg);
+                            Navigator.of(context).pop();
+                            getData();
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is DeleteTaskInitial) {
+                            return AlertDialog(
+                              title: const Text("Xác nhận"),
+                              content: const Text(
+                                  "Bạn có xác nhận xoá công việc này không ?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<DeleteTaskBloc>(context)
+                                        .add(DeleteTask(int.parse(
+                                            congViec.maCV.toString())));
+                                  },
+                                  child: const Text(
+                                    "Xác nhận",
+                                    style: TextStyle(
+                                        color: Colors.deepOrangeAccent,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    "Huỷ",
+                                    style: TextStyle(
+                                        color: Colors.deepOrangeAccent,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
                     ),
                   );
                 },
