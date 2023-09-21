@@ -1,11 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todos_app/firebase_options.dart';
 import 'package:todos_app/screens/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:todos_app/services/api/firebase/firebase_api.dart';
 import 'package:todos_app/services/notification/notification_services.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationServices().initNotification();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 

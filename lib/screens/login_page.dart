@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/screens/user_screen.dart';
-import 'package:todos_app/services/config/api_config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,58 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   Dio dio = Dio();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwdController = TextEditingController();
-
-  Future<void> login() async {
-    String username = userNameController.text;
-    String passwd = passwdController.text;
-    String msg = "";
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (username.isEmpty || passwd.isEmpty) {
-      msg = "Vui lòng nhập đủ thông tin";
-    } else {
-      try {
-        Response response =
-            await dio.post('${ApiConfig.BASE_URL}/nguoidung/login', data: {
-          'TenNguoiDung': username,
-          'MatKhau': passwd,
-        });
-
-        if (response.statusCode == 200) {
-          msg = response.data['msg'];
-          await prefs.setInt("maND", response.data['maND']);
-
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context);
-          } else {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) {
-                  return const UserScreen();
-                },
-              ),
-            );
-          }
-        }
-      } on DioException catch (e) {
-        if (e.type == DioExceptionType.badResponse) {
-          msg = "${e.response?.data}";
-        }
-      }
-    }
-
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-
-    // hide keyboard
-    FocusManager.instance.primaryFocus?.unfocus();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,7 @@ class MyTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final Widget? widget;
   final TextInputType? inputType;
+  final bool? enabled;
 
   const MyTextFormField(
       {super.key,
@@ -14,7 +15,7 @@ class MyTextFormField extends StatelessWidget {
         required this.hintText,
         this.controller,
         this.widget,
-        this.inputType});
+        this.inputType, this.enabled});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,7 @@ class MyTextFormField extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: TextFormField(
+                    enabled: enabled,
                     maxLines: null,
                     readOnly: widget == null ? false : true,
                     autofocus: false,

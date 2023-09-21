@@ -1,65 +1,63 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationServices {
-  static final NotificationServices _notificationServices =
-      NotificationServices._internal();
-
-  factory NotificationServices() {
-    return _notificationServices;
-  }
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+class NotificationService {
+  FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  NotificationServices._internal();
+  int idTB = 0;
 
   Future<void> initNotification() async {
-    const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_laucher');
+    AndroidInitializationSettings androidInitializationSettings =
+        const AndroidInitializationSettings('logo');
 
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
+    var iOSInitializationSettings = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+        onDidReceiveLocalNotification: (id, title, body, payload) {});
+
+    var initializationSettings = InitializationSettings(
+        android: androidInitializationSettings, iOS: iOSInitializationSettings);
+
+    await notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {},
     );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: androidInitializationSettings,
-            iOS: initializationSettingsIOS);
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    final prefs = await SharedPreferences.getInstance();
+    idTB = prefs.getInt('idTB') ?? 0;
+    print(idTB);
   }
 
-  Future<void> showNotification(
-      int id, String title, String body, DateTime deadline) async {
-    final currentTime = DateTime.now();
+  Future<void> saveIdTB() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('idTB', idTB);
+  }
 
-    if (deadline.isAfter(currentTime)) {
-      final timeUtilDeadline = deadline.difference(currentTime);
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-          id,
-          title,
-          body,
-          tz.TZDateTime.now(tz.getLocation("Vietnam/Hanoi")).add(timeUtilDeadline),
-          const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "main_channel",
-                "Main Channel",
-                channelDescription: 'desc',
-                importance: Importance.max,
-                priority: Priority.max,
-              ),
-              iOS: DarwinNotificationDetails(
-                sound: 'default.wav',
-                presentAlert: true,
-                presentBadge: true,
-                presentSound: true,
-              )),
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime);
-    }
+  notificationDetails() {
+    return const NotificationDetails(
+        android: AndroidNotificationDetails("channelId", "channelName",
+            importance: Importance.max),
+        iOS: DarwinNotificationDetails());
+  }
+
+  Future scheduleNotification(
+      {String? title,
+      String? body,
+      String? payload,
+      required DateTime scheduledNotificationDateTime}) async {
+    await notificationsPlugin.zonedSchedule(
+        idTB,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
+        notificationDetails(),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+
+    idTB++;
+    await saveIdTB();
   }
 }
