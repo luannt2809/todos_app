@@ -1,7 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todos_app/bloc/profile_page/profile_page_bloc.dart';
+import 'package:todos_app/components/my_text_form_field.dart';
+import 'package:todos_app/components/process_indicator.dart';
+import 'package:todos_app/components/toast.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  ProfilePageBloc profilePageBloc = ProfilePageBloc();
+  TextEditingController userNameCtrl = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
+  TextEditingController fullNameCtrl = TextEditingController();
+  TextEditingController phoneCtrl = TextEditingController();
+  TextEditingController roleCtrl = TextEditingController();
+  TextEditingController departmentCtrl = TextEditingController(); // phòng ban
+  TextEditingController statusCtrl = TextEditingController();
+
+  getData() async {
+    profilePageBloc.add(GetInfoEvent());
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,133 +46,161 @@ class ProfilePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  width: 90,
-                  height: 90,
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    // borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+      body: BlocProvider(
+        create: (context) => profilePageBloc,
+        child: BlocListener<ProfilePageBloc, ProfilePageState>(
+          listener: (context, state) {
+            if (state is GetInfoError) {
+              toast(state.error.toString());
+            } else if (state is GetInfoLoaded) {
+              NguoiDung nguoiDung = state.userList[0];
+              userNameCtrl.text = nguoiDung.tenNguoiDung;
+              emailCtrl.text = nguoiDung.email;
+              fullNameCtrl.text = nguoiDung.hoTen;
+              phoneCtrl.text = nguoiDung.soDienThoai;
+              roleCtrl.text = nguoiDung.tenVaiTro;
+              departmentCtrl.text = nguoiDung.tenPhongBan;
+              statusCtrl.text = nguoiDung.trangThai == true
+                  ? "Đang hoạt động"
+                  : "Không hoạt động";
+            } else if (state is ChangeInfoError) {
+              toast(state.error.toString());
+            } else if (state is ChangeInfoSuccess) {
+              toast(state.msg);
+            }
+          },
+          child: BlocBuilder<ProfilePageBloc, ProfilePageState>(
+            builder: (context, state) {
+              if (state is GetInfoLoading) {
+                return circularProgressIndicator();
+              } else if (state is ChangingInfo) {
+                return circularProgressIndicator();
+              } else {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 90,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              // borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Image.asset("assets/images/user.png"),
+                          ),
+                        ),
+                        MyTextFormField(
+                          controller: userNameCtrl,
+                          text: "Username",
+                          hintText: "Username",
+                          enabled: true,
+                        ),
+                        MyTextFormField(
+                          controller: emailCtrl,
+                          text: "Email",
+                          hintText: "Email",
+                          enabled: true,
+                        ),
+                        MyTextFormField(
+                          controller: fullNameCtrl,
+                          text: "Họ và tên",
+                          hintText: "Họ và tên",
+                          enabled: true,
+                        ),
+                        MyTextFormField(
+                          controller: phoneCtrl,
+                          text: "Số điện thoại",
+                          hintText: "Số điện thoại",
+                          enabled: true,
+                        ),
+                        MyTextFormField(
+                          controller: roleCtrl,
+                          text: "Vai trò",
+                          hintText: "Vai trò",
+                          enabled: false,
+                        ),
+                        MyTextFormField(
+                          controller: departmentCtrl,
+                          text: "Phòng ban",
+                          hintText: "Phòng ban",
+                          enabled: false,
+                        ),
+                        MyTextFormField(
+                          controller: statusCtrl,
+                          text: "Trạng thái",
+                          hintText: "Trạng thái",
+                          enabled: false,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 45,
+                              width: 200,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (userNameCtrl.text.isEmpty ||
+                                      emailCtrl.text.isEmpty ||
+                                      fullNameCtrl.text.isEmpty ||
+                                      phoneCtrl.text.isEmpty ||
+                                      roleCtrl.text.isEmpty ||
+                                      departmentCtrl.text.isEmpty ||
+                                      statusCtrl.text.isEmpty) {
+                                    toast(
+                                        "Vui lòng nhập đủ thông tin người dùng");
+                                  } else {
+                                    BlocProvider.of<ProfilePageBloc>(context)
+                                        .add(ChangeInfoEvent(
+                                            userName: userNameCtrl.text,
+                                            email: emailCtrl.text,
+                                            fullName: fullNameCtrl.text,
+                                            phone: phoneCtrl.text));
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.deepOrangeAccent),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Cập nhật thông tin",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Image.asset("assets/images/logo.png"),
-                ),
-              ),
-              const MyTextFormField(
-                text: "Username",
-                hintText: "Username",
-                enabled: true,
-              ),
-              const MyTextFormField(
-                text: "Email",
-                hintText: "Email",
-                enabled: true,
-              ),
-              const MyTextFormField(
-                text: "Họ và tên",
-                hintText: "Họ và tên",
-                enabled: true,
-              ),
-              const MyTextFormField(
-                text: "Số điện thoại",
-                hintText: "Số điện thoại",
-                enabled: true,
-              ),
-              const MyTextFormField(
-                text: "Vai trò",
-                hintText: "Vai trò",
-                enabled: false,
-              ),
-              const MyTextFormField(
-                text: "Phòng ban",
-                hintText: "Phòng ban",
-                enabled: false,
-              ),
-              const MyTextFormField(
-                text: "Trạng thái",
-                hintText: "Trạng thái",
-                enabled: false,
-              ),
-            ],
+                );
+              }
+            },
           ),
         ),
       ),
     );
   }
-}
 
-class MyTextFormField extends StatelessWidget {
-  final String text;
-  final String hintText;
-  final bool enabled;
-
-  const MyTextFormField(
-      {super.key,
-      required this.text,
-      required this.hintText,
-      required this.enabled});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            text,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.only(left: 14),
-            height: 52,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    autofocus: false,
-                    cursorColor: Colors.grey,
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      disabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      enabled: enabled,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+// Widget buildBody(NguoiDung nguoiDung) {}
 }

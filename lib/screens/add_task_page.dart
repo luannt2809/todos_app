@@ -260,14 +260,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                         trangThaiCtrl.text,
                                                     tienDo: tienDoCtrl.text,
                                                     ghiChu: ghiChuCtrl.text));
-                                            final deadline =
-                                                DateTime(2023, 9, 19, 16, 57);
-                                            NotificationServices()
-                                                .showNotification(
-                                                    0,
-                                                    "Da den han",
-                                                    "Phai hoan thanh gap",
-                                                    deadline);
+                                          }
+
+                                          if (trangThaiCtrl.text != "Hoàn thành" && double.parse(tienDoCtrl.text) < 100) {
+                                            final timeOfDay =
+                                            TimeOfDay.fromDateTime(DateFormat('hh:mm a').parse(_endTime));
+
+                                            final scheduledNotificationDateTime = DateTime(
+                                                _selectEndDate.year,
+                                                _selectEndDate.month,
+                                                _selectEndDate.day,
+                                                timeOfDay.hour,
+                                                timeOfDay.minute);
+
+                                            NotificationService().scheduleNotification(
+                                                scheduledNotificationDateTime: scheduledNotificationDateTime,
+                                                title: tieuDeCtrl.text,
+                                                body: noiDungCtrl.text +
+                                                    (trangThaiCtrl.text != "Hoàn thành"
+                                                        ? " chưa hoàn thành"
+                                                        : ""));
                                           }
                                         },
                                         style: ButtonStyle(

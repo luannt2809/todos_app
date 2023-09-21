@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/screens/home_page.dart';
 import 'package:todos_app/screens/notify_page.dart';
-import 'package:todos_app/screens/profile_page.dart';
+import 'package:todos_app/screens/settings_page.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -15,7 +15,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listPages = [const HomePage(), const NotifyPage(), const ProfilePage()];
+    List<Widget> listPages = [const HomePage(), const NotifyPage(), const SettingsPage()];
 
     void _onItemTapped(int index) {
       setState(() {
@@ -37,7 +37,7 @@ class _UserScreenState extends State<UserScreen> {
           MyBottomNavigationBarItem(
               icon: Icons.notifications_rounded, label: "Thông báo"),
           MyBottomNavigationBarItem(
-              icon: Icons.perm_contact_cal_rounded, label: "Hồ sơ"),
+              icon: Icons.settings, label: "Cài đặt"),
         ],
       ),
     );
