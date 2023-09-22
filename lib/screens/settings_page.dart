@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/login_page.dart';
 import 'package:todos_app/screens/profile_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final NguoiDung nguoiDung;
+
+  const SettingsPage({super.key, required this.nguoiDung});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -45,15 +48,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ],
                 ),
-                child: Image.asset("assets/images/user.png"),
+                child: Image.asset("assets/images/officer.png"),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              "Nguyễn Thành Luân",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            Text(
+              widget.nguoiDung.hoTen,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(
               height: 20,
@@ -80,9 +83,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (builder) {
-                  return const ProfilePage();
-                }));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (builder) {
+                  return ProfilePage(hoTen: widget.nguoiDung.hoTen);
+                })).then((value) {
+                  if (value != null && value[1] != null) {
+                    setState(() {
+                      widget.nguoiDung.hoTen = value[1];
+                    });
+                  }
+                });
               },
             ),
             const SizedBox(

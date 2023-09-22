@@ -5,6 +5,10 @@ import 'package:todos_app/services/providers/nguoi_dung_provider.dart';
 class NguoiDungRepository {
   final NguoiDungProvider nguoiDungProvider = NguoiDungProvider();
 
+  Future<List<NguoiDung>> getListUser() {
+    return nguoiDungProvider.getListUser();
+  }
+
   Future<List<NguoiDung>> getInfoUser() {
     return nguoiDungProvider.getInfoUser();
   }

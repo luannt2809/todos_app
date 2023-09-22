@@ -4,6 +4,14 @@ import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/services/config/api_config.dart';
 
 class NguoiDungProvider {
+  Future<List<NguoiDung>> getListUser() async {
+    Response response =
+        await ApiConfig.dio.get("${ApiConfig.BASE_URL}/nguoidung/list");
+
+    List<dynamic> value = response.data;
+    return value.map((e) => NguoiDung.fromJson(e)).toList();
+  }
+
   Future<List<NguoiDung>> getInfoUser() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
@@ -25,10 +33,7 @@ class NguoiDungProvider {
   }
 
   Future<Response> updateInfo(
-      String userName,
-      String email,
-      String fullName,
-      String phone) async {
+      String userName, String email, String fullName, String phone) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maND = prefs.getInt("maND");
 

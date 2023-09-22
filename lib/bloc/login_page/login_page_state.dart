@@ -16,8 +16,9 @@ class LoginPageLoading extends LoginPageState {
 
 class LoginPageSuccess extends LoginPageState {
   final String msg;
+  final NguoiDung nguoiDung;
 
-  const LoginPageSuccess(this.msg);
+  const LoginPageSuccess({required this.msg, required this.nguoiDung});
 
   @override
   List<Object> get props => [];
