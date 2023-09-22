@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
+import 'package:todos_app/screens/admin_screen.dart';
 import 'package:todos_app/screens/user_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,10 +41,23 @@ class _LoginPageState extends State<LoginPage> {
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   } else {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return const UserScreen();
-                    }));
+                    // giam doc vs truong phong
+                    if (state.nguoiDung.maVt == 1 ||
+                        state.nguoiDung.maVt == 2) {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AdminScreen(
+                          nguoiDung: state.nguoiDung,
+                        );
+                      }));
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return UserScreen(
+                          nguoiDung: state.nguoiDung,
+                        );
+                      }));
+                    }
                   }
                 }
               },

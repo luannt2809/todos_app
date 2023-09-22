@@ -21,7 +21,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         if (taskList.isNotEmpty) {
           emit(HomePageLoaded(taskList: taskList));
         } else {
-          print('List empty');
           emit(GetListTaskEmpty());
         }
         // if (taskList[0].error != null) {

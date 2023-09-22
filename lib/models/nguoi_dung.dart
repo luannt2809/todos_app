@@ -11,6 +11,7 @@ class NguoiDung {
   bool trangThai;
   String tenPhongBan;
   String tenVaiTro;
+  String? error;
 
   NguoiDung({
     required this.maNd,
@@ -24,6 +25,7 @@ class NguoiDung {
     required this.trangThai,
     required this.tenPhongBan,
     required this.tenVaiTro,
+    this.error
   });
 
   NguoiDung copyWith({

@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/home_page.dart';
+import 'package:todos_app/screens/list_department_page.dart';
+import 'package:todos_app/screens/list_user_page.dart';
 import 'package:todos_app/screens/notify_page.dart';
 import 'package:todos_app/screens/settings_page.dart';
 
-class UserScreen extends StatefulWidget {
+class AdminScreen extends StatefulWidget {
   final NguoiDung nguoiDung;
-  const UserScreen({super.key, required this.nguoiDung});
+
+  const AdminScreen({super.key, required this.nguoiDung});
 
   @override
-  State<UserScreen> createState() => _UserScreenState();
+  State<AdminScreen> createState() => _AdminScreenState();
 }
 
-class _UserScreenState extends State<UserScreen> {
+class _AdminScreenState extends State<AdminScreen> {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listPages = [const HomePage(), const NotifyPage(), SettingsPage(nguoiDung: widget.nguoiDung)];
+    List<Widget> listPages = [
+      const HomePage(),
+      const ListUserPage(),
+      const ListDepartmentPage(),
+      const NotifyPage(),
+      SettingsPage(nguoiDung: widget.nguoiDung)
+    ];
 
     void _onItemTapped(int index) {
       setState(() {
@@ -31,11 +40,14 @@ class _UserScreenState extends State<UserScreen> {
         backgroundColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        unselectedItemColor: Colors.black54,
         selectedItemColor: Colors.deepOrangeAccent,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
+          MyBottomNavigationBarItem(icon: Icons.person, label: "Người dùng"),
+          MyBottomNavigationBarItem(icon: Icons.business_outlined, label: "Phòng ban"),
           MyBottomNavigationBarItem(
               icon: Icons.notifications_rounded, label: "Thông báo"),
           MyBottomNavigationBarItem(
@@ -49,10 +61,10 @@ class _UserScreenState extends State<UserScreen> {
 class MyBottomNavigationBarItem extends BottomNavigationBarItem {
   MyBottomNavigationBarItem({required IconData icon, required String label})
       : super(
-          icon: Icon(
-            icon,
-            size: 25,
-          ),
-          label: label,
-        );
+    icon: Icon(
+      icon,
+      size: 25,
+    ),
+    label: label,
+  );
 }

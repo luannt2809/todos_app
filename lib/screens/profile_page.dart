@@ -7,7 +7,8 @@ import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String hoTen;
+  const ProfilePage({super.key, required this.hoTen});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -38,7 +39,17 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context, ["Reload", fullNameCtrl.text]);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.orangeAccent,
+            size: 20,
+          ),
+        ),
+        elevation: 3,
         backgroundColor: Colors.white,
         title: const Text(
           "Thông tin cá nhân",
@@ -144,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           hintText: "Trạng thái",
                           enabled: false,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
