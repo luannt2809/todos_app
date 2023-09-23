@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+import 'package:todos_app/screens/admin/list_department_page.dart';
+import 'package:todos_app/screens/admin/list_user_page.dart';
 import 'package:todos_app/screens/home_page.dart';
-import 'package:todos_app/screens/list_department_page.dart';
-import 'package:todos_app/screens/list_user_page.dart';
 import 'package:todos_app/screens/notify_page.dart';
 import 'package:todos_app/screens/settings_page.dart';
 
@@ -21,7 +21,7 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> listPages = [
-      const HomePage(),
+      HomePage(nguoiDung: widget.nguoiDung),
       const ListUserPage(),
       const ListDepartmentPage(),
       const NotifyPage(),

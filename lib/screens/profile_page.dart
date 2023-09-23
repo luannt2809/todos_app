@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pop(context, ["Reload", fullNameCtrl.text]);
           },
           child: const Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_back_ios_new,
             color: Colors.orangeAccent,
             size: 20,
           ),
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ],
                             ),
-                            child: Image.asset("assets/images/user.png"),
+                            child: Image.asset("assets/images/officer.png"),
                           ),
                         ),
                         MyTextFormField(

@@ -7,7 +7,9 @@ import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/add_task_page.dart';
+import 'package:todos_app/screens/admin/admin_add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
 import 'package:todos_app/screens/update_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
@@ -15,7 +17,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final NguoiDung nguoiDung;
+
+  const HomePage({super.key, required this.nguoiDung});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -138,20 +142,32 @@ class _HomePageState extends State<HomePage> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) => AddTaskPageBloc(),
-                          child: const AddTaskPage(),
+                    if (widget.nguoiDung.maVt == 1 ||
+                        widget.nguoiDung.maVt == 2) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const AdminAddTaskPage();
+                        }),
+                      ).then((value) {
+                        getData();
+                      });
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => AddTaskPageBloc(),
+                            child: const AddTaskPage(),
+                          ),
                         ),
-                      ),
-                    ).then((value) {
-                      // if (value != null && value[0] == 'Reload') {
-                      /// to do something
-                      getData();
-                      // }
-                    });
+                      ).then((value) {
+                        // if (value != null && value[0] == 'Reload') {
+                        /// to do something
+                        getData();
+                        // }
+                      });
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor:
