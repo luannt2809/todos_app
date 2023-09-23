@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
-import 'package:todos_app/screens/admin_screen.dart';
+import 'package:todos_app/screens/admin/admin_screen.dart';
 import 'package:todos_app/screens/user_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Dio dio = Dio();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwdController = TextEditingController();
 

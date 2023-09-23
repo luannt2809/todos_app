@@ -6,6 +6,7 @@ import 'package:todos_app/screens/settings_page.dart';
 
 class UserScreen extends StatefulWidget {
   final NguoiDung nguoiDung;
+
   const UserScreen({super.key, required this.nguoiDung});
 
   @override
@@ -17,7 +18,13 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listPages = [const HomePage(), const NotifyPage(), SettingsPage(nguoiDung: widget.nguoiDung)];
+    List<Widget> listPages = [
+      HomePage(
+        nguoiDung: widget.nguoiDung,
+      ),
+      const NotifyPage(),
+      SettingsPage(nguoiDung: widget.nguoiDung)
+    ];
 
     void _onItemTapped(int index) {
       setState(() {
@@ -38,8 +45,7 @@ class _UserScreenState extends State<UserScreen> {
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
           MyBottomNavigationBarItem(
               icon: Icons.notifications_rounded, label: "Thông báo"),
-          MyBottomNavigationBarItem(
-              icon: Icons.settings, label: "Cài đặt"),
+          MyBottomNavigationBarItem(icon: Icons.settings, label: "Cài đặt"),
         ],
       ),
     );

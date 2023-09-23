@@ -60,7 +60,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               Navigator.pop(context, ["Reload"]);
             },
             child: const Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back_ios_new,
               color: Colors.orangeAccent,
               size: 20,
             ),
