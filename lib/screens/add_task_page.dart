@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:todos_app/bloc/add_task_page/add_task_page_bloc.dart';
+import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';

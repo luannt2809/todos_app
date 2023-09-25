@@ -11,4 +11,13 @@ class PhongBanProvider {
     return value.map((e) => PhongBan.fromJson(e)).toList();
   }
 
+  Future<Response> addDepartment(String tenPB) async {
+    Response response = await ApiConfig.dio.post("${ApiConfig.BASE_URL}/phongban/insert", data: {'TenPhongBan': tenPB});
+    return response;
+  }
+  
+  Future<Response> updateDepartment(int maPB, String tenPB) async {
+    Response response = await  ApiConfig.dio.put("${ApiConfig.BASE_URL}/phongban/update/$maPB", data: {'TenPhongBan': tenPB});
+    return response;
+  }
 }

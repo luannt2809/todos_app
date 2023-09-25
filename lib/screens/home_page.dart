@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:todos_app/bloc/add_task_page/add_task_page_bloc.dart';
-import 'package:todos_app/bloc/delete_task/delete_task_bloc.dart';
 import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
+import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
+import 'package:todos_app/bloc/task/delete_task/delete_task_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
