@@ -18,7 +18,7 @@ class UpdateDepartmentBloc
         emit(UpdatingDepartment());
         try {
           Response response = await phongBanRepository.updateDepartment(
-              event.maPB, event.tenPB);
+              event.maPB, event.tenPB, event.arrMaVT);
           if (response.statusCode == 200) {
             emit(UpdatedDepartment(response.data.toString()));
           }

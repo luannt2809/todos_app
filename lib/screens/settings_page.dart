@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+
 import 'package:todos_app/screens/login_page.dart';
 import 'package:todos_app/screens/profile_page.dart';
 import 'package:todos_app/themes/styles.dart';
@@ -55,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 20,
             ),
             Text(
-              widget.nguoiDung.hoTen,
+              widget.nguoiDung.hoTen!,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(
@@ -85,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (builder) {
-                  return ProfilePage(hoTen: widget.nguoiDung.hoTen);
+                  return ProfilePage(hoTen: widget.nguoiDung.hoTen!);
                 })).then((value) {
                   if (value != null && value[1] != null) {
                     setState(() {

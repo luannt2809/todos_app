@@ -8,5 +8,6 @@ abstract class AddDepartmentEvent extends Equatable {
 
 class AddDepartment extends AddDepartmentEvent {
   final String tenPB;
-  AddDepartment(this.tenPB);
+  final String arrMaVT;
+  AddDepartment(this.tenPB, this.arrMaVT);
 }

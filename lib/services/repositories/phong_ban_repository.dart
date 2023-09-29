@@ -9,11 +9,11 @@ class PhongBanRepository {
     return phongBanProvider.getListDepartment();
   }
 
-  Future<Response> addDepartment(String tenPB) async {
-    return phongBanProvider.addDepartment(tenPB);
+  Future<Response> addDepartment(String tenPB, String arrMaVT) async {
+    return phongBanProvider.addDepartment(tenPB, arrMaVT);
   }
 
-  Future<Response> updateDepartment(int maPB, String tenPB) async {
-    return phongBanProvider.updateDepartment(maPB, tenPB);
+  Future<Response> updateDepartment(int maPB, String tenPB, String arrMaVT) async {
+    return phongBanProvider.updateDepartment(maPB, tenPB, arrMaVT);
   }
 }

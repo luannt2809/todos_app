@@ -40,8 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pop(context);
                   } else {
                     // giam doc vs truong phong
-                    if (state.nguoiDung.maVt == 1 ||
-                        state.nguoiDung.maVt == 2) {
+                    if (state.nguoiDung.maPB == 2) {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return AdminScreen(

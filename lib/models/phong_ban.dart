@@ -1,29 +1,24 @@
-
 class PhongBan {
-  int maPb;
-  String tenPhongBan;
+  int? maPB;
+  String? tenPhongBan;
+  String? arrMaVT;
+  String? danhSachVaiTro;
 
-  PhongBan({
-    required this.maPb,
-    required this.tenPhongBan,
-  });
+  PhongBan({this.maPB, this.tenPhongBan, this.arrMaVT, this.danhSachVaiTro});
 
-  PhongBan copyWith({
-    int? maPb,
-    String? tenPhongBan,
-  }) =>
-      PhongBan(
-        maPb: maPb ?? this.maPb,
-        tenPhongBan: tenPhongBan ?? this.tenPhongBan,
-      );
+  PhongBan.fromJson(Map<String, dynamic> json) {
+    maPB = json['MaPB'];
+    tenPhongBan = json['TenPhongBan'];
+    arrMaVT = json['ArrMaVT'];
+    danhSachVaiTro = json['DanhSachVaiTro'];
+  }
 
-  factory PhongBan.fromJson(Map<String, dynamic> json) => PhongBan(
-    maPb: json["MaPB"],
-    tenPhongBan: json["TenPhongBan"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "MaPB": maPb,
-    "TenPhongBan": tenPhongBan,
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['MaPB'] = this.maPB;
+    data['TenPhongBan'] = this.tenPhongBan;
+    data['ArrMaVT'] = this.arrMaVT;
+    data['DanhSachVaiTro'] = this.danhSachVaiTro;
+    return data;
+  }
 }

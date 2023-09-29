@@ -10,5 +10,6 @@ abstract class UpdateDepartmentEvent extends Equatable {
 class UpdateDepartment extends UpdateDepartmentEvent {
   final int maPB;
   final String tenPB;
-  UpdateDepartment({required this.maPB, required this.tenPB});
+  final String arrMaVT;
+  UpdateDepartment({required this.maPB, required this.tenPB, required this.arrMaVT});
 }

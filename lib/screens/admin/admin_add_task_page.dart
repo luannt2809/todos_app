@@ -5,9 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/toast.dart';
-import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/services/notification/notification_services.dart';
-import 'package:todos_app/services/repositories/nguoi_dung_repository.dart';
 
 class AdminAddTaskPage extends StatefulWidget {
   const AdminAddTaskPage({super.key});
@@ -123,38 +121,38 @@ class _AdminAddTaskPageState extends State<AdminAddTaskPage> {
                       controller: nguoiLamCtrl,
                       text: "Người làm",
                       hintText: _selectNguoiLam,
-                      widget: FutureBuilder<List<NguoiDung>>(
-                        future: NguoiDungRepository().getListUser(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return DropdownButton(
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.grey,
-                              ),
-                              iconSize: 30,
-                              elevation: 4,
-                              underline: Container(
-                                height: 0,
-                              ),
-                              padding: const EdgeInsets.only(right: 8),
-                              items: snapshot.data!.map((e) {
-                                return DropdownMenuItem(
-                                  value: e.hoTen,
-                                  child: Text(e.hoTen),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectNguoiLam = value.toString();
-                                });
-                              },
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                      // widget: FutureBuilder<List<NguoiDung>>(
+                      //   future: NguoiDungRepository().getListUser(),
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       return DropdownButton(
+                      //         icon: const Icon(
+                      //           Icons.keyboard_arrow_down,
+                      //           color: Colors.grey,
+                      //         ),
+                      //         iconSize: 30,
+                      //         elevation: 4,
+                      //         underline: Container(
+                      //           height: 0,
+                      //         ),
+                      //         padding: const EdgeInsets.only(right: 8),
+                      //         items: snapshot.data!.map((e) {
+                      //           return DropdownMenuItem(
+                      //             value: e.hoTen,
+                      //             child: Text(e.hoTen),
+                      //           );
+                      //         }).toList(),
+                      //         onChanged: (value) {
+                      //           setState(() {
+                      //             _selectNguoiLam = value.toString();
+                      //           });
+                      //         },
+                      //       );
+                      //     } else {
+                      //       return Container();
+                      //     }
+                      //   },
+                      // ),
                     ),
                   ),
                   MyTextFormField(
