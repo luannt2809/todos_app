@@ -16,7 +16,7 @@ class AddDepartmentBloc extends Bloc<AddDepartmentEvent, AddDepartmentState> {
         emit(AddDepartmentLoading());
         try {
           Response response =
-              await phongBanRepository.addDepartment(event.tenPB);
+              await phongBanRepository.addDepartment(event.tenPB, event.arrMaVT);
           if (response.statusCode == 200) {
             emit(AddDepartmentLoaded(response.data.toString()));
           }

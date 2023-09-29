@@ -1,85 +1,56 @@
-
 class NguoiDung {
-  int maNd;
-  String tenNguoiDung;
-  String matKhau;
-  String email;
-  String hoTen;
-  String soDienThoai;
-  int maVt;
-  int maPb;
-  bool trangThai;
-  String tenPhongBan;
-  String tenVaiTro;
-  String? error;
+  int? maND;
+  String? tenNguoiDung;
+  String? matKhau;
+  String? email;
+  String? hoTen;
+  String? soDienThoai;
+  int? maPB;
+  bool? trangThai;
+  String? tenPhongBan;
+  String? arrMaVT;
+  String? danhSachVaiTro;
 
-  NguoiDung({
-    required this.maNd,
-    required this.tenNguoiDung,
-    required this.matKhau,
-    required this.email,
-    required this.hoTen,
-    required this.soDienThoai,
-    required this.maVt,
-    required this.maPb,
-    required this.trangThai,
-    required this.tenPhongBan,
-    required this.tenVaiTro,
-    this.error
-  });
+  NguoiDung(
+      {this.maND,
+        this.tenNguoiDung,
+        this.matKhau,
+        this.email,
+        this.hoTen,
+        this.soDienThoai,
+        this.maPB,
+        this.trangThai,
+        this.tenPhongBan,
+        this.arrMaVT,
+        this.danhSachVaiTro});
 
-  NguoiDung copyWith({
-    int? maNd,
-    String? tenNguoiDung,
-    String? matKhau,
-    String? email,
-    String? hoTen,
-    String? soDienThoai,
-    int? maVt,
-    int? maPb,
-    bool? trangThai,
-    String? tenPhongBan,
-    String? tenVaiTro,
-  }) =>
-      NguoiDung(
-        maNd: maNd ?? this.maNd,
-        tenNguoiDung: tenNguoiDung ?? this.tenNguoiDung,
-        matKhau: matKhau ?? this.matKhau,
-        email: email ?? this.email,
-        hoTen: hoTen ?? this.hoTen,
-        soDienThoai: soDienThoai ?? this.soDienThoai,
-        maVt: maVt ?? this.maVt,
-        maPb: maPb ?? this.maPb,
-        trangThai: trangThai ?? this.trangThai,
-        tenPhongBan: tenPhongBan ?? this.tenPhongBan,
-        tenVaiTro: tenVaiTro ?? this.tenVaiTro,
-      );
+  NguoiDung.fromJson(Map<String, dynamic> json) {
+    maND = json['MaND'];
+    tenNguoiDung = json['TenNguoiDung'];
+    matKhau = json['MatKhau'];
+    email = json['Email'];
+    hoTen = json['HoTen'];
+    soDienThoai = json['SoDienThoai'];
+    maPB = json['MaPB'];
+    trangThai = json['TrangThai'];
+    tenPhongBan = json['TenPhongBan'];
+    arrMaVT = json['ArrMaVT'];
+    danhSachVaiTro = json['DanhSachVaiTro'];
+  }
 
-  factory NguoiDung.fromJson(Map<String, dynamic> json) => NguoiDung(
-    maNd: json["MaND"],
-    tenNguoiDung: json["TenNguoiDung"],
-    matKhau: json["MatKhau"],
-    email: json["Email"],
-    hoTen: json["HoTen"],
-    soDienThoai: json["SoDienThoai"],
-    maVt: json["MaVT"],
-    maPb: json["MaPB"],
-    trangThai: json["TrangThai"],
-    tenPhongBan: json["TenPhongBan"],
-    tenVaiTro: json["TenVaiTro"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "MaND": maNd,
-    "TenNguoiDung": tenNguoiDung,
-    "MatKhau": matKhau,
-    "Email": email,
-    "HoTen": hoTen,
-    "SoDienThoai": soDienThoai,
-    "MaVT": maVt,
-    "MaPB": maPb,
-    "TrangThai": trangThai,
-    "TenPhongBan": tenPhongBan,
-    "TenVaiTro": tenVaiTro,
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['MaND'] = this.maND;
+    data['TenNguoiDung'] = this.tenNguoiDung;
+    data['MatKhau'] = this.matKhau;
+    data['Email'] = this.email;
+    data['HoTen'] = this.hoTen;
+    data['SoDienThoai'] = this.soDienThoai;
+    data['MaPB'] = this.maPB;
+    data['TrangThai'] = this.trangThai;
+    data['TenPhongBan'] = this.tenPhongBan;
+    data['ArrMaVT'] = this.arrMaVT;
+    data['DanhSachVaiTro'] = this.danhSachVaiTro;
+    return data;
+  }
 }

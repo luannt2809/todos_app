@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos_app/bloc/list_user_page/list_user_page_bloc.dart';
+import 'package:todos_app/bloc/user/list_user_page/list_user_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+import 'package:todos_app/screens/admin/add_user_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class ListUserPage extends StatefulWidget {
@@ -81,11 +82,15 @@ class _ListUserPageState extends State<ListUserPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(nguoiDung.hoTen),
+                                  Text(nguoiDung.hoTen.toString()),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(nguoiDung.tenVaiTro)
+                                  Text(nguoiDung.tenPhongBan.toString()),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(nguoiDung.danhSachVaiTro.toString())
                                 ],
                               ),
                             ),
@@ -93,7 +98,7 @@ class _ListUserPageState extends State<ListUserPage> {
                               trangThai,
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  color: nguoiDung.trangThai
+                                  color: nguoiDung.trangThai ?? false
                                       ? Colors.green
                                       : Colors.deepOrange),
                             ),
@@ -115,7 +120,11 @@ class _ListUserPageState extends State<ListUserPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const AddUserPage()))
+              .then((value) => getData());
+        },
         backgroundColor: Colors.deepOrangeAccent,
         elevation: 3,
         highlightElevation: 3,
@@ -124,5 +133,9 @@ class _ListUserPageState extends State<ListUserPage> {
         ),
       ),
     );
+  }
+
+  getData() {
+    listUserPageBloc.add(GetListUser());
   }
 }

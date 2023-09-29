@@ -8,6 +8,7 @@ import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+
 import 'package:todos_app/screens/add_task_page.dart';
 import 'package:todos_app/screens/admin/admin_add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
@@ -142,8 +143,7 @@ class _HomePageState extends State<HomePage> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (widget.nguoiDung.maVt == 1 ||
-                        widget.nguoiDung.maVt == 2) {
+                    if (widget.nguoiDung.maPB == 1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+
 import 'package:todos_app/services/config/api_config.dart';
 
 class NguoiDungProvider {
@@ -30,6 +31,22 @@ class NguoiDungProvider {
       print(e.toString());
       return [];
     }
+  }
+
+  Future<Response> insertUser(String userName, String passwd, String email, String fullName,
+      String phone, String maPB, int status) async {
+
+    Response response = await ApiConfig.dio.post("${ApiConfig.BASE_URL}/nguoidung/register", data: {
+      'TenNguoiDung': userName,
+      'MatKhau': passwd,
+      'Email': email,
+      'HoTen': fullName,
+      'SoDienThoai': phone,
+      'MaPB': maPB,
+      'TrangThai': status
+    });
+
+    return response;
   }
 
   Future<Response> updateInfo(

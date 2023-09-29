@@ -51,6 +51,8 @@ dependencies:
   timezone:
   firebase_messaging:
   firebase_core:
+  flutter_native_splash:
+  flutter_sticky_header:
 
 dev_dependencies:
   flutter_test:
