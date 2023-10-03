@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todos_app/bloc/user/list_user_page/list_user_page_bloc.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/admin/add_user_page.dart';
+import 'package:todos_app/screens/admin/update_user_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class ListUserPage extends StatefulWidget {
@@ -16,12 +19,37 @@ class ListUserPage extends StatefulWidget {
 
 class _ListUserPageState extends State<ListUserPage> {
   final ListUserPageBloc listUserPageBloc = ListUserPageBloc();
+  ScrollController _scrollController = ScrollController();
+  bool fabVisible = true;
 
   @override
   void initState() {
     // TODO: implement initState
     listUserPageBloc.add(GetListUser());
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      setState(() {
+        fabVisible = false;
+      });
+    } else if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      setState(() {
+        fabVisible = true;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
+    _scrollController.removeListener(_scrollListener);
   }
 
   @override
@@ -55,6 +83,7 @@ class _ListUserPageState extends State<ListUserPage> {
                 );
               } else if (state is ListUserPageLoaded) {
                 return ListView.builder(
+                  controller: _scrollController,
                   itemBuilder: (context, index) {
                     NguoiDung nguoiDung = state.listUser[index];
                     String trangThai = "";
@@ -65,44 +94,69 @@ class _ListUserPageState extends State<ListUserPage> {
                     }
                     return Padding(
                       padding: const EdgeInsets.only(top: 16),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: Styles.boxDecoration,
-                        child: Row(
+                      child: Slidable(
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
                           children: [
-                            Image.asset(
-                              'assets/images/officer.png',
-                              width: 50,
-                              height: 50,
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(nguoiDung.hoTen.toString()),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(nguoiDung.tenPhongBan.toString()),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(nguoiDung.danhSachVaiTro.toString())
-                                ],
-                              ),
-                            ),
-                            Text(
-                              trangThai,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: nguoiDung.trangThai ?? false
-                                      ? Colors.green
-                                      : Colors.deepOrange),
-                            ),
+                            SlidableAction(
+                              onPressed: (context) {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (_) => UpdateUserPage(
+                                            nguoiDung: nguoiDung)))
+                                    .then((value) => getData());
+                              },
+                              backgroundColor: Colors.amber,
+                              foregroundColor: Colors.white,
+                              icon: Icons.edit,
+                              label: 'Cập nhật',
+                            )
                           ],
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 16, bottom: 16, left: 16),
+                          decoration: Styles.boxDecoration,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/officer.png',
+                                width: 50,
+                                height: 50,
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(nguoiDung.hoTen.toString()),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(nguoiDung.tenPhongBan.toString()),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(nguoiDung.danhSachVaiTro.toString())
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                trangThai,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: nguoiDung.trangThai ?? false
+                                        ? Colors.green
+                                        : Colors.deepOrange),
+                              ),
+                              const SizedBox(width: 8,),
+                              Transform.rotate(
+                                angle: 3.14 / 2,
+                                child: const Icon(Icons.drag_handle, color: Colors.grey,),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -113,25 +167,30 @@ class _ListUserPageState extends State<ListUserPage> {
                       const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 );
               } else {
-                return Container();
+                return const Center(
+                  child: Text("Không có dữ liệu"),
+                );
               }
             },
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const AddUserPage()))
-              .then((value) => getData());
-        },
-        backgroundColor: Colors.deepOrangeAccent,
-        elevation: 3,
-        highlightElevation: 3,
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
+      floatingActionButton: fabVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(
+                        MaterialPageRoute(builder: (_) => const AddUserPage()))
+                    .then((value) => getData());
+              },
+              backgroundColor: Colors.deepOrangeAccent,
+              elevation: 3,
+              highlightElevation: 3,
+              child: const Icon(
+                Icons.add,
+              ),
+            )
+          : null,
     );
   }
 

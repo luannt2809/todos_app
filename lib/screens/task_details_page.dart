@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/models/cong_viec.dart';
@@ -6,37 +5,17 @@ import 'package:todos_app/services/config/api_config.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class TaskDetailsPage extends StatefulWidget {
+  final String hoTen;
   final CongViec congViec;
 
-  const TaskDetailsPage({super.key, required this.congViec});
+  const TaskDetailsPage(
+      {super.key, required this.congViec, required this.hoTen});
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
 }
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
-  String hoTen = '';
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getUser();
-  }
-
-  Future<dynamic> getUser() async {
-    try {
-      Response response = await ApiConfig.dio
-          .get("${ApiConfig.BASE_URL}/nguoidung/${widget.congViec.maNguoiLam}");
-
-      setState(() {
-        hoTen = response.data[0]['HoTen'];
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
   Future<List<dynamic>> getListLogCV() async {
     var response = await ApiConfig.dio
         .get("${ApiConfig.BASE_URL}/logcongviec/${widget.congViec.maCV}");
@@ -136,7 +115,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ),
                           RowItem(
                             icon: Icons.person_outline_outlined,
-                            text: hoTen,
+                            text: widget.hoTen,
                           ),
                         ],
                       ),
@@ -240,7 +219,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         return itemListLogCV(
                             snapshot.data![index]['TieuDe'].toString(),
                             snapshot.data![index]['ThoiGian'].toString(),
-                            hoTen,
+                            widget.hoTen,
                             snapshot.data![index]['TrangThai'].toString(),
                             snapshot.data![index]['TienDo'].toDouble(),
                             snapshot.data![index]['MoTa'].toString(),
@@ -316,8 +295,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
-      child: _tabBar,
       padding: const EdgeInsets.only(bottom: 5),
+      child: _tabBar,
     );
   }
 

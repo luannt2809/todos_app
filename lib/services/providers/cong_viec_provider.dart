@@ -54,6 +54,38 @@ class CongViecProvider {
     return response;
   }
 
+  Future<Response> adminAddTask(
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu,
+      int maNguoiLam) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maNguoiGiao = prefs.getInt("maND");
+
+    Response response = await ApiConfig.dio
+        .post("${ApiConfig.BASE_URL}/congviec/insert", data: {
+      'TieuDe': tieuDe,
+      'NoiDung': noiDung,
+      'GioBatDau': gioBD,
+      'GioKetThuc': gioKT,
+      'NgayBatDau': ngayBD,
+      'NgayKetThuc': ngayKT,
+      'TrangThai': trangThai,
+      'TienDo': tienDo,
+      'GhiChu': ghiChu,
+      'MaNguoiGiao': maNguoiGiao,
+      'MaNguoiLam': maNguoiLam
+    });
+
+    return response;
+  }
+
   // update task
   Future<Response> updateTask(
       int maCV,

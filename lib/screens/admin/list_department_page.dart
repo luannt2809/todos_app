@@ -102,7 +102,7 @@ class _ListDepartmentPageState extends State<ListDepartmentPage> {
                           ],
                         ),
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.only(top: 16, bottom: 16, left: 16),
                           decoration: Styles.boxDecoration,
                           child: Row(
                             children: [
@@ -114,7 +114,11 @@ class _ListDepartmentPageState extends State<ListDepartmentPage> {
                               const SizedBox(
                                 width: 16,
                               ),
-                              Text(phongBan.tenPhongBan.toString())
+                              Expanded(child: Text(phongBan.tenPhongBan.toString())),
+                              Transform.rotate(
+                                angle: 3.14 / 2,
+                                child: const Icon(Icons.drag_handle, color: Colors.grey,),
+                              )
                             ],
                           ),
                         ),
