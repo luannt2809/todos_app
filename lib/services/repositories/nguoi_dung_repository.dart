@@ -14,19 +14,28 @@ class NguoiDungRepository {
     return nguoiDungProvider.getInfoUser();
   }
 
-  Future<Response> insertUser(String userName, String passwd, String email, String fullName,
-      String phone, String maPB, int status) async {
-    return nguoiDungProvider.insertUser(userName, passwd, email, fullName, phone, maPB, status);
+  Future<Response> insertUser(String userName, String passwd, String email,
+      String fullName, String phone, String maPB, int status) async {
+    return nguoiDungProvider.insertUser(
+        userName, passwd, email, fullName, phone, maPB, status);
   }
 
-  Future<Response> updateUser(String userName,
-      String email,
-      String fullName,
-      String phone) {
-    return nguoiDungProvider.updateInfo(
-        userName,
-        email,
-        fullName,
-        phone);
+  Future<Response> updateInfo(
+      String userName, String email, String fullName, String phone) {
+    return nguoiDungProvider.updateInfo(userName, email, fullName, phone);
+  }
+
+  Future<Response> updateUser(
+    int maND,
+    String userName,
+    String passWd,
+    String email,
+    String fullName,
+    String phone,
+    String maPB,
+    int status,
+  ) {
+    return nguoiDungProvider.updateUser(
+        maND, userName, passWd, email, fullName, phone, maPB, status);
   }
 }

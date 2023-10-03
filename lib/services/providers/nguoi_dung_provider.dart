@@ -33,10 +33,10 @@ class NguoiDungProvider {
     }
   }
 
-  Future<Response> insertUser(String userName, String passwd, String email, String fullName,
-      String phone, String maPB, int status) async {
-
-    Response response = await ApiConfig.dio.post("${ApiConfig.BASE_URL}/nguoidung/register", data: {
+  Future<Response> insertUser(String userName, String passwd, String email,
+      String fullName, String phone, String maPB, int status) async {
+    Response response = await ApiConfig.dio
+        .post("${ApiConfig.BASE_URL}/nguoidung/register", data: {
       'TenNguoiDung': userName,
       'MatKhau': passwd,
       'Email': email,
@@ -60,6 +60,30 @@ class NguoiDungProvider {
       'Email': email,
       'HoTen': fullName,
       'SoDienThoai': phone,
+    });
+
+    return response;
+  }
+
+  Future<Response> updateUser(
+    int maND,
+    String userName,
+    String passWd,
+    String email,
+    String fullName,
+    String phone,
+    String maPB,
+    int status,
+  ) async {
+    Response response = await ApiConfig.dio
+        .put("${ApiConfig.BASE_URL}/nguoidung/update/$maND", data: {
+      'TenNguoiDung': userName,
+      'MatKhau': passWd,
+      'Email': email,
+      'HoTen': fullName,
+      'SoDienThoai': phone,
+      'MaPB': maPB,
+      'TrangThai': status,
     });
 
     return response;

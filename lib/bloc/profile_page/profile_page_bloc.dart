@@ -29,7 +29,7 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
       if (event is ChangeInfoEvent) {
         try {
           emit(ChangingInfo());
-          Response response = await nguoiDungRepository.updateUser(
+          Response response = await nguoiDungRepository.updateInfo(
               event.userName, event.email, event.fullName, event.phone);
           if (response.statusCode == 200) {
             emit(ChangeInfoSuccess(response.data.toString()));

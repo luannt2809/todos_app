@@ -28,94 +28,97 @@ class _AddDepartmentPageState extends State<AddDepartmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 3,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         backgroundColor: Colors.white,
-        title: const Text(
-          "Thêm phòng ban",
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context, ["Reload"]);
-          },
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.orangeAccent,
-            size: 20,
+        appBar: AppBar(
+          elevation: 3,
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Thêm phòng ban",
+            style: TextStyle(color: Colors.black),
           ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context, ["Reload"]);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.orangeAccent,
+              size: 20,
+            ),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: BlocProvider(
-        create: (context) => AddDepartmentBloc(),
-        child: BlocListener<AddDepartmentBloc, AddDepartmentState>(
-          listener: (context, state) {
-            if (state is AddDepartmentError) {
-              toast(state.error.toString());
-            } else if (state is AddDepartmentLoaded) {
-              toast(state.msg);
-              Navigator.of(context).pop(["Reload"]);
-            }
-          },
-          child: BlocBuilder<AddDepartmentBloc, AddDepartmentState>(
-            builder: (context, state) {
-              if (state is AddDepartmentLoading) {
-                return circularProgressIndicator();
-              } else {
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        MyTextFormField(
-                          text: "Tên phòng ban",
-                          hintText: "Tên phòng ban",
-                          controller: tenPhongBanCtrl,
-                          enabled: true,
-                          inputType: TextInputType.text,
-                        ),
-                        buildCheckbox(1, "Xem"),
-                        buildCheckbox(2, "Thêm"),
-                        buildCheckbox(3, "Cập nhật"),
-                        buildCheckbox(4, "Xoá"),
-                        const Divider(
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SizedBox(
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<AddDepartmentBloc>(context).add(
-                                AddDepartment(
-                                  tenPhongBanCtrl.text,
-                                  selectedValue.isEmpty ? '1, 2, 3, 4' : selectedValue.join(", "),
-                                ),
-                              );
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Colors.deepOrangeAccent),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            child: const Text(
-                              "Thêm phòng ban",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ));
+        body: BlocProvider(
+          create: (context) => AddDepartmentBloc(),
+          child: BlocListener<AddDepartmentBloc, AddDepartmentState>(
+            listener: (context, state) {
+              if (state is AddDepartmentError) {
+                toast(state.error.toString());
+              } else if (state is AddDepartmentLoaded) {
+                toast(state.msg);
+                Navigator.of(context).pop(["Reload"]);
               }
             },
+            child: BlocBuilder<AddDepartmentBloc, AddDepartmentState>(
+              builder: (context, state) {
+                if (state is AddDepartmentLoading) {
+                  return circularProgressIndicator();
+                } else {
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          MyTextFormField(
+                            text: "Tên phòng ban",
+                            hintText: "Tên phòng ban",
+                            controller: tenPhongBanCtrl,
+                            enabled: true,
+                            inputType: TextInputType.text,
+                          ),
+                          buildCheckbox(1, "Xem"),
+                          buildCheckbox(2, "Thêm"),
+                          buildCheckbox(3, "Cập nhật"),
+                          buildCheckbox(4, "Xoá"),
+                          const Divider(
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<AddDepartmentBloc>(context).add(
+                                  AddDepartment(
+                                    tenPhongBanCtrl.text,
+                                    selectedValue.isEmpty ? '1, 2, 3, 4' : selectedValue.join(", "),
+                                  ),
+                                );
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.deepOrangeAccent),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                "Thêm phòng ban",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ));
+                }
+              },
+            ),
           ),
         ),
       ),

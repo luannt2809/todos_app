@@ -25,6 +25,21 @@ class CongViecRepository {
         gioKT, trangThai, tienDo, ghiChu);
   }
 
+  Future<Response> adminAddTask(
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu,
+      int maNguoiLam) async {
+    return congViecProvider.adminAddTask(tieuDe, noiDung, ngayBD, ngayKT, gioBD,
+        gioKT, trangThai, tienDo, ghiChu, maNguoiLam);
+  }
+
   // update task
   Future<Response> updateTask(
       int maCV,

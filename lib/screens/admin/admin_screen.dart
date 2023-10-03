@@ -18,13 +18,27 @@ class AdminScreen extends StatefulWidget {
 
 class _AdminScreenState extends State<AdminScreen> {
   int _selectedIndex = 0;
+  bool showItem = true;
+
+  @override
+  void initState() {
+    if (widget.nguoiDung.maPB == 2) {
+      showItem = true;
+    } else {
+      showItem = false;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> listPages = [
       HomePage(nguoiDung: widget.nguoiDung),
-      const ListUserPage(),
-      const ListDepartmentPage(),
+      Visibility(
+        visible: showItem,
+        child: const ListUserPage(),
+      ),
+      Visibility(visible: showItem, child: const ListDepartmentPage()),
       const NotifyPage(),
       SettingsPage(nguoiDung: widget.nguoiDung)
     ];
@@ -48,11 +62,11 @@ class _AdminScreenState extends State<AdminScreen> {
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
           MyBottomNavigationBarItem(icon: Icons.person, label: "Người dùng"),
-          MyBottomNavigationBarItem(icon: Icons.business_outlined, label: "Phòng ban"),
+          MyBottomNavigationBarItem(
+              icon: Icons.business_outlined, label: "Phòng ban"),
           MyBottomNavigationBarItem(
               icon: Icons.notifications_rounded, label: "Thông báo"),
-          MyBottomNavigationBarItem(
-              icon: Icons.settings, label: "Cài đặt"),
+          MyBottomNavigationBarItem(icon: Icons.settings, label: "Cài đặt"),
         ],
       ),
     );
@@ -62,10 +76,10 @@ class _AdminScreenState extends State<AdminScreen> {
 class MyBottomNavigationBarItem extends BottomNavigationBarItem {
   MyBottomNavigationBarItem({required IconData icon, required String label})
       : super(
-    icon: Icon(
-      icon,
-      size: 25,
-    ),
-    label: label,
-  );
+          icon: Icon(
+            icon,
+            size: 25,
+          ),
+          label: label,
+        );
 }

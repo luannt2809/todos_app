@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos_app/bloc/user/add_user_page/add_user_page_bloc.dart';
+import 'package:todos_app/bloc/user/update_user_page/update_user_page_bloc.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/components/toast.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/models/phong_ban.dart';
 import 'package:todos_app/services/repositories/phong_ban_repository.dart';
 
-class AddUserPage extends StatefulWidget {
-  const AddUserPage({super.key});
+class UpdateUserPage extends StatefulWidget {
+  final NguoiDung nguoiDung;
+
+  const UpdateUserPage({required this.nguoiDung, super.key});
 
   @override
-  State<AddUserPage> createState() => _AddUserPageState();
+  State<UpdateUserPage> createState() => _UpdateUserPageState();
 }
 
-class _AddUserPageState extends State<AddUserPage> {
+class _UpdateUserPageState extends State<UpdateUserPage> {
   TextEditingController userNameCtrl = TextEditingController();
   TextEditingController passWdCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
@@ -33,6 +36,18 @@ class _AddUserPageState extends State<AddUserPage> {
   @override
   void initState() {
     // TODO: implement initState
+    userNameCtrl.text = widget.nguoiDung.tenNguoiDung.toString();
+    emailCtrl.text = widget.nguoiDung.email.toString();
+    fullNameCtrl.text = widget.nguoiDung.hoTen.toString();
+    phoneCtrl.text = widget.nguoiDung.soDienThoai.toString();
+    selectedMaPB = int.parse(widget.nguoiDung.maPB.toString());
+    departmentCtrl.text = widget.nguoiDung.tenPhongBan.toString();
+    if (widget.nguoiDung.trangThai == true) {
+      statusCtrl.text = "Hoạt động";
+    } else {
+      statusCtrl.text = "Không hoạt động";
+    }
+
     PhongBanRepository().getListDepartment().then((value) {
       setState(() {
         listPhongBan = value;
@@ -40,6 +55,7 @@ class _AddUserPageState extends State<AddUserPage> {
     }).catchError((err) {
       throw Exception(err);
     });
+
     super.initState();
   }
 
@@ -53,7 +69,7 @@ class _AddUserPageState extends State<AddUserPage> {
           elevation: 3,
           backgroundColor: Colors.white,
           title: const Text(
-            "Thêm người dùng",
+            "Cập nhật người dùng",
             style: TextStyle(color: Colors.black),
           ),
           leading: GestureDetector(
@@ -69,19 +85,19 @@ class _AddUserPageState extends State<AddUserPage> {
           centerTitle: true,
         ),
         body: BlocProvider(
-          create: (context) => AddUserPageBloc(),
-          child: BlocListener<AddUserPageBloc, AddUserPageState>(
+          create: (context) => UpdateUserPageBloc(),
+          child: BlocListener<UpdateUserPageBloc, UpdateUserPageState>(
             listener: (context, state) {
-              if (state is AddUserError) {
+              if (state is UpdateUserError) {
                 toast(state.error.toString());
-              } else if (state is AddUserLoaded) {
+              } else if (state is UpdatedUser) {
                 toast(state.msg);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
-            child: BlocBuilder<AddUserPageBloc, AddUserPageState>(
+            child: BlocBuilder<UpdateUserPageBloc, UpdateUserPageState>(
               builder: (context, state) {
-                if (state is AddUserLoading) {
+                if (state is UpdatingUser) {
                   return circularProgressIndicator();
                 } else {
                   return SingleChildScrollView(
@@ -156,9 +172,8 @@ class _AddUserPageState extends State<AddUserPage> {
                                 height: 0,
                               ),
                               padding: const EdgeInsets.only(right: 8),
-                              items: listPhongBan
-                                  .map<DropdownMenuItem<PhongBan>>(
-                                      (PhongBan item) {
+                              items: listPhongBan.map<DropdownMenuItem<PhongBan>>(
+                                  (PhongBan item) {
                                 return DropdownMenuItem<PhongBan>(
                                   value: item,
                                   child: Text(item.tenPhongBan.toString()),
@@ -227,22 +242,26 @@ class _AddUserPageState extends State<AddUserPage> {
                                       toast(
                                           "Vui lòng nhập đủ thông tin người dùng");
                                     } else {
-                                      int status = 1;
+                                      int? status;
                                       if (statusCtrl.text == "Hoạt động") {
                                         status = 1;
                                       } else if (statusCtrl.text ==
                                           "Không hoạt động") {
                                         status = 0;
                                       }
-                                      BlocProvider.of<AddUserPageBloc>(context)
-                                          .add(AddUserEvent(
+
+                                      BlocProvider.of<UpdateUserPageBloc>(context)
+                                          .add(UpdateUserEvent(
+                                              maND: int.parse(widget
+                                                  .nguoiDung.maND
+                                                  .toString()),
                                               userName: userNameCtrl.text,
                                               passWd: passWdCtrl.text,
                                               email: emailCtrl.text,
                                               fullName: fullNameCtrl.text,
                                               phone: phoneCtrl.text,
                                               maPB: selectedMaPB.toString(),
-                                              status: status));
+                                              status: status!));
                                     }
                                   },
                                   style: ButtonStyle(
@@ -255,7 +274,7 @@ class _AddUserPageState extends State<AddUserPage> {
                                     ),
                                   ),
                                   child: const Text(
-                                    "Thêm người dùng",
+                                    "Cập nhật người dùng",
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),

@@ -10,7 +10,7 @@ import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 
 import 'package:todos_app/screens/add_task_page.dart';
-import 'package:todos_app/screens/admin/admin_add_task_page.dart';
+import 'package:todos_app/screens/admin/admin_add_task/admin_add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
 import 'package:todos_app/screens/update_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (widget.nguoiDung.maPB == 1) {
+                    if (widget.nguoiDung.maPB == 2) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
@@ -295,6 +295,7 @@ class _HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => TaskDetailsPage(
+                hoTen: widget.nguoiDung.hoTen.toString(),
                 congViec: CongViec(
                   maCV: int.parse(congViec.maCV.toString()),
                   tieuDe: congViec.tieuDe,
