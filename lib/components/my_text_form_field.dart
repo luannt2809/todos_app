@@ -12,11 +12,13 @@ class MyTextFormField extends StatelessWidget {
 
   const MyTextFormField(
       {super.key,
-        required this.text,
-        required this.hintText,
-        this.controller,
-        this.widget,
-        this.inputType, this.enabled, required this.obscureText});
+      required this.text,
+      required this.hintText,
+      this.controller,
+      this.widget,
+      this.inputType,
+      this.enabled,
+      required this.obscureText});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +65,8 @@ class MyTextFormField extends StatelessWidget {
                 widget == null
                     ? Container()
                     : Container(
-                  child: widget,
-                )
+                        child: widget,
+                      )
               ],
             ),
           ),

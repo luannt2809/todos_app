@@ -298,6 +298,18 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
                                               message:
                                                   "Vui lòng nhập đủ thông tin công việc",
                                               contentType: ContentType.warning);
+                                        } else if (double.parse(
+                                            tienDoCtrl.text) <
+                                            0 ||
+                                            double.parse(tienDoCtrl.text) >
+                                                100) {
+                                          customToast(
+                                              context: context,
+                                              title: "Thông báo",
+                                              message:
+                                              "Vui lòng nhập tiến độ 0 - 100",
+                                              contentType:
+                                              ContentType.warning);
                                         } else {
                                           // them cong viec ơ day
                                           BlocProvider.of<AdminAddTaskPageBloc>(
