@@ -1,21 +1,21 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
 import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/bloc/task/delete_task/delete_task_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
-
 import 'package:todos_app/screens/add_task_page.dart';
 import 'package:todos_app/screens/admin/admin_add_task/admin_add_task_page.dart';
 import 'package:todos_app/screens/task_details_page.dart';
 import 'package:todos_app/screens/update_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   final NguoiDung nguoiDung;
@@ -308,6 +308,7 @@ class _HomePageState extends State<HomePage> {
                   tienDo: congViec.tienDo,
                   ghiChu: congViec.ghiChu,
                   maNguoiLam: congViec.maNguoiLam,
+                  hoTenNguoiLam: congViec.hoTenNguoiLam
                 ),
               ),
             ),
@@ -367,10 +368,18 @@ class _HomePageState extends State<HomePage> {
                       child: BlocConsumer<DeleteTaskBloc, DeleteTaskState>(
                         listener: (context, state) {
                           if (state is DeleteTaskError) {
-                            toast("Error: ${state.error}");
+                            customToast(
+                                context: context,
+                                title: "Lỗi",
+                                message: state.error.toString(),
+                                contentType: ContentType.failure);
                             Navigator.of(context).pop();
                           } else if (state is DeletedTask) {
-                            toast(state.msg);
+                            customToast(
+                                context: context,
+                                title: "Thành công",
+                                message: state.msg,
+                                contentType: ContentType.success);
                             Navigator.of(context).pop();
                             getData();
                           }
@@ -425,7 +434,20 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(congViec.tieuDe.toString()),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      congViec.tieuDe.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    )),
+                    Text(
+                      congViec.trangThai.toString(),
+                      style: const TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),

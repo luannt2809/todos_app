@@ -31,8 +31,12 @@ class UpdateTaskPageBloc
           if (response.statusCode == 200) {
             emit(UpdateTaskPageLoaded(response.data.toString()));
           }
-        } catch (e) {
-          emit(UpdateTaskPageError(error: 'Cập nhật thất bại: $e'));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(UpdateTaskPageError(error: 'Cập nhật thất bại: $e'));
+          } else {
+            emit(UpdateTaskPageError(error: e.toString()));
+          }
         }
       }
     });

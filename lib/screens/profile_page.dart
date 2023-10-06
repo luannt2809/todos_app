@@ -1,14 +1,15 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/profile_page/profile_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
-
 
 class ProfilePage extends StatefulWidget {
   final String hoTen;
+
   const ProfilePage({super.key, required this.hoTen});
 
   @override
@@ -63,7 +64,11 @@ class _ProfilePageState extends State<ProfilePage> {
         child: BlocListener<ProfilePageBloc, ProfilePageState>(
           listener: (context, state) {
             if (state is GetInfoError) {
-              toast(state.error.toString());
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
             } else if (state is GetInfoLoaded) {
               NguoiDung nguoiDung = state.userList[0];
               userNameCtrl.text = nguoiDung.tenNguoiDung.toString();
@@ -76,9 +81,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   ? "Đang hoạt động"
                   : "Không hoạt động";
             } else if (state is ChangeInfoError) {
-              toast(state.error.toString());
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
             } else if (state is ChangeInfoSuccess) {
-              toast(state.msg);
+              customToast(
+                  context: context,
+                  title: "Thành công",
+                  message: state.msg,
+                  contentType: ContentType.success);
             }
           },
           child: BlocBuilder<ProfilePageBloc, ProfilePageState>(
@@ -115,42 +128,49 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: userNameCtrl,
                           text: "Username",
                           hintText: "Username",
                           enabled: true,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: emailCtrl,
                           text: "Email",
                           hintText: "Email",
                           enabled: true,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: fullNameCtrl,
                           text: "Họ và tên",
                           hintText: "Họ và tên",
                           enabled: true,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: phoneCtrl,
                           text: "Số điện thoại",
                           hintText: "Số điện thoại",
                           enabled: true,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: roleCtrl,
                           text: "Vai trò",
                           hintText: "Vai trò",
                           enabled: false,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: departmentCtrl,
                           text: "Phòng ban",
                           hintText: "Phòng ban",
                           enabled: false,
                         ),
                         MyTextFormField(
+                          obscureText: false,
                           controller: statusCtrl,
                           text: "Trạng thái",
                           hintText: "Trạng thái",
@@ -174,8 +194,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       roleCtrl.text.isEmpty ||
                                       departmentCtrl.text.isEmpty ||
                                       statusCtrl.text.isEmpty) {
-                                    toast(
-                                        "Vui lòng nhập đủ thông tin người dùng");
+                                    customToast(
+                                        context: context,
+                                        title: "Thông báo",
+                                        message:
+                                            "Vui lòng nhập đủ thông tin người dùng",
+                                        contentType: ContentType.warning);
                                   } else {
                                     BlocProvider.of<ProfilePageBloc>(context)
                                         .add(ChangeInfoEvent(
@@ -213,6 +237,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-// Widget buildBody(NguoiDung nguoiDung) {}
 }

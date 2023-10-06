@@ -1,10 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/task/update_task_page/update_task_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/cong_viec.dart';
 
 class UpdateTaskPage extends StatefulWidget {
@@ -55,7 +56,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         .toString();
     trangThaiCtrl.text = widget.congViec.trangThai.toString();
     tienDoCtrl.text = widget.congViec.tienDo.toString();
-    ghiChuCtrl.text = widget.congViec.ghiChu.toString();
+    ghiChuCtrl.text = widget.congViec.ghiChu.toString() == "null"
+        ? "Không có ghi chú"
+        : widget.congViec.ghiChu.toString();
   }
 
   @override
@@ -109,10 +112,18 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
           body: BlocConsumer<UpdateTaskPageBloc, UpdateTaskPageState>(
             listener: (context, state) {
               if (state is UpdateTaskPageLoaded) {
-                toast(state.msg);
+                customToast(
+                    context: context,
+                    title: "Thành công",
+                    message: state.msg,
+                    contentType: ContentType.success);
                 Navigator.pop(context, ["Reload"]);
               } else if (state is UpdateTaskPageError) {
-                toast(state.error.toString());
+                customToast(
+                    context: context,
+                    title: "Lỗi",
+                    message: state.error.toString(),
+                    contentType: ContentType.failure);
               }
             },
             builder: (context, state) {
@@ -134,16 +145,19 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     MyTextFormField(
+                                      obscureText: false,
                                       text: "Tiêu đề",
                                       hintText: "Tiêu đề",
                                       controller: tieuDeCtrl,
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       text: "Nội dung",
                                       hintText: "Nội dung",
                                       controller: noiDungCtrl,
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       controller: ngayBDCtrl,
                                       text: "Ngày bắt đầu",
                                       hintText: DateFormat.yMd()
@@ -158,10 +172,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       ),
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       controller: ngayKTCtrl,
                                       text: "Ngày kết thúc",
-                                      hintText:
-                                          DateFormat.yMd().format(_selectEndDate),
+                                      hintText: DateFormat.yMd()
+                                          .format(_selectEndDate),
                                       widget: IconButton(
                                         onPressed: () {
                                           _getDateFromUser(isStartDate: false);
@@ -175,11 +190,13 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       children: <Widget>[
                                         Expanded(
                                           child: MyTextFormField(
+                                            obscureText: false,
                                             controller: gioBDCtrl,
                                             text: "Giờ bắt đầu",
                                             hintText: _startTime,
                                             widget: IconButton(
-                                              icon: const Icon(Icons.access_time),
+                                              icon:
+                                                  const Icon(Icons.access_time),
                                               color: Colors.grey,
                                               onPressed: () {
                                                 _getTimeFromUser(
@@ -193,11 +210,13 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                         ),
                                         Expanded(
                                           child: MyTextFormField(
+                                            obscureText: false,
                                             controller: gioKTCtrl,
                                             text: "Giờ kết thúc",
                                             hintText: _endTime,
                                             widget: IconButton(
-                                              icon: const Icon(Icons.access_time),
+                                              icon:
+                                                  const Icon(Icons.access_time),
                                               color: Colors.grey,
                                               onPressed: () {
                                                 _getTimeFromUser(
@@ -209,6 +228,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       ],
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       controller: trangThaiCtrl,
                                       text: "Trạng thái",
                                       hintText: _selectedTrangThai,
@@ -222,7 +242,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                         underline: Container(
                                           height: 0,
                                         ),
-                                        padding: const EdgeInsets.only(right: 8),
+                                        padding:
+                                            const EdgeInsets.only(right: 8),
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             _selectedTrangThai = newValue!;
@@ -241,12 +262,14 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       ),
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       controller: tienDoCtrl,
                                       text: "Tiến độ",
                                       hintText: "Tiến độ",
                                       inputType: TextInputType.number,
                                     ),
                                     MyTextFormField(
+                                      obscureText: false,
                                       controller: ghiChuCtrl,
                                       text: "Ghi chú",
                                       hintText: "Ghi chú",
@@ -255,7 +278,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       height: 20,
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           height: 45,
@@ -270,36 +294,35 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                   gioKTCtrl.text.isEmpty ||
                                                   trangThaiCtrl.text.isEmpty ||
                                                   tienDoCtrl.text.isEmpty) {
-                                                toast(
-                                                    "Vui lòng nhập đủ thông tin công việc");
+                                                customToast(
+                                                    context: context,
+                                                    title: "Thông báo",
+                                                    message:
+                                                        "Vui lòng nhập đủ thông tin công việc",
+                                                    contentType:
+                                                        ContentType.warning);
                                               } else {
-                                                BlocProvider.of<UpdateTaskPageBloc>(
+                                                BlocProvider.of<
+                                                            UpdateTaskPageBloc>(
                                                         context)
                                                     .add(UpdateTask(
-                                                        maCV:
-                                                            int
-                                                                .parse(
-                                                                    widget
-                                                                        .congViec
-                                                                        .maCV
-                                                                        .toString()),
-                                                        tieuDe: tieuDeCtrl.text,
-                                                        noiDung: noiDungCtrl.text,
-                                                        ngayBD:
-                                                            DateFormat(
-                                                                    "yyyy-MM-dd")
-                                                                .format(
-                                                                    _selectStartDate),
-                                                        ngayKT: DateFormat(
-                                                                "yyyy-MM-dd")
-                                                            .format(
-                                                                _selectEndDate),
-                                                        gioBD: gioBDCtrl.text,
-                                                        gioKT: gioKTCtrl.text,
-                                                        trangThai:
-                                                            trangThaiCtrl.text,
-                                                        tienDo: tienDoCtrl.text,
-                                                        ghiChu: ghiChuCtrl.text));
+                                                  maCV: int.parse(widget
+                                                      .congViec.maCV
+                                                      .toString()),
+                                                  tieuDe: tieuDeCtrl.text,
+                                                  noiDung: noiDungCtrl.text,
+                                                  ngayBD: DateFormat(
+                                                          "yyyy-MM-dd")
+                                                      .format(_selectStartDate),
+                                                  ngayKT: DateFormat(
+                                                          "yyyy-MM-dd")
+                                                      .format(_selectEndDate),
+                                                  gioBD: gioBDCtrl.text,
+                                                  gioKT: gioKTCtrl.text,
+                                                  trangThai: trangThaiCtrl.text,
+                                                  tienDo: tienDoCtrl.text,
+                                                  ghiChu: ghiChuCtrl.text,
+                                                ));
                                               }
                                             },
                                             style: ButtonStyle(

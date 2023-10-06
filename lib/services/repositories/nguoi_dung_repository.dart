@@ -14,6 +14,10 @@ class NguoiDungRepository {
     return nguoiDungProvider.getInfoUser();
   }
 
+  Future<List<NguoiDung>> getListOthers() {
+    return nguoiDungProvider.getListOthers();
+  }
+
   Future<Response> insertUser(String userName, String passwd, String email,
       String fullName, String phone, String maPB, int status) async {
     return nguoiDungProvider.insertUser(

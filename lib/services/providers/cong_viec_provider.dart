@@ -125,4 +125,19 @@ class CongViecProvider {
 
     return response;
   }
+  
+  Future<List<CongViec>> getAllTaskAssigned() async {
+    
+    try {
+      Response response = await ApiConfig.dio.get("${ApiConfig.BASE_URL}/congviec/list-task-assigned");
+
+      List<dynamic> value = response.data;
+      return value.map((e) => CongViec.fromJson(e)).toList();
+    } catch (e) {
+      if (e.toString().contains("SocketException")) {
+        return [CongViec.withError("Check Internet Connection")];
+      }
+      return [CongViec.withError(e.toString())];
+    }
+  }
 }

@@ -19,8 +19,12 @@ class DeleteTaskBloc extends Bloc<DeleteTaskEvent, DeleteTaskState> {
           if (response.statusCode == 200) {
             emit(DeletedTask(response.data.toString()));
           }
-        } catch (e) {
-          emit(DeleteTaskError('Error: $e'));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(DeleteTaskError('Error: ${e.response?.data}'));
+          } else {
+            emit(DeleteTaskError(e.toString()));
+          }
         }
       }
     });

@@ -21,8 +21,12 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
           emit(GetInfoLoading());
           userList = await nguoiDungRepository.getInfoUser();
           emit(GetInfoLoaded(userList: userList));
-        } catch (e) {
-          emit(GetInfoError(e.toString()));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(GetInfoError("Error: ${e.response?.data}"));
+          } else {
+            emit(GetInfoError(e.toString()));
+          }
         }
       }
 
@@ -34,8 +38,12 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
           if (response.statusCode == 200) {
             emit(ChangeInfoSuccess(response.data.toString()));
           }
-        } catch (e) {
-          emit(ChangeInfoError(error: "Error: $e"));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(ChangeInfoError(error: "Error: ${e.response?.data}"));
+          } else {
+            emit(ChangeInfoError(error: e.toString()));
+          }
         }
       }
     });

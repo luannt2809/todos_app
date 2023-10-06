@@ -22,8 +22,12 @@ class UpdateDepartmentBloc
           if (response.statusCode == 200) {
             emit(UpdatedDepartment(response.data.toString()));
           }
-        } catch (e) {
-          emit(UpdateDepartmentError(e.toString()));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(UpdateDepartmentError(e.response?.data));
+          } else {
+            emit(UpdateDepartmentError(e.toString()));
+          }
         }
       }
     });

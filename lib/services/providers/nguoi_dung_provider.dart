@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
-
 import 'package:todos_app/services/config/api_config.dart';
 
 class NguoiDungProvider {
@@ -30,6 +29,22 @@ class NguoiDungProvider {
       }
       print(e.toString());
       return [];
+    }
+  }
+
+  Future<List<NguoiDung>> getListOthers() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    final int? maND = sharedPreferences.getInt('maND');
+
+    try {
+      Response response = await ApiConfig.dio
+          .get("${ApiConfig.BASE_URL}/nguoidung/others/$maND");
+
+      List<dynamic> value = response.data;
+      return value.map((e) => NguoiDung.fromJson(e)).toList();
+    } catch (e) {
+      throw Exception(e);
     }
   }
 

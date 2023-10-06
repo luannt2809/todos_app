@@ -1,13 +1,16 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todos_app/bloc/user/list_user_page/list_user_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
+
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/admin/add_user_page.dart';
 import 'package:todos_app/screens/admin/update_user_page.dart';
+import 'package:todos_app/screens/admin/user_details_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class ListUserPage extends StatefulWidget {
@@ -70,7 +73,11 @@ class _ListUserPageState extends State<ListUserPage> {
         child: BlocListener<ListUserPageBloc, ListUserPageState>(
           listener: (context, state) {
             if (state is ListUserPageError) {
-              toast(state.error.toString());
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
             }
           },
           child: BlocBuilder<ListUserPageBloc, ListUserPageState>(
@@ -113,49 +120,65 @@ class _ListUserPageState extends State<ListUserPage> {
                             )
                           ],
                         ),
-                        child: Container(
-                          padding: const EdgeInsets.only(top: 16, bottom: 16, left: 16),
-                          decoration: Styles.boxDecoration,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/officer.png',
-                                width: 50,
-                                height: 50,
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(nguoiDung.hoTen.toString()),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(nguoiDung.tenPhongBan.toString()),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(nguoiDung.danhSachVaiTro.toString())
-                                  ],
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (_) =>
+                                        UserDetailsPage(nguoiDung: nguoiDung)))
+                                .then((value) => getData());
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                top: 16, bottom: 16, left: 16),
+                            decoration: Styles.boxDecoration,
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/officer.png',
+                                  width: 50,
+                                  height: 50,
                                 ),
-                              ),
-                              Text(
-                                trangThai,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: nguoiDung.trangThai ?? false
-                                        ? Colors.green
-                                        : Colors.deepOrange),
-                              ),
-                              const SizedBox(width: 8,),
-                              Transform.rotate(
-                                angle: 3.14 / 2,
-                                child: const Icon(Icons.drag_handle, color: Colors.grey,),
-                              )
-                            ],
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(nguoiDung.hoTen.toString(), style: TextStyle(fontWeight: FontWeight.w600),),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(nguoiDung.tenPhongBan.toString()),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(nguoiDung.danhSachVaiTro.toString())
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  trangThai,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: nguoiDung.trangThai ?? false
+                                          ? Colors.green
+                                          : Colors.deepOrange),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Transform.rotate(
+                                  angle: 3.14 / 2,
+                                  child: const Icon(
+                                    Icons.drag_handle,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),

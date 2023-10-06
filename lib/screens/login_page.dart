@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
+
 import 'package:todos_app/screens/admin/admin_screen.dart';
 import 'package:todos_app/screens/user_screen.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,13 +35,20 @@ class _LoginPageState extends State<LoginPage> {
             child: BlocListener<LoginPageBloc, LoginPageState>(
               listener: (context, state) {
                 if (state is LoginPageError) {
-                  toast(state.error.toString());
+                  customToast(
+                      context: context,
+                      title: "Lỗi",
+                      message: state.error.toString(),
+                      contentType: ContentType.failure);
                 } else if (state is LoginPageSuccess) {
-                  toast(state.msg);
+                  customToast(
+                      context: context,
+                      title: "Thành công",
+                      message: state.msg,
+                      contentType: ContentType.success);
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   } else {
-                    // giam doc vs truong phong
                     if (state.nguoiDung.maPB == 2) {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {

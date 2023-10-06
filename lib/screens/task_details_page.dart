@@ -8,8 +8,7 @@ class TaskDetailsPage extends StatefulWidget {
   final String hoTen;
   final CongViec congViec;
 
-  const TaskDetailsPage(
-      {super.key, required this.congViec, required this.hoTen});
+  const TaskDetailsPage({super.key, required this.congViec, required this.hoTen});
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -115,7 +114,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ),
                           RowItem(
                             icon: Icons.person_outline_outlined,
-                            text: widget.hoTen,
+                            text: widget.congViec.hoTenNguoiLam ?? widget.hoTen,
                           ),
                         ],
                       ),
@@ -219,7 +218,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         return itemListLogCV(
                             snapshot.data![index]['TieuDe'].toString(),
                             snapshot.data![index]['ThoiGian'].toString(),
-                            widget.hoTen,
+                            widget.congViec.hoTenNguoiLam ?? widget.hoTen,
                             snapshot.data![index]['TrangThai'].toString(),
                             snapshot.data![index]['TienDo'].toDouble(),
                             snapshot.data![index]['MoTa'].toString(),

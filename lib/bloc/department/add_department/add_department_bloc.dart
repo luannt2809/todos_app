@@ -20,8 +20,12 @@ class AddDepartmentBloc extends Bloc<AddDepartmentEvent, AddDepartmentState> {
           if (response.statusCode == 200) {
             emit(AddDepartmentLoaded(response.data.toString()));
           }
-        } catch (e) {
-          emit(AddDepartmentError(e.toString()));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(AddDepartmentError(e.response?.data));
+          } else {
+            emit(AddDepartmentError(e.toString()));
+          }
         }
       }
     });

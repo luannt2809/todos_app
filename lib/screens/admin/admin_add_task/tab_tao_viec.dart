@@ -1,10 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 
 class TabTaoViec extends StatefulWidget {
   const TabTaoViec({super.key});
@@ -60,10 +61,18 @@ class _TabTaoViecState extends State<TabTaoViec> {
       child: BlocListener<AddTaskPageBloc, AddTaskPageState>(
         listener: (context, state) {
           if (state is AddTaskPageLoaded) {
-            toast(state.msg);
+            customToast(
+                context: context,
+                title: "Thành công",
+                message: state.msg,
+                contentType: ContentType.success);
             Navigator.of(context).pop();
           } else if (state is AddTaskPageError) {
-            toast(state.error.toString());
+            customToast(
+                context: context,
+                title: "Lỗi",
+                message: state.error.toString(),
+                contentType: ContentType.failure);
           }
         },
         child: BlocBuilder<AddTaskPageBloc, AddTaskPageState>(
@@ -85,16 +94,19 @@ class _TabTaoViecState extends State<TabTaoViec> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               MyTextFormField(
+                                obscureText: false,
                                 text: "Tiêu đề",
                                 hintText: "Tiêu đề",
                                 controller: tieuDeCtrl,
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 text: "Nội dung",
                                 hintText: "Nội dung",
                                 controller: noiDungCtrl,
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 controller: ngayBDCtrl,
                                 text: "Ngày bắt đầu",
                                 hintText: DateFormat('dd-MM-yyyy')
@@ -110,6 +122,7 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                 ),
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 controller: ngayKTCtrl,
                                 text: "Ngày kết thúc",
                                 hintText: DateFormat('dd-MM-yyyy')
@@ -127,6 +140,7 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                 children: <Widget>[
                                   Expanded(
                                     child: MyTextFormField(
+                                      obscureText: false,
                                       controller: gioBDCtrl,
                                       text: "Giờ bắt đầu",
                                       hintText: _startTime,
@@ -144,6 +158,7 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                   ),
                                   Expanded(
                                     child: MyTextFormField(
+                                      obscureText: false,
                                       controller: gioKTCtrl,
                                       text: "Giờ kết thúc",
                                       hintText: _endTime,
@@ -159,6 +174,7 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                 ],
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 controller: trangThaiCtrl,
                                 text: "Trạng thái",
                                 hintText: _selectedTrangThai,
@@ -191,12 +207,14 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                 ),
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 controller: tienDoCtrl,
                                 text: "Tiến độ",
                                 hintText: "Tiến độ",
                                 inputType: TextInputType.number,
                               ),
                               MyTextFormField(
+                                obscureText: false,
                                 controller: ghiChuCtrl,
                                 text: "Ghi chú",
                                 hintText: "Ghi chú",
@@ -220,8 +238,12 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                             gioKTCtrl.text.isEmpty ||
                                             trangThaiCtrl.text.isEmpty ||
                                             tienDoCtrl.text.isEmpty) {
-                                          toast(
-                                              "Vui lòng nhập đủ thông tin công việc");
+                                          customToast(
+                                              context: context,
+                                              title: "Thông báo",
+                                              message:
+                                                  "Vui lòng nhập đủ thông tin công việc",
+                                              contentType: ContentType.warning);
                                         } else {
                                           // them cong viec ơ day
                                           BlocProvider.of<AddTaskPageBloc>(
@@ -239,7 +261,7 @@ class _TabTaoViecState extends State<TabTaoViec> {
                                                   gioKT: gioKTCtrl.text,
                                                   trangThai: trangThaiCtrl.text,
                                                   tienDo: tienDoCtrl.text,
-                                                  ghiChu: ghiChuCtrl.text));
+                                                  ghiChu: ghiChuCtrl.text.isEmpty ? "Không có ghi chú" : ghiChuCtrl.text));
                                         }
                                       },
                                       style: ButtonStyle(
