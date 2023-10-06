@@ -32,7 +32,32 @@ class UpdateTaskPageBloc
             emit(UpdateTaskPageLoaded(response.data.toString()));
           }
         } on DioException catch (e) {
-          if(e.type == DioExceptionType.badResponse){
+          if (e.type == DioExceptionType.badResponse) {
+            emit(UpdateTaskPageError(error: 'Cập nhật thất bại: $e'));
+          } else {
+            emit(UpdateTaskPageError(error: e.toString()));
+          }
+        }
+      } else if (event is AdminUpdateTask) {
+        emit(UpdateTaskPageLoading());
+        try {
+          Response response = await congViecRepository.adminUpdateTask(
+              event.maCV,
+              event.tieuDe,
+              event.noiDung,
+              event.ngayBD,
+              event.ngayKT,
+              event.gioBD,
+              event.gioKT,
+              event.trangThai,
+              event.tienDo,
+              event.ghiChu,
+              event.maNguoiLam);
+          if (response.statusCode == 200) {
+            emit(UpdateTaskPageLoaded(response.data.toString()));
+          }
+        } on DioException catch (e) {
+          if (e.type == DioExceptionType.badResponse) {
             emit(UpdateTaskPageError(error: 'Cập nhật thất bại: $e'));
           } else {
             emit(UpdateTaskPageError(error: e.toString()));

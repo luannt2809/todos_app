@@ -266,6 +266,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                       "Vui lòng nhập đủ thông tin công việc",
                                                   contentType:
                                                       ContentType.warning);
+                                            } else if (double.parse(
+                                                        tienDoCtrl.text) <
+                                                    0 ||
+                                                double.parse(tienDoCtrl.text) >
+                                                    100) {
+                                              customToast(
+                                                  context: context,
+                                                  title: "Thông báo",
+                                                  message:
+                                                      "Vui lòng nhập tiến độ 0 - 100",
+                                                  contentType:
+                                                      ContentType.warning);
                                             } else {
                                               BlocProvider.of<AddTaskPageBloc>(
                                                       context)
@@ -285,7 +297,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                       trangThai:
                                                           trangThaiCtrl.text,
                                                       tienDo: tienDoCtrl.text,
-                                                      ghiChu: ghiChuCtrl.text.isEmpty ? "Không có ghi chú" : ghiChuCtrl.text));
+                                                      ghiChu: ghiChuCtrl
+                                                              .text.isEmpty
+                                                          ? "Không có ghi chú"
+                                                          : ghiChuCtrl.text));
                                             }
                                           },
                                           style: ButtonStyle(

@@ -118,6 +118,39 @@ class CongViecProvider {
     return response;
   }
 
+  Future<Response> adminUpdateTask(
+      int maCV,
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu,
+      int maNguoiLam
+      ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maNguoiGiao = prefs.getInt("maND");
+
+    Response response = await ApiConfig.dio.put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {
+      'TieuDe': tieuDe,
+      'NoiDung': noiDung,
+      'GioBatDau': gioBD,
+      'GioKetThuc': gioKT,
+      'NgayBatDau': ngayBD,
+      'NgayKetThuc': ngayKT,
+      'TrangThai': trangThai,
+      'TienDo': tienDo,
+      'GhiChu': ghiChu,
+      'MaNguoiGiao': maNguoiGiao,
+      'MaNguoiLam': maNguoiLam
+    });
+
+    return response;
+  }
+
   // delete task
   Future<Response> deleteTask(int maCV) async {
     Response response = await ApiConfig.dio

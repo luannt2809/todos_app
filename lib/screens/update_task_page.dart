@@ -7,11 +7,15 @@ import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/models/cong_viec.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
+import 'package:todos_app/services/repositories/nguoi_dung_repository.dart';
 
 class UpdateTaskPage extends StatefulWidget {
   final CongViec congViec;
+  final NguoiDung nguoiDung;
 
-  const UpdateTaskPage({super.key, required this.congViec});
+  const UpdateTaskPage(
+      {super.key, required this.congViec, required this.nguoiDung});
 
   @override
   State<UpdateTaskPage> createState() => _UpdateTaskPageState();
@@ -24,13 +28,17 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   String _endTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _selectedTrangThai = 'Chờ nhận';
 
+  List<NguoiDung> listNguoiLam = [];
+  int? selectMaNL;
+  String selectTenNL = "Người làm";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fillDataCongViec();
   }
 
+  TextEditingController nguoiLamCtrl = TextEditingController();
   TextEditingController tieuDeCtrl = TextEditingController();
   TextEditingController noiDungCtrl = TextEditingController();
   TextEditingController ngayBDCtrl = TextEditingController();
@@ -59,10 +67,22 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     ghiChuCtrl.text = widget.congViec.ghiChu.toString() == "null"
         ? "Không có ghi chú"
         : widget.congViec.ghiChu.toString();
+    selectMaNL = widget.congViec.maNguoiLam;
+    nguoiLamCtrl.text = widget.congViec.hoTenNguoiLam.toString();
+    NguoiDungRepository().getListOthers().then((value) {
+      setState(() {
+        listNguoiLam = value;
+      });
+    }).catchError((onError) {
+      throw Exception(onError);
+    });
+
+    print("No NG:${widget.congViec.maNguoiGiao}");
   }
 
   @override
   void dispose() {
+    nguoiLamCtrl.dispose();
     tieuDeCtrl.dispose();
     noiDungCtrl.dispose();
     ngayBDCtrl.dispose();
@@ -84,6 +104,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.congViec.maNguoiGiao != null) {}
     return BlocProvider(
       create: (context) => UpdateTaskPageBloc(),
       child: GestureDetector(
@@ -144,6 +165,50 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
+                                    Visibility(
+                                      visible: widget.nguoiDung.maPB == 2 &&
+                                              widget.congViec.maNguoiGiao !=
+                                                  null
+                                          ? true
+                                          : false,
+                                      child: MyTextFormField(
+                                        obscureText: false,
+                                        controller: nguoiLamCtrl,
+                                        text: "Người làm",
+                                        hintText: selectTenNL,
+                                        widget: DropdownButton(
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.grey,
+                                          ),
+                                          iconSize: 30,
+                                          elevation: 4,
+                                          underline: Container(
+                                            height: 0,
+                                          ),
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
+                                          items: listNguoiLam
+                                              .map<DropdownMenuItem<NguoiDung>>(
+                                                  (NguoiDung item) {
+                                            return DropdownMenuItem<NguoiDung>(
+                                              value: item,
+                                              child:
+                                                  Text(item.hoTen.toString()),
+                                            );
+                                          }).toList(),
+                                          onChanged: (NguoiDung? newValue) {
+                                            setState(() {
+                                              selectMaNL = int.parse(
+                                                  newValue!.maND.toString());
+                                              nguoiLamCtrl.text =
+                                                  newValue.hoTen.toString();
+                                              print(selectMaNL);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                     MyTextFormField(
                                       obscureText: false,
                                       text: "Tiêu đề",
@@ -156,76 +221,94 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       hintText: "Nội dung",
                                       controller: noiDungCtrl,
                                     ),
-                                    MyTextFormField(
-                                      obscureText: false,
-                                      controller: ngayBDCtrl,
-                                      text: "Ngày bắt đầu",
-                                      hintText: DateFormat.yMd()
-                                          .format(_selectStartDate),
-                                      widget: IconButton(
-                                        onPressed: () {
-                                          _getDateFromUser(isStartDate: true);
-                                        },
-                                        icon: const Icon(
-                                            Icons.calendar_month_outlined),
-                                        color: Colors.grey,
+                                    Visibility(
+                                      visible:
+                                          widget.congViec.maNguoiGiao == null &&
+                                                  widget.nguoiDung.maPB != 2 ||
+                                              widget.nguoiDung.maPB == 2,
+                                      child: MyTextFormField(
+                                        obscureText: false,
+                                        controller: ngayBDCtrl,
+                                        text: "Ngày bắt đầu",
+                                        hintText: DateFormat.yMd()
+                                            .format(_selectStartDate),
+                                        widget: IconButton(
+                                          onPressed: () {
+                                            _getDateFromUser(isStartDate: true);
+                                          },
+                                          icon: const Icon(
+                                              Icons.calendar_month_outlined),
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
-                                    MyTextFormField(
-                                      obscureText: false,
-                                      controller: ngayKTCtrl,
-                                      text: "Ngày kết thúc",
-                                      hintText: DateFormat.yMd()
-                                          .format(_selectEndDate),
-                                      widget: IconButton(
-                                        onPressed: () {
-                                          _getDateFromUser(isStartDate: false);
-                                        },
-                                        icon: const Icon(
-                                            Icons.calendar_month_outlined),
-                                        color: Colors.grey,
+                                    Visibility(
+                                      visible:
+                                      widget.congViec.maNguoiGiao == null &&
+                                          widget.nguoiDung.maPB != 2 ||
+                                          widget.nguoiDung.maPB == 2,
+                                      child: MyTextFormField(
+                                        obscureText: false,
+                                        controller: ngayKTCtrl,
+                                        text: "Ngày kết thúc",
+                                        hintText: DateFormat.yMd()
+                                            .format(_selectEndDate),
+                                        widget: IconButton(
+                                          onPressed: () {
+                                            _getDateFromUser(isStartDate: false);
+                                          },
+                                          icon: const Icon(
+                                              Icons.calendar_month_outlined),
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: MyTextFormField(
-                                            obscureText: false,
-                                            controller: gioBDCtrl,
-                                            text: "Giờ bắt đầu",
-                                            hintText: _startTime,
-                                            widget: IconButton(
-                                              icon:
-                                                  const Icon(Icons.access_time),
-                                              color: Colors.grey,
-                                              onPressed: () {
-                                                _getTimeFromUser(
-                                                    isStartTime: true);
-                                              },
+                                    Visibility(
+                                      visible:
+                                      widget.congViec.maNguoiGiao == null &&
+                                          widget.nguoiDung.maPB != 2 ||
+                                          widget.nguoiDung.maPB == 2,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: MyTextFormField(
+                                              obscureText: false,
+                                              controller: gioBDCtrl,
+                                              text: "Giờ bắt đầu",
+                                              hintText: _startTime,
+                                              widget: IconButton(
+                                                icon:
+                                                    const Icon(Icons.access_time),
+                                                color: Colors.grey,
+                                                onPressed: () {
+                                                  _getTimeFromUser(
+                                                      isStartTime: true);
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 12,
-                                        ),
-                                        Expanded(
-                                          child: MyTextFormField(
-                                            obscureText: false,
-                                            controller: gioKTCtrl,
-                                            text: "Giờ kết thúc",
-                                            hintText: _endTime,
-                                            widget: IconButton(
-                                              icon:
-                                                  const Icon(Icons.access_time),
-                                              color: Colors.grey,
-                                              onPressed: () {
-                                                _getTimeFromUser(
-                                                    isStartTime: false);
-                                              },
+                                          const SizedBox(
+                                            width: 12,
+                                          ),
+                                          Expanded(
+                                            child: MyTextFormField(
+                                              obscureText: false,
+                                              controller: gioKTCtrl,
+                                              text: "Giờ kết thúc",
+                                              hintText: _endTime,
+                                              widget: IconButton(
+                                                icon:
+                                                    const Icon(Icons.access_time),
+                                                color: Colors.grey,
+                                                onPressed: () {
+                                                  _getTimeFromUser(
+                                                      isStartTime: false);
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                     MyTextFormField(
                                       obscureText: false,
@@ -301,28 +384,76 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                         "Vui lòng nhập đủ thông tin công việc",
                                                     contentType:
                                                         ContentType.warning);
+                                              } else if (double.parse(
+                                                  tienDoCtrl.text) <
+                                                  0 ||
+                                                  double.parse(tienDoCtrl.text) >
+                                                      100) {
+                                                customToast(
+                                                    context: context,
+                                                    title: "Thông báo",
+                                                    message:
+                                                    "Vui lòng nhập tiến độ 0 - 100",
+                                                    contentType:
+                                                    ContentType.warning);
                                               } else {
-                                                BlocProvider.of<
-                                                            UpdateTaskPageBloc>(
-                                                        context)
-                                                    .add(UpdateTask(
-                                                  maCV: int.parse(widget
-                                                      .congViec.maCV
-                                                      .toString()),
-                                                  tieuDe: tieuDeCtrl.text,
-                                                  noiDung: noiDungCtrl.text,
-                                                  ngayBD: DateFormat(
-                                                          "yyyy-MM-dd")
-                                                      .format(_selectStartDate),
-                                                  ngayKT: DateFormat(
-                                                          "yyyy-MM-dd")
-                                                      .format(_selectEndDate),
-                                                  gioBD: gioBDCtrl.text,
-                                                  gioKT: gioKTCtrl.text,
-                                                  trangThai: trangThaiCtrl.text,
-                                                  tienDo: tienDoCtrl.text,
-                                                  ghiChu: ghiChuCtrl.text,
-                                                ));
+                                                widget.nguoiDung.maPB != 2 ||
+                                                        widget.congViec
+                                                                .maNguoiGiao ==
+                                                            null
+                                                    ? BlocProvider.of<
+                                                                UpdateTaskPageBloc>(
+                                                            context)
+                                                        .add(UpdateTask(
+                                                        maCV: int.parse(widget
+                                                            .congViec.maCV
+                                                            .toString()),
+                                                        tieuDe: tieuDeCtrl.text,
+                                                        noiDung:
+                                                            noiDungCtrl.text,
+                                                        ngayBD: DateFormat(
+                                                                "yyyy-MM-dd")
+                                                            .format(
+                                                                _selectStartDate),
+                                                        ngayKT: DateFormat(
+                                                                "yyyy-MM-dd")
+                                                            .format(
+                                                                _selectEndDate),
+                                                        gioBD: gioBDCtrl.text,
+                                                        gioKT: gioKTCtrl.text,
+                                                        trangThai:
+                                                            trangThaiCtrl.text,
+                                                        tienDo: tienDoCtrl.text,
+                                                        ghiChu: ghiChuCtrl.text,
+                                                      ))
+                                                    : BlocProvider.of<
+                                                                UpdateTaskPageBloc>(
+                                                            context)
+                                                        .add(AdminUpdateTask(
+                                                        maCV: int.parse(widget
+                                                            .congViec.maCV
+                                                            .toString()),
+                                                        tieuDe: tieuDeCtrl.text,
+                                                        noiDung:
+                                                            noiDungCtrl.text,
+                                                        ngayBD: DateFormat(
+                                                                "yyyy-MM-dd")
+                                                            .format(
+                                                                _selectStartDate),
+                                                        ngayKT: DateFormat(
+                                                                "yyyy-MM-dd")
+                                                            .format(
+                                                                _selectEndDate),
+                                                        gioBD: gioBDCtrl.text,
+                                                        gioKT: gioKTCtrl.text,
+                                                        trangThai:
+                                                            trangThaiCtrl.text,
+                                                        tienDo: tienDoCtrl.text,
+                                                        ghiChu: ghiChuCtrl.text,
+                                                        maNguoiLam: int.parse(
+                                                            selectMaNL
+                                                                .toString()),
+                                                      ));
                                               }
                                             },
                                             style: ButtonStyle(

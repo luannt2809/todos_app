@@ -295,22 +295,7 @@ class _HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => TaskDetailsPage(
-                hoTen: widget.nguoiDung.hoTen.toString(),
-                congViec: CongViec(
-                  maCV: int.parse(congViec.maCV.toString()),
-                  tieuDe: congViec.tieuDe,
-                  noiDung: congViec.noiDung,
-                  ngayBatDau: congViec.ngayBatDau,
-                  ngayKetThuc: congViec.ngayKetThuc,
-                  gioBatDau: congViec.gioBatDau,
-                  gioKetThuc: congViec.gioKetThuc,
-                  trangThai: congViec.trangThai,
-                  tienDo: congViec.tienDo,
-                  ghiChu: congViec.ghiChu,
-                  maNguoiLam: congViec.maNguoiLam,
-                  hoTenNguoiLam: congViec.hoTenNguoiLam
-                ),
-              ),
+                  hoTen: widget.nguoiDung.hoTen.toString(), congViec: congViec),
             ),
           ).then((value) async {
             if (value != null && value[0] == 'Reload') {
@@ -329,20 +314,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => UpdateTaskPage(
-                        congViec: CongViec(
-                          maCV: int.parse(congViec.maCV.toString()),
-                          tieuDe: congViec.tieuDe,
-                          noiDung: congViec.noiDung,
-                          ngayBatDau: congViec.ngayBatDau,
-                          ngayKetThuc: congViec.ngayKetThuc,
-                          gioBatDau: congViec.gioBatDau,
-                          gioKetThuc: congViec.gioKetThuc,
-                          trangThai: congViec.trangThai,
-                          tienDo: congViec.tienDo,
-                          ghiChu: congViec.ghiChu,
-                          maNguoiLam: congViec.maNguoiLam,
-                        ),
-                      ),
+                          nguoiDung: widget.nguoiDung, congViec: congViec),
                     ),
                   ).then((value) {
                     if (value != null && value[0] == 'Reload') {
@@ -355,76 +327,81 @@ class _HomePageState extends State<HomePage> {
                 icon: Icons.edit,
                 label: 'Cập nhật',
               ),
-              SlidableAction(
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
-                icon: Icons.delete_rounded,
-                label: 'Xóa',
-                onPressed: (BuildContext context) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => BlocProvider(
-                      create: (context) => DeleteTaskBloc(),
-                      child: BlocConsumer<DeleteTaskBloc, DeleteTaskState>(
-                        listener: (context, state) {
-                          if (state is DeleteTaskError) {
-                            customToast(
-                                context: context,
-                                title: "Lỗi",
-                                message: state.error.toString(),
-                                contentType: ContentType.failure);
-                            Navigator.of(context).pop();
-                          } else if (state is DeletedTask) {
-                            customToast(
-                                context: context,
-                                title: "Thành công",
-                                message: state.msg,
-                                contentType: ContentType.success);
-                            Navigator.of(context).pop();
-                            getData();
-                          }
-                        },
-                        builder: (context, state) {
-                          if (state is DeleteTaskInitial) {
-                            return AlertDialog(
-                              title: const Text("Xác nhận"),
-                              content: const Text(
-                                  "Bạn có xác nhận xoá công việc này không ?"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    BlocProvider.of<DeleteTaskBloc>(context)
-                                        .add(DeleteTask(int.parse(
-                                            congViec.maCV.toString())));
-                                  },
-                                  child: const Text(
-                                    "Xác nhận",
-                                    style: TextStyle(
-                                        color: Colors.deepOrangeAccent,
-                                        fontSize: 16),
+              Visibility(
+                visible: congViec.maNguoiGiao == null &&
+                        widget.nguoiDung.maPB != 2 ||
+                    widget.nguoiDung.maPB == 2,
+                child: SlidableAction(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete_rounded,
+                  label: 'Xóa',
+                  onPressed: (BuildContext context) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => BlocProvider(
+                        create: (context) => DeleteTaskBloc(),
+                        child: BlocConsumer<DeleteTaskBloc, DeleteTaskState>(
+                          listener: (context, state) {
+                            if (state is DeleteTaskError) {
+                              customToast(
+                                  context: context,
+                                  title: "Lỗi",
+                                  message: state.error.toString(),
+                                  contentType: ContentType.failure);
+                              Navigator.of(context).pop();
+                            } else if (state is DeletedTask) {
+                              customToast(
+                                  context: context,
+                                  title: "Thành công",
+                                  message: state.msg,
+                                  contentType: ContentType.success);
+                              Navigator.of(context).pop();
+                              getData();
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is DeleteTaskInitial) {
+                              return AlertDialog(
+                                title: const Text("Xác nhận"),
+                                content: const Text(
+                                    "Bạn có xác nhận xoá công việc này không ?"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      BlocProvider.of<DeleteTaskBloc>(context)
+                                          .add(DeleteTask(int.parse(
+                                              congViec.maCV.toString())));
+                                    },
+                                    child: const Text(
+                                      "Xác nhận",
+                                      style: TextStyle(
+                                          color: Colors.deepOrangeAccent,
+                                          fontSize: 16),
+                                    ),
                                   ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text(
-                                    "Huỷ",
-                                    style: TextStyle(
-                                        color: Colors.deepOrangeAccent,
-                                        fontSize: 16),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Huỷ",
+                                      style: TextStyle(
+                                          color: Colors.deepOrangeAccent,
+                                          fontSize: 16),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
+                                ],
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ],
           ),

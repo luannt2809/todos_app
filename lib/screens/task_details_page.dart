@@ -8,7 +8,8 @@ class TaskDetailsPage extends StatefulWidget {
   final String hoTen;
   final CongViec congViec;
 
-  const TaskDetailsPage({super.key, required this.congViec, required this.hoTen});
+  const TaskDetailsPage(
+      {super.key, required this.congViec, required this.hoTen});
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -218,7 +219,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         return itemListLogCV(
                             snapshot.data![index]['TieuDe'].toString(),
                             snapshot.data![index]['ThoiGian'].toString(),
-                            widget.congViec.hoTenNguoiLam ?? widget.hoTen,
+                            snapshot.data![index]['HoTen'].toString(),
                             snapshot.data![index]['TrangThai'].toString(),
                             snapshot.data![index]['TienDo'].toDouble(),
                             snapshot.data![index]['MoTa'].toString(),
@@ -316,12 +317,18 @@ Widget itemListLogCV(String tieuDe, String thoiGian, String hoTenNguoiLam,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(tieuDe),
-              Text(DateFormat('dd-MM-yyyy   hh:mm a')
-                  .format(DateTime.parse(thoiGian))
-                  .toString()),
+              Expanded(
+                  child: Text(
+                tieuDe,
+                softWrap: true,
+              )),
+              Text(
+                DateFormat('dd-MM-yyyy   hh:mm a')
+                    .format(DateTime.parse(thoiGian))
+                    .toString(),
+                softWrap: true,
+              ),
             ],
           ),
           const SizedBox(

@@ -56,6 +56,22 @@ class CongViecRepository {
         gioBD, gioKT, trangThai, tienDo, ghiChu);
   }
 
+  Future<Response> adminUpdateTask(
+      int maCV,
+      String tieuDe,
+      String noiDung,
+      String ngayBD,
+      String ngayKT,
+      String gioBD,
+      String gioKT,
+      String trangThai,
+      String tienDo,
+      String ghiChu,
+      int maNguoiLam) {
+    return congViecProvider.adminUpdateTask(maCV, tieuDe, noiDung, ngayBD,
+        ngayKT, gioBD, gioKT, trangThai, tienDo, ghiChu, maNguoiLam);
+  }
+
   // delete task
   Future<Response> deleteTask(int maCV) {
     return congViecProvider.deleteTask(maCV);
