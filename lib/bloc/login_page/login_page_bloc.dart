@@ -34,6 +34,8 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
         } on DioException catch (e) {
           if (e.type == DioExceptionType.badResponse) {
             emit(LoginPageError("Error: ${e.response?.data}"));
+          } else {
+            emit(LoginPageError(e.toString()));
           }
         }
       }

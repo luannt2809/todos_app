@@ -27,8 +27,12 @@ class AddUserPageBloc extends Bloc<AddUserPageEvent, AddUserPageState> {
           if (response.statusCode == 200) {
             emit(AddUserLoaded(msg: response.data.toString()));
           }
-        } catch (e) {
-          emit(AddUserError(error: "Error: $e"));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(AddUserError(error: "Error: ${e.response?.data}"));
+          } else {
+            emit(AddUserError(error: e.toString()));
+          }
         }
       }
     });

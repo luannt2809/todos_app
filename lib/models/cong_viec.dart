@@ -12,6 +12,8 @@ class CongViec {
   int? maNguoiLam;
   int? maNguoiGiao;
   int? kieu;
+  String? hoTenNguoiLam;
+  String? hoTenNguoiGiao;
   String? error;
 
   CongViec(
@@ -27,7 +29,9 @@ class CongViec {
       this.ghiChu,
       this.maNguoiLam,
       this.maNguoiGiao,
-      this.kieu, this.error});
+      this.kieu,
+      this.hoTenNguoiLam,
+      this.hoTenNguoiGiao, this.error});
 
   factory CongViec.fromJson(Map<String, dynamic> json) {
     return CongViec(
@@ -44,6 +48,8 @@ class CongViec {
       maNguoiLam: json['MaNguoiLam'],
       maNguoiGiao: json['MaNguoiGiao'],
       kieu: json['Kieu'],
+      hoTenNguoiLam: json['HoTenNguoiLam'],
+      hoTenNguoiGiao: json['HoTenNguoiGiao'],
       error: json['error']
     );
   }
@@ -63,6 +69,8 @@ class CongViec {
     data['MaNguoiLam'] = this.maNguoiLam;
     data['MaNguoiGiao'] = this.maNguoiGiao;
     data['Kieu'] = this.kieu;
+    data['HoTenNguoiLam'] = this.hoTenNguoiLam;
+    data['HoTenNguoiGiao'] = this.hoTenNguoiGiao;
     return data;
   }
 

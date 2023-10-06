@@ -1,9 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/department/update_department/update_department_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
+
 import 'package:todos_app/models/phong_ban.dart';
 
 class UpdateDepartmentPage extends StatefulWidget {
@@ -61,9 +63,17 @@ class _UpdateDepartmentPageState extends State<UpdateDepartmentPage> {
           child: BlocListener<UpdateDepartmentBloc, UpdateDepartmentState>(
             listener: (context, state) {
               if (state is UpdateDepartmentError) {
-                toast(state.error.toString());
+                customToast(
+                    context: context,
+                    title: "Lỗi",
+                    message: state.error.toString(),
+                    contentType: ContentType.failure);
               } else if (state is UpdatedDepartment) {
-                toast(state.msg);
+                customToast(
+                    context: context,
+                    title: "Thành công",
+                    message: state.msg,
+                    contentType: ContentType.success);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
@@ -76,7 +86,7 @@ class _UpdateDepartmentPageState extends State<UpdateDepartmentPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         children: [
-                          MyTextFormField(
+                          MyTextFormField(obscureText: false,
                             text: "Tên phòng ban",
                             hintText: "Tên phòng ban",
                             controller: tenPhongBanCtrl,
@@ -97,17 +107,26 @@ class _UpdateDepartmentPageState extends State<UpdateDepartmentPage> {
                             height: 40,
                             child: ElevatedButton(
                               onPressed: () {
-                                BlocProvider.of<UpdateDepartmentBloc>(context)
-                                    .add(
-                                  UpdateDepartment(
-                                    maPB: int.parse(
-                                        widget.phongBan.maPB.toString()),
-                                    tenPB: tenPhongBanCtrl.text,
-                                    arrMaVT: selectedValue.isEmpty
-                                        ? '1, 2, 3, 4'
-                                        : selectedValue.join(", "),
-                                  ),
-                                );
+                                if(tenPhongBanCtrl.text.isEmpty){
+                                  customToast(
+                                      context: context,
+                                      title: "Thông báo",
+                                      message:
+                                      "Vui lòng nhập đủ thông tin phòng ban",
+                                      contentType: ContentType.warning);
+                                } else {
+                                  BlocProvider.of<UpdateDepartmentBloc>(context)
+                                      .add(
+                                    UpdateDepartment(
+                                      maPB: int.parse(
+                                          widget.phongBan.maPB.toString()),
+                                      tenPB: tenPhongBanCtrl.text,
+                                      arrMaVT: selectedValue.isEmpty
+                                          ? '1, 2, 3, 4'
+                                          : selectedValue.join(", "),
+                                    ),
+                                  );
+                                }
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(

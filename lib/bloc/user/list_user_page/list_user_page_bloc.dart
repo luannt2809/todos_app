@@ -1,5 +1,6 @@
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
@@ -14,20 +15,24 @@ class ListUserPageBloc extends Bloc<ListUserPageEvent, ListUserPageState> {
   List<NguoiDung> listUser = [];
 
   ListUserPageBloc() : super(ListUserPageInitial()) {
-    NguoiDungRepository nguoiDungRepository = NguoiDungRepository();
     on<ListUserPageEvent>((event, emit) async {
+      NguoiDungRepository nguoiDungRepository = NguoiDungRepository();
       // TODO: implement event handler
       if (event is GetListUser) {
+        emit(ListUserPageLoading());
         try {
-          emit(ListUserPageLoading());
           listUser = await nguoiDungRepository.getListUser();
           if (listUser.isNotEmpty) {
             emit(ListUserPageLoaded(listUser: listUser));
           } else {
             emit(GetListUserEmpty());
           }
-        } catch (e) {
-          emit(ListUserPageError(error: "Error: $e"));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(ListUserPageError(error: "Error: ${e.response?.data}"));
+          } else {
+            emit(ListUserPageError(error: "Error: $e"));
+          }
         }
       }
     });

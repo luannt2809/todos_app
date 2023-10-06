@@ -60,6 +60,10 @@ class CongViecRepository {
   Future<Response> deleteTask(int maCV) {
     return congViecProvider.deleteTask(maCV);
   }
+
+  Future<List<CongViec>> getAllTaskAssigned() {
+    return congViecProvider.getAllTaskAssigned();
+  }
 }
 
 class NetworkError extends Error {}

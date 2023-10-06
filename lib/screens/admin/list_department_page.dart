@@ -1,10 +1,12 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todos_app/bloc/department/list_department_page/list_department_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
+
 import 'package:todos_app/models/phong_ban.dart';
 import 'package:todos_app/screens/admin/add_department_page.dart';
 import 'package:todos_app/screens/admin/update_department_page.dart';
@@ -69,7 +71,11 @@ class _ListDepartmentPageState extends State<ListDepartmentPage> {
         child: BlocListener<ListDepartmentPageBloc, ListDepartmentPageState>(
           listener: (context, state) {
             if (state is ListDepartmentPageError) {
-              toast(state.error.toString());
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
             }
           },
           child: BlocBuilder<ListDepartmentPageBloc, ListDepartmentPageState>(

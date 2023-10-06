@@ -8,6 +8,7 @@ class MyTextFormField extends StatelessWidget {
   final Widget? widget;
   final TextInputType? inputType;
   final bool? enabled;
+  final bool obscureText;
 
   const MyTextFormField(
       {super.key,
@@ -15,7 +16,7 @@ class MyTextFormField extends StatelessWidget {
         required this.hintText,
         this.controller,
         this.widget,
-        this.inputType, this.enabled});
+        this.inputType, this.enabled, required this.obscureText});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,8 @@ class MyTextFormField extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     enabled: enabled,
-                    maxLines: null,
+                    maxLines: obscureText == true ? 1 : null,
+                    obscureText: obscureText,
                     readOnly: widget == null ? false : true,
                     autofocus: false,
                     cursorColor: Colors.grey,

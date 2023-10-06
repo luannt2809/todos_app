@@ -1,9 +1,10 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/user/update_user_page/update_user_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/models/phong_ban.dart';
 import 'package:todos_app/services/repositories/phong_ban_repository.dart';
@@ -59,6 +60,17 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     super.initState();
   }
 
+  // validate
+  bool isEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool isPhoneNumber(String phoneNumber) {
+    final phoneNumberRegex = RegExp(r'^(?:\+84|0[0-9]{9})$');
+    return phoneNumberRegex.hasMatch(phoneNumber);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -89,9 +101,17 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           child: BlocListener<UpdateUserPageBloc, UpdateUserPageState>(
             listener: (context, state) {
               if (state is UpdateUserError) {
-                toast(state.error.toString());
+                customToast(
+                    context: context,
+                    title: "Lỗi",
+                    message: state.error.toString(),
+                    contentType: ContentType.failure);
               } else if (state is UpdatedUser) {
-                toast(state.msg);
+                customToast(
+                    context: context,
+                    title: "Thành công",
+                    message: state.msg,
+                    contentType: ContentType.success);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
@@ -127,36 +147,42 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                             ),
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: userNameCtrl,
                             text: "Username",
                             hintText: "Username",
                             enabled: true,
                           ),
                           MyTextFormField(
+                            obscureText: true,
                             controller: passWdCtrl,
                             text: "Password",
                             hintText: "Password",
                             enabled: true,
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: emailCtrl,
                             text: "Email",
                             hintText: "Email",
                             enabled: true,
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: fullNameCtrl,
                             text: "Họ và tên",
                             hintText: "Họ và tên",
                             enabled: true,
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: phoneCtrl,
                             text: "Số điện thoại",
                             hintText: "Số điện thoại",
                             enabled: true,
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: departmentCtrl,
                             text: "Phòng ban",
                             hintText: _selectTenPhongBan,
@@ -172,8 +198,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                 height: 0,
                               ),
                               padding: const EdgeInsets.only(right: 8),
-                              items: listPhongBan.map<DropdownMenuItem<PhongBan>>(
-                                  (PhongBan item) {
+                              items: listPhongBan
+                                  .map<DropdownMenuItem<PhongBan>>(
+                                      (PhongBan item) {
                                 return DropdownMenuItem<PhongBan>(
                                   value: item,
                                   child: Text(item.tenPhongBan.toString()),
@@ -191,6 +218,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                             ),
                           ),
                           MyTextFormField(
+                            obscureText: false,
                             controller: statusCtrl,
                             text: "Trạng thái",
                             hintText: _selectedTrangThai,
@@ -239,8 +267,12 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                         phoneCtrl.text.isEmpty ||
                                         departmentCtrl.text.isEmpty ||
                                         statusCtrl.text.isEmpty) {
-                                      toast(
-                                          "Vui lòng nhập đủ thông tin người dùng");
+                                      customToast(
+                                          context: context,
+                                          title: "Thông báo",
+                                          message:
+                                              "Vui lòng nhập đủ thông tin người dùng",
+                                          contentType: ContentType.warning);
                                     } else {
                                       int? status;
                                       if (statusCtrl.text == "Hoạt động") {
@@ -250,7 +282,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                         status = 0;
                                       }
 
-                                      BlocProvider.of<UpdateUserPageBloc>(context)
+                                      BlocProvider.of<UpdateUserPageBloc>(
+                                              context)
                                           .add(UpdateUserEvent(
                                               maND: int.parse(widget
                                                   .nguoiDung.maND

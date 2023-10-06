@@ -1,9 +1,10 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/department/add_department/add_department_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 
 class AddDepartmentPage extends StatefulWidget {
   const AddDepartmentPage({super.key});
@@ -56,9 +57,17 @@ class _AddDepartmentPageState extends State<AddDepartmentPage> {
           child: BlocListener<AddDepartmentBloc, AddDepartmentState>(
             listener: (context, state) {
               if (state is AddDepartmentError) {
-                toast(state.error.toString());
+                customToast(
+                    context: context,
+                    title: "Lỗi",
+                    message: state.error.toString(),
+                    contentType: ContentType.failure);
               } else if (state is AddDepartmentLoaded) {
-                toast(state.msg);
+                customToast(
+                    context: context,
+                    title: "Thành công",
+                    message: state.msg,
+                    contentType: ContentType.success);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
@@ -72,6 +81,7 @@ class _AddDepartmentPageState extends State<AddDepartmentPage> {
                       child: Column(
                         children: [
                           MyTextFormField(
+                            obscureText: false,
                             text: "Tên phòng ban",
                             hintText: "Tên phòng ban",
                             controller: tenPhongBanCtrl,
@@ -92,12 +102,24 @@ class _AddDepartmentPageState extends State<AddDepartmentPage> {
                             height: 40,
                             child: ElevatedButton(
                               onPressed: () {
-                                BlocProvider.of<AddDepartmentBloc>(context).add(
-                                  AddDepartment(
-                                    tenPhongBanCtrl.text,
-                                    selectedValue.isEmpty ? '1, 2, 3, 4' : selectedValue.join(", "),
-                                  ),
-                                );
+                                if (tenPhongBanCtrl.text.isEmpty) {
+                                  customToast(
+                                      context: context,
+                                      title: "Thông báo",
+                                      message:
+                                          "Vui lòng nhập đủ thông tin phòng ban",
+                                      contentType: ContentType.warning);
+                                } else {
+                                  BlocProvider.of<AddDepartmentBloc>(context)
+                                      .add(
+                                    AddDepartment(
+                                      tenPhongBanCtrl.text,
+                                      selectedValue.isEmpty
+                                          ? '1, 2, 3, 4'
+                                          : selectedValue.join(", "),
+                                    ),
+                                  );
+                                }
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(

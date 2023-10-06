@@ -1,10 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
+import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:todos_app/components/toast.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -79,10 +80,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
         body: BlocConsumer<AddTaskPageBloc, AddTaskPageState>(
           listener: (context, state) {
             if (state is AddTaskPageLoaded) {
-              toast(state.msg);
+              customToast(
+                  context: context,
+                  title: "Thành công",
+                  message: state.msg,
+                  contentType: ContentType.success);
               Navigator.of(context).pop();
             } else if (state is AddTaskPageError) {
-              toast(state.error.toString());
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
             }
           },
           builder: (context, state) {
@@ -104,16 +113,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   MyTextFormField(
+                                    obscureText: false,
                                     text: "Tiêu đề",
                                     hintText: "Tiêu đề",
                                     controller: tieuDeCtrl,
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     text: "Nội dung",
                                     hintText: "Nội dung",
                                     controller: noiDungCtrl,
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     controller: ngayBDCtrl,
                                     text: "Ngày bắt đầu",
                                     hintText: DateFormat('dd-MM-yyyy')
@@ -129,6 +141,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     ),
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     controller: ngayKTCtrl,
                                     text: "Ngày kết thúc",
                                     hintText: DateFormat('dd-MM-yyyy')
@@ -146,6 +159,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     children: <Widget>[
                                       Expanded(
                                         child: MyTextFormField(
+                                          obscureText: false,
                                           controller: gioBDCtrl,
                                           text: "Giờ bắt đầu",
                                           hintText: _startTime,
@@ -153,7 +167,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                             icon: const Icon(Icons.access_time),
                                             color: Colors.grey,
                                             onPressed: () {
-                                              _getTimeFromUser(isStartTime: true);
+                                              _getTimeFromUser(
+                                                  isStartTime: true);
                                             },
                                           ),
                                         ),
@@ -163,6 +178,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                       ),
                                       Expanded(
                                         child: MyTextFormField(
+                                          obscureText: false,
                                           controller: gioKTCtrl,
                                           text: "Giờ kết thúc",
                                           hintText: _endTime,
@@ -179,6 +195,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     ],
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     controller: trangThaiCtrl,
                                     text: "Trạng thái",
                                     hintText: _selectedTrangThai,
@@ -211,12 +228,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     ),
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     controller: tienDoCtrl,
                                     text: "Tiến độ",
                                     hintText: "Tiến độ",
                                     inputType: TextInputType.number,
                                   ),
                                   MyTextFormField(
+                                    obscureText: false,
                                     controller: ghiChuCtrl,
                                     text: "Ghi chú",
                                     hintText: "Ghi chú",
@@ -240,11 +259,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                 gioKTCtrl.text.isEmpty ||
                                                 trangThaiCtrl.text.isEmpty ||
                                                 tienDoCtrl.text.isEmpty) {
-                                              toast(
-                                                  "Vui lòng nhập đủ thông tin công việc");
+                                              customToast(
+                                                  context: context,
+                                                  title: "Thông báo",
+                                                  message:
+                                                      "Vui lòng nhập đủ thông tin công việc",
+                                                  contentType:
+                                                      ContentType.warning);
                                             } else {
-                                              BlocProvider.of<
-                                                      AddTaskPageBloc>(context)
+                                              BlocProvider.of<AddTaskPageBloc>(
+                                                      context)
                                                   .add(AddTask(
                                                       tieuDe: tieuDeCtrl.text,
                                                       noiDung: noiDungCtrl.text,
@@ -254,13 +278,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                               _selectStartDate),
                                                       ngayKT: DateFormat(
                                                               "yyyy-MM-dd")
-                                                          .format(_selectEndDate),
+                                                          .format(
+                                                              _selectEndDate),
                                                       gioBD: gioBDCtrl.text,
                                                       gioKT: gioKTCtrl.text,
                                                       trangThai:
                                                           trangThaiCtrl.text,
                                                       tienDo: tienDoCtrl.text,
-                                                      ghiChu: ghiChuCtrl.text));
+                                                      ghiChu: ghiChuCtrl.text.isEmpty ? "Không có ghi chú" : ghiChuCtrl.text));
                                             }
                                           },
                                           style: ButtonStyle(

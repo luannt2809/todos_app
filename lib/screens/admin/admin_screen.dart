@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
-
 import 'package:todos_app/screens/admin/list_department_page.dart';
+import 'package:todos_app/screens/admin/list_task_assigned_page.dart';
 import 'package:todos_app/screens/admin/list_user_page.dart';
 import 'package:todos_app/screens/home_page.dart';
 import 'package:todos_app/screens/notify_page.dart';
@@ -36,6 +36,12 @@ class _AdminScreenState extends State<AdminScreen> {
       HomePage(nguoiDung: widget.nguoiDung),
       Visibility(
         visible: showItem,
+        child: ListTaskAssignedPage(
+          nguoiDung: widget.nguoiDung,
+        ),
+      ),
+      Visibility(
+        visible: showItem,
         child: const ListUserPage(),
       ),
       Visibility(visible: showItem, child: const ListDepartmentPage()),
@@ -61,6 +67,8 @@ class _AdminScreenState extends State<AdminScreen> {
         onTap: _onItemTapped,
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
+          MyBottomNavigationBarItem(
+              icon: Icons.list_alt_rounded, label: "Công việc"),
           MyBottomNavigationBarItem(icon: Icons.person, label: "Người dùng"),
           MyBottomNavigationBarItem(
               icon: Icons.business_outlined, label: "Phòng ban"),

@@ -30,8 +30,12 @@ class AddTaskPageBloc extends Bloc<AddTaskPageEvent, AddTaskPageState> {
           if (response.statusCode == 200) {
             emit(AddTaskPageLoaded(response.data.toString()));
           }
-        } catch (e) {
-          emit(AddTaskPageError(error: 'Error: $e'));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(AddTaskPageError(error: 'Error: ${e.response?.data}'));
+          } else {
+            emit(AddTaskPageError(error: e.toString()));
+          }
         }
       }
     });

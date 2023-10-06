@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:todos_app/models/phong_ban.dart';
@@ -25,8 +26,12 @@ class ListDepartmentPageBloc
           } else {
             emit(GetListDepartmentEmpty());
           }
-        } catch (e) {
-          emit(ListDepartmentPageError(error: "Error $e"));
+        } on DioException catch (e) {
+          if(e.type == DioExceptionType.badResponse){
+            emit(ListDepartmentPageError(error: "Error ${e.response?.data}"));
+          } else {
+            emit(ListDepartmentPageError(error: "Error $e"));
+          }
         }
       }
     });
