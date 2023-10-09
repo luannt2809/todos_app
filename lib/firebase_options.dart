@@ -44,37 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC2A9oYjV-43_bN_L0pwql5fCXVXkwlXiM',
-    appId: '1:684968736764:web:82c7030bb6095af2106479',
-    messagingSenderId: '684968736764',
-    projectId: 'todosapp-cb644',
-    authDomain: 'todosapp-cb644.firebaseapp.com',
-    storageBucket: 'todosapp-cb644.appspot.com',
+    apiKey: 'AIzaSyBzUfjx73YZTcUNi1b6vFM4ZUtH1Oq81q0',
+    appId: '1:379927564711:web:6ab752931f20ab3ac0a682',
+    messagingSenderId: '379927564711',
+    projectId: 'todosapp-3e3a0',
+    authDomain: 'todosapp-3e3a0.firebaseapp.com',
+    storageBucket: 'todosapp-3e3a0.appspot.com',
+    measurementId: 'G-9EXHHRKQ7L',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCw9fm6s_GAjtJTFulHyPI0zPGVwx6PO1E',
-    appId: '1:684968736764:android:bb9b321374430545106479',
-    messagingSenderId: '684968736764',
-    projectId: 'todosapp-cb644',
-    storageBucket: 'todosapp-cb644.appspot.com',
+    apiKey: 'AIzaSyA7y02cm85BWaRon9ZeAg2l1hdAaE1TJZo',
+    appId: '1:379927564711:android:beb79987fac88e79c0a682',
+    messagingSenderId: '379927564711',
+    projectId: 'todosapp-3e3a0',
+    storageBucket: 'todosapp-3e3a0.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDdd4TD5NW3KzK3h3QkPKnq1dZQ7AL67jY',
-    appId: '1:684968736764:ios:99a0d0541c43a9da106479',
-    messagingSenderId: '684968736764',
-    projectId: 'todosapp-cb644',
-    storageBucket: 'todosapp-cb644.appspot.com',
+    apiKey: 'AIzaSyAh06cwx38kyN65U0biT8Gn8X5cL9U5tCM',
+    appId: '1:379927564711:ios:6d0bbcc35ed718c3c0a682',
+    messagingSenderId: '379927564711',
+    projectId: 'todosapp-3e3a0',
+    storageBucket: 'todosapp-3e3a0.appspot.com',
     iosBundleId: 'com.example.todosApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDdd4TD5NW3KzK3h3QkPKnq1dZQ7AL67jY',
-    appId: '1:684968736764:ios:f9e9bfb613c38efb106479',
-    messagingSenderId: '684968736764',
-    projectId: 'todosapp-cb644',
-    storageBucket: 'todosapp-cb644.appspot.com',
+    apiKey: 'AIzaSyAh06cwx38kyN65U0biT8Gn8X5cL9U5tCM',
+    appId: '1:379927564711:ios:50838ee2c4758a29c0a682',
+    messagingSenderId: '379927564711',
+    projectId: 'todosapp-3e3a0',
+    storageBucket: 'todosapp-3e3a0.appspot.com',
     iosBundleId: 'com.example.todosApp.RunnerTests',
   );
 }

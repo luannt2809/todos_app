@@ -17,6 +17,8 @@ class AdminAddTaskEvent extends AdminAddTaskPageEvent {
   final String tienDo;
   final String ghiChu;
   final int maNguoiLam;
+  final int? maNguoiGiao;
+  final int? kieu;
 
   AdminAddTaskEvent({
     required this.tieuDe,
@@ -28,5 +30,7 @@ class AdminAddTaskEvent extends AdminAddTaskPageEvent {
     required this.trangThai,
     required this.tienDo,
     required this.ghiChu,
-    required this.maNguoiLam});
+    required this.maNguoiLam,
+    required this.maNguoiGiao,
+    this.kieu});
 }

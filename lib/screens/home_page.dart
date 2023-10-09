@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => TaskDetailsPage(
-                  hoTen: widget.nguoiDung.hoTen.toString(), congViec: congViec),
+                  nguoiDung: widget.nguoiDung, congViec: congViec),
             ),
           ).then((value) async {
             if (value != null && value[0] == 'Reload') {
@@ -418,6 +418,7 @@ class _HomePageState extends State<HomePage> {
                       congViec.tieuDe.toString(),
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     )),
+                    SizedBox(width: 10,),
                     Text(
                       congViec.trangThai.toString(),
                       style: const TextStyle(
