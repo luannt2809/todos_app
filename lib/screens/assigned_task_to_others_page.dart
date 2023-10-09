@@ -2,22 +2,26 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todos_app/bloc/task/admin_add_task_page/admin_add_task_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
+import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/services/repositories/nguoi_dung_repository.dart';
 
-class TabGiaoViec extends StatefulWidget {
-  const TabGiaoViec({super.key});
+class AssignedTaskToOther extends StatefulWidget {
+  final CongViec congViec;
+  final NguoiDung nguoiDung;
+
+  const AssignedTaskToOther(
+      {super.key, required this.congViec, required this.nguoiDung});
 
   @override
-  State<TabGiaoViec> createState() => _TabGiaoViecState();
+  State<AssignedTaskToOther> createState() => _AssignedTaskToOtherState();
 }
 
-class _TabGiaoViecState extends State<TabGiaoViec> {
+class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
   DateTime _selectStartDate = DateTime.now();
   DateTime _selectEndDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -27,8 +31,6 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
   List<NguoiDung> listNguoiLam = [];
   int selectMaNL = 1;
   String selectTenNL = "Người làm";
-
-  int? maNguoiGiao;
 
   TextEditingController nguoiLamCtrl = TextEditingController();
   TextEditingController tieuDeCtrl = TextEditingController();
@@ -63,14 +65,6 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
     'Hoàn thành'
   ];
 
-  void setMaNguoiGiao () async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      maNguoiGiao = prefs.getInt("maND");
-      print(maNguoiGiao);
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -82,39 +76,59 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
       throw Exception(onError);
     });
 
-    setMaNguoiGiao();
+    print(widget.congViec.maNguoiLam);
+    print(widget.congViec.maNguoiGiao);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AdminAddTaskPageBloc(),
-      child: BlocListener<AdminAddTaskPageBloc, AdminAddTaskPageState>(
-        listener: (context, state) {
-          if (state is AdminAddTaskPageLoaded) {
-            customToast(
-                context: context,
-                title: "Thành công",
-                message: state.msg,
-                contentType: ContentType.success);
-            Navigator.of(context).pop();
-          } else if (state is AdminAddTaskPageError) {
-            customToast(
-                context: context,
-                title: "Lỗi",
-                message: state.error.toString(),
-                contentType: ContentType.failure);
-          }
-        },
-        child: BlocBuilder<AdminAddTaskPageBloc, AdminAddTaskPageState>(
-          builder: (context, state) {
-            if (state is AdminAddTaskPageLoading) {
-              return circularProgressIndicator();
-            } else {
-              return GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: Container(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 3,
+        leading: GestureDetector(
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.orangeAccent,
+            size: 20,
+          ),
+          onTap: () {
+            Navigator.pop(context, ["Reload"]);
+          },
+        ),
+        title: const Text(
+          "Thêm công việc",
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+      ),
+      body: BlocProvider(
+        create: (context) => AdminAddTaskPageBloc(),
+        child: BlocListener<AdminAddTaskPageBloc, AdminAddTaskPageState>(
+          listener: (context, state) {
+            if (state is AdminAddTaskPageLoaded) {
+              customToast(
+                  context: context,
+                  title: "Thành công",
+                  message: state.msg,
+                  contentType: ContentType.success);
+              Navigator.of(context).pop();
+            } else if (state is AdminAddTaskPageError) {
+              customToast(
+                  context: context,
+                  title: "Lỗi",
+                  message: state.error.toString(),
+                  contentType: ContentType.failure);
+            }
+          },
+          child: BlocBuilder<AdminAddTaskPageBloc, AdminAddTaskPageState>(
+            builder: (context, state) {
+              if (state is AdminAddTaskPageLoading) {
+                return circularProgressIndicator();
+              } else {
+                return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,7 +358,14 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
                                                           ? "Không có ghi chú"
                                                           : ghiChuCtrl.text,
                                                   maNguoiLam: selectMaNL,
-                                                  maNguoiGiao: maNguoiGiao));
+                                                  maNguoiGiao:
+                                                      widget.nguoiDung.maPB ==
+                                                              2
+                                                          ? widget.congViec
+                                                              .maNguoiGiao
+                                                          : widget.congViec
+                                                              .maNguoiLam,
+                                                  kieu: widget.congViec.maCV));
                                         }
                                       },
                                       style: ButtonStyle(
@@ -375,10 +396,10 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
                       ),
                     ],
                   ),
-                ),
-              );
-            }
-          },
+                );
+              }
+            },
+          ),
         ),
       ),
     );

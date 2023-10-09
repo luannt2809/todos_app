@@ -27,7 +27,9 @@ class AdminAddTaskPageBloc
               event.trangThai,
               event.tienDo,
               event.ghiChu,
-              event.maNguoiLam);
+              event.maNguoiLam,
+              event.maNguoiGiao,
+              event.kieu);
           if (response.statusCode == 200) {
             emit(AdminAddTaskPageLoaded(response.data.toString()));
           }

@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "684968736764",
-    "project_id": "todosapp-cb644",
-    "storage_bucket": "todosapp-cb644.appspot.com"
+    "project_number": "379927564711",
+    "project_id": "todosapp-3e3a0",
+    "storage_bucket": "todosapp-3e3a0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:684968736764:android:bb9b321374430545106479",
+        "mobilesdk_app_id": "1:379927564711:android:e409c3d1242e3ec6c0a682",
+        "android_client_info": {
+          "package_name": "com.example.push_notification_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7y02cm85BWaRon9ZeAg2l1hdAaE1TJZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379927564711:android:beb79987fac88e79c0a682",
         "android_client_info": {
           "package_name": "com.example.todos_app"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCw9fm6s_GAjtJTFulHyPI0zPGVwx6PO1E"
+          "current_key": "AIzaSyA7y02cm85BWaRon9ZeAg2l1hdAaE1TJZo"
         }
       ],
       "services": {

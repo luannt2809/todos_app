@@ -35,9 +35,11 @@ class CongViecRepository {
       String trangThai,
       String tienDo,
       String ghiChu,
-      int maNguoiLam) async {
+      int maNguoiLam,
+      int? maNguoiGiao,
+      int? kieu) async {
     return congViecProvider.adminAddTask(tieuDe, noiDung, ngayBD, ngayKT, gioBD,
-        gioKT, trangThai, tienDo, ghiChu, maNguoiLam);
+        gioKT, trangThai, tienDo, ghiChu, maNguoiLam, maNguoiGiao, kieu);
   }
 
   // update task
@@ -67,9 +69,11 @@ class CongViecRepository {
       String trangThai,
       String tienDo,
       String ghiChu,
-      int maNguoiLam) {
+      int maNguoiLam,
+      int? maNguoiGiao,
+      int? kieu) {
     return congViecProvider.adminUpdateTask(maCV, tieuDe, noiDung, ngayBD,
-        ngayKT, gioBD, gioKT, trangThai, tienDo, ghiChu, maNguoiLam);
+        ngayKT, gioBD, gioKT, trangThai, tienDo, ghiChu, maNguoiLam, maNguoiGiao, kieu);
   }
 
   // delete task
@@ -79,6 +83,10 @@ class CongViecRepository {
 
   Future<List<CongViec>> getAllTaskAssigned() {
     return congViecProvider.getAllTaskAssigned();
+  }
+
+  Future<List<CongViec>> getAllTransferTask(int? maCV) {
+    return congViecProvider.getAllTransferTask(maCV);
   }
 }
 

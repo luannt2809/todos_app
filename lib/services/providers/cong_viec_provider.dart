@@ -64,9 +64,18 @@ class CongViecProvider {
       String trangThai,
       String tienDo,
       String ghiChu,
-      int maNguoiLam) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? maNguoiGiao = prefs.getInt("maND");
+      int maNguoiLam,
+      int? maNguoiGiao,
+      int? kieu) async {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final int? maNguoiGiao = prefs.getInt("maND");
+
+    final SharedPreferences registrationTokenPrefs =
+        await SharedPreferences.getInstance();
+
+    // để sau
+    final String? registrationToken =
+        registrationTokenPrefs.getString("registrationToken");
 
     Response response = await ApiConfig.dio
         .post("${ApiConfig.BASE_URL}/congviec/insert", data: {
@@ -80,7 +89,8 @@ class CongViecProvider {
       'TienDo': tienDo,
       'GhiChu': ghiChu,
       'MaNguoiGiao': maNguoiGiao,
-      'MaNguoiLam': maNguoiLam
+      'MaNguoiLam': maNguoiLam,
+      'Kieu': kieu
     });
 
     return response;
@@ -129,12 +139,14 @@ class CongViecProvider {
       String trangThai,
       String tienDo,
       String ghiChu,
-      int maNguoiLam
-      ) async {
+      int maNguoiLam,
+      int? maNguoiGiao,
+      int? kieu) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maNguoiGiao = prefs.getInt("maND");
 
-    Response response = await ApiConfig.dio.put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {
+    Response response = await ApiConfig.dio
+        .put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {
       'TieuDe': tieuDe,
       'NoiDung': noiDung,
       'GioBatDau': gioBD,
@@ -158,13 +170,32 @@ class CongViecProvider {
 
     return response;
   }
-  
+
   Future<List<CongViec>> getAllTaskAssigned() async {
-    
     try {
-      Response response = await ApiConfig.dio.get("${ApiConfig.BASE_URL}/congviec/list-task-assigned");
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? maNguoiGiao = prefs.getInt("maND");
+
+      Response response = await ApiConfig.dio.get(
+          "${ApiConfig.BASE_URL}/congviec/list-task-assigned/${maNguoiGiao}");
 
       List<dynamic> value = response.data;
+      return value.map((e) => CongViec.fromJson(e)).toList();
+    } catch (e) {
+      if (e.toString().contains("SocketException")) {
+        return [CongViec.withError("Check Internet Connection")];
+      }
+      return [CongViec.withError(e.toString())];
+    }
+  }
+
+  Future<List<CongViec>> getAllTransferTask(int? maCV) async {
+    try {
+      Response response = await ApiConfig.dio
+          .get("${ApiConfig.BASE_URL}/congviec/list-task-transfer/${maCV}");
+
+      List<dynamic> value = response.data;
+
       return value.map((e) => CongViec.fromJson(e)).toList();
     } catch (e) {
       if (e.toString().contains("SocketException")) {

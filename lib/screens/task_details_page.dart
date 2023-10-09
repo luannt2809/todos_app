@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/models/cong_viec.dart';
-import 'package:todos_app/services/config/api_config.dart';
+import 'package:todos_app/models/nguoi_dung.dart';
+import 'package:todos_app/screens/assigned_task_to_others_page.dart';
+import 'package:todos_app/screens/list_log_task_page.dart';
+import 'package:todos_app/screens/list_transfer_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class TaskDetailsPage extends StatefulWidget {
-  final String hoTen;
+  final NguoiDung nguoiDung;
   final CongViec congViec;
 
   const TaskDetailsPage(
-      {super.key, required this.congViec, required this.hoTen});
+      {super.key, required this.congViec, required this.nguoiDung});
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
 }
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
-  Future<List<dynamic>> getListLogCV() async {
-    var response = await ApiConfig.dio
-        .get("${ApiConfig.BASE_URL}/logcongviec/${widget.congViec.maCV}");
-
-    final List<dynamic> listLogCV = response.data;
-
-    return listLogCV;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,60 +57,97 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       margin:
                           const EdgeInsets.only(top: 10, left: 16, right: 16),
                       decoration: Styles.boxDecoration,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Stack(
                         children: [
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Text(widget.congViec.tieuDe.toString()),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child:
+                                        Text(widget.congViec.tieuDe.toString()),
+                                  ),
+                                  Text(
+                                    widget.congViec.trangThai.toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.green,
+                                        fontSize: 15),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                widget.congViec.trangThai.toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.green,
-                                    fontSize: 15),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: RowItem(
+                                      icon: Icons.access_time,
+                                      text:
+                                          "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioBatDau.toString()))} - "
+                                          "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioKetThuc.toString()))}",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${widget.congViec.tienDo}%",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.deepOrange,
+                                        fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              RowItem(
+                                icon: Icons.calendar_month_outlined,
+                                text:
+                                    "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayBatDau.toString()))} - "
+                                    "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()))}",
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              RowItem(
+                                icon: Icons.person_outline_outlined,
+                                text: widget.congViec.hoTenNguoiLam ??
+                                    widget.nguoiDung.hoTen.toString(),
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: RowItem(
-                                  icon: Icons.access_time,
-                                  text:
-                                      "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioBatDau.toString()))} - "
-                                      "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioKetThuc.toString()))}",
+                          Visibility(
+                            visible:
+                                widget.congViec.trangThai == "Hoàn thành" &&
+                                    widget.congViec.tienDo == 100,
+                            child: Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => AssignedTaskToOther(
+                                        congViec: widget.congViec,
+                                        nguoiDung: widget.nguoiDung,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 35,
+                                  height: 35,
+                                  decoration: Styles.boxDecoration,
+                                  child: Icon(
+                                    Icons.navigate_next,
+                                    size: 20,
+                                    color: Colors.blueAccent,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                "${widget.congViec.tienDo}%",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.deepOrange,
-                                    fontSize: 15),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          RowItem(
-                            icon: Icons.calendar_month_outlined,
-                            text:
-                                "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayBatDau.toString()))} - "
-                                "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()))}",
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          RowItem(
-                            icon: Icons.person_outline_outlined,
-                            text: widget.congViec.hoTenNguoiLam ?? widget.hoTen,
+                            ),
                           ),
                         ],
                       ),
@@ -208,40 +240,44 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             physics: const BouncingScrollPhysics(),
             children: [
               // Nội dung của Tab 1
-              FutureBuilder<List<dynamic>>(
-                future: getListLogCV(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<dynamic>> snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        // item
-                        return itemListLogCV(
-                            snapshot.data![index]['TieuDe'].toString(),
-                            snapshot.data![index]['ThoiGian'].toString(),
-                            snapshot.data![index]['HoTen'].toString(),
-                            snapshot.data![index]['TrangThai'].toString(),
-                            snapshot.data![index]['TienDo'].toDouble(),
-                            snapshot.data![index]['MoTa'].toString(),
-                            context);
-                      },
-                      itemCount: snapshot.data!.length,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: 16,
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                      child: Text("Chưa có dữ liệu"),
-                    );
-                  }
-                },
-              ),
+              // FutureBuilder<List<dynamic>>(
+              //   future: getListLogCV(),
+              //   builder: (BuildContext context,
+              //       AsyncSnapshot<List<dynamic>> snapshot) {
+              //     if (snapshot.hasData) {
+              //       return ListView.builder(
+              //         itemBuilder: (BuildContext context, int index) {
+              //           // item
+              //           return itemListLogCV(
+              //               snapshot.data![index]['TieuDe'].toString(),
+              //               snapshot.data![index]['ThoiGian'].toString(),
+              //               snapshot.data![index]['HoTen'].toString(),
+              //               snapshot.data![index]['TrangThai'].toString(),
+              //               snapshot.data![index]['TienDo'].toDouble(),
+              //               snapshot.data![index]['MoTa'].toString(),
+              //               context);
+              //         },
+              //         itemCount: snapshot.data!.length,
+              //         physics: const BouncingScrollPhysics(),
+              //         padding: const EdgeInsets.only(
+              //           left: 16,
+              //           right: 16,
+              //           bottom: 16,
+              //         ),
+              //       );
+              //     } else {
+              //       return const Center(
+              //         child: Text("Chưa có dữ liệu"),
+              //       );
+              //     }
+              //   },
+              // ),
               // Nội dung của Tab 2
-              const Center(child: Text('Tab 2 Content')),
+              ListLogTaskPage(congViec: widget.congViec),
+              ListTransferTaskPage(
+                congViec: widget.congViec,
+                nguoiDung: widget.nguoiDung,
+              ),
             ],
           ),
         ),

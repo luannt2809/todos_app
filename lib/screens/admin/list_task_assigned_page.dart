@@ -80,21 +80,9 @@ class _ListTaskAssignedPageState extends State<ListTaskAssignedPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => TaskDetailsPage(
-                                hoTen: widget.nguoiDung.hoTen.toString(),
-                                congViec: CongViec(
-                                    maCV: int.parse(congViec.maCV.toString()),
-                                    tieuDe: congViec.tieuDe,
-                                    noiDung: congViec.noiDung,
-                                    ngayBatDau: congViec.ngayBatDau,
-                                    ngayKetThuc: congViec.ngayKetThuc,
-                                    gioBatDau: congViec.gioBatDau,
-                                    gioKetThuc: congViec.gioKetThuc,
-                                    trangThai: congViec.trangThai,
-                                    tienDo: congViec.tienDo,
-                                    ghiChu: congViec.ghiChu,
-                                    hoTenNguoiLam: congViec.hoTenNguoiLam,
-                                    hoTenNguoiGiao: congViec.hoTenNguoiGiao),
-                              ),
+                                nguoiDung: widget.nguoiDung,
+                                congViec: congViec,
+                              )
                             ),
                           ).then((value) async {
                             if (value != null && value[0] == 'Reload') {
@@ -226,7 +214,9 @@ class _ListTaskAssignedPageState extends State<ListTaskAssignedPage> {
                                           fontWeight: FontWeight.w600),
                                       softWrap: true,
                                     )),
-                                    const SizedBox(width: 10,),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
                                     Text(
                                       congViec.trangThai.toString(),
                                       style: const TextStyle(
