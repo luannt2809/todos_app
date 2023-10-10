@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/assigned_task_to_others_page.dart';
@@ -19,7 +20,6 @@ class TaskDetailsPage extends StatefulWidget {
 }
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -44,6 +44,24 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             style: TextStyle(color: Colors.black),
           ),
           centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: GestureDetector(
+                onTap: () {
+                  Share.share(
+                      "Tiêu đề: ${widget.congViec.tieuDe}\nNội dung: ${widget.congViec.noiDung}"
+                      "\nTiến độ: ${widget.congViec.tienDo}%\n Trạng thái: ${widget.congViec.trangThai}",
+                      subject: widget.congViec.tieuDe);
+                },
+                child: Icon(
+                  Icons.share,
+                  size: 20,
+                  color: Colors.orangeAccent,
+                ),
+              ),
+            )
+          ],
         ),
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {

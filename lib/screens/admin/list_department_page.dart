@@ -91,7 +91,7 @@ class _ListDepartmentPageState extends State<ListDepartmentPage> {
                       padding: const EdgeInsets.only(top: 16),
                       child: Slidable(
                         endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
+                          motion: const DrawerMotion(),
                           children: [
                             SlidableAction(
                               onPressed: (context) {
@@ -103,7 +103,7 @@ class _ListDepartmentPageState extends State<ListDepartmentPage> {
                               backgroundColor: Colors.amber,
                               foregroundColor: Colors.white,
                               icon: Icons.edit,
-                              label: "Cập nhật",
+                              
                             ),
                           ],
                         ),

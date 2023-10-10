@@ -23,6 +23,24 @@ class CongViecProvider {
     }
   }
 
+  // Future<List<CongViec>> getAllCongViecByMaND(String startDate, String inputTime) async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final int? maND = prefs.getInt("maND");
+  //
+  //   try {
+  //     Response response = await ApiConfig.dio.get(
+  //         "${ApiConfig.BASE_URL}/congviec/search?MaND=$maND&StartDate=$startDate&InputTime=$inputTime");
+  //
+  //     List<dynamic> value = response.data;
+  //     return value.map((e) => CongViec.fromJson(e)).toList();
+  //   } catch (e) {
+  //     if (e.toString().contains("SocketException")) {
+  //       return [CongViec.withError("Check Internet Connection")];
+  //     }
+  //     return [CongViec.withError(e.toString())];
+  //   }
+  // }
+
   // add task
   Future<Response> addTask(
       String tieuDe,
@@ -107,9 +125,10 @@ class CongViecProvider {
       String gioKT,
       String trangThai,
       String tienDo,
-      String ghiChu) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? maNguoiLam = prefs.getInt("maND");
+      String ghiChu,
+      int maNguoiLam) async {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final int? maNguoiLam = prefs.getInt("maND");
 
     Response response = await ApiConfig.dio
         .put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {
@@ -142,8 +161,8 @@ class CongViecProvider {
       int maNguoiLam,
       int? maNguoiGiao,
       int? kieu) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? maNguoiGiao = prefs.getInt("maND");
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final int? maNguoiGiao = prefs.getInt("maND");
 
     Response response = await ApiConfig.dio
         .put("${ApiConfig.BASE_URL}/congviec/update/$maCV", data: {

@@ -79,11 +79,10 @@ class _ListTaskAssignedPageState extends State<ListTaskAssignedPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TaskDetailsPage(
-                                nguoiDung: widget.nguoiDung,
-                                congViec: congViec,
-                              )
-                            ),
+                                builder: (context) => TaskDetailsPage(
+                                      nguoiDung: widget.nguoiDung,
+                                      congViec: congViec,
+                                    )),
                           ).then((value) async {
                             if (value != null && value[0] == 'Reload') {
                               getData();
@@ -92,7 +91,7 @@ class _ListTaskAssignedPageState extends State<ListTaskAssignedPage> {
                         },
                         child: Slidable(
                           endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
+                            motion: const DrawerMotion(),
                             children: [
                               SlidableAction(
                                 // An action can be bigger than the others.
@@ -114,13 +113,11 @@ class _ListTaskAssignedPageState extends State<ListTaskAssignedPage> {
                                 backgroundColor: Colors.amber,
                                 foregroundColor: Colors.white,
                                 icon: Icons.edit,
-                                label: 'Cập nhật',
                               ),
                               SlidableAction(
                                 backgroundColor: Colors.redAccent,
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete_rounded,
-                                label: 'Xóa',
                                 onPressed: (BuildContext context) {
                                   showDialog(
                                     context: context,

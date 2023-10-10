@@ -68,10 +68,10 @@ class _AdminScreenState extends State<AdminScreen> {
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
           MyBottomNavigationBarItem(
-              icon: Icons.list_alt_rounded, label: "Công việc"),
+              icon: Icons.assignment_rounded, label: "Công việc"),
           MyBottomNavigationBarItem(icon: Icons.person, label: "Người dùng"),
           MyBottomNavigationBarItem(
-              icon: Icons.business_outlined, label: "Phòng ban"),
+              icon: Icons.group, label: "Phòng ban"),
           MyBottomNavigationBarItem(
               icon: Icons.notifications_rounded, label: "Thông báo"),
           MyBottomNavigationBarItem(icon: Icons.settings, label: "Cài đặt"),
