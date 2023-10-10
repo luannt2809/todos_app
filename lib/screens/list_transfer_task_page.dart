@@ -81,7 +81,7 @@ class _ListTransferTaskPageState extends State<ListTransferTaskPage> {
                       },
                       child: Slidable(
                         endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
+                          motion: const DrawerMotion(),
                           children: [
                             SlidableAction(
                               // An action can be bigger than the others.
@@ -103,85 +103,90 @@ class _ListTransferTaskPageState extends State<ListTransferTaskPage> {
                               backgroundColor: Colors.amber,
                               foregroundColor: Colors.white,
                               icon: Icons.edit,
-                              label: 'Cập nhật',
                             ),
-                            SlidableAction(
-                              backgroundColor: Colors.redAccent,
-                              foregroundColor: Colors.white,
-                              icon: Icons.delete_rounded,
-                              label: 'Xóa',
-                              onPressed: (BuildContext context) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      BlocProvider(
-                                    create: (context) => DeleteTaskBloc(),
-                                    child: BlocConsumer<DeleteTaskBloc,
-                                        DeleteTaskState>(
-                                      listener: (context, state) {
-                                        if (state is DeleteTaskError) {
-                                          customToast(
-                                              context: context,
-                                              title: "Lỗi",
-                                              message: state.error.toString(),
-                                              contentType: ContentType.failure);
-                                          Navigator.of(context).pop();
-                                        } else if (state is DeletedTask) {
-                                          customToast(
-                                              context: context,
-                                              title: "Thành công",
-                                              message: state.msg,
-                                              contentType: ContentType.success);
-                                          Navigator.of(context).pop();
-                                          getData();
-                                        }
-                                      },
-                                      builder: (context, state) {
-                                        if (state is DeleteTaskInitial) {
-                                          return AlertDialog(
-                                            title: const Text("Xác nhận"),
-                                            content: const Text(
-                                                "Bạn có xác nhận xoá công việc này không ?"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  BlocProvider.of<
-                                                              DeleteTaskBloc>(
-                                                          context)
-                                                      .add(DeleteTask(int.parse(
-                                                          congViec.maCV
-                                                              .toString())));
-                                                },
-                                                child: const Text(
-                                                  "Xác nhận",
-                                                  style: TextStyle(
-                                                      color: Colors
-                                                          .deepOrangeAccent,
-                                                      fontSize: 16),
+                            Visibility(
+                              visible: congViec.maNguoiGiao == null &&
+                                  widget.nguoiDung.maPB != 2 ||
+                                  widget.nguoiDung.maPB == 2 ||
+                                  congViec.maNguoiGiao ==
+                                      widget.nguoiDung.maND,
+                              child: SlidableAction(
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete_rounded,
+                                onPressed: (BuildContext context) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        BlocProvider(
+                                      create: (context) => DeleteTaskBloc(),
+                                      child: BlocConsumer<DeleteTaskBloc,
+                                          DeleteTaskState>(
+                                        listener: (context, state) {
+                                          if (state is DeleteTaskError) {
+                                            customToast(
+                                                context: context,
+                                                title: "Lỗi",
+                                                message: state.error.toString(),
+                                                contentType: ContentType.failure);
+                                            Navigator.of(context).pop();
+                                          } else if (state is DeletedTask) {
+                                            customToast(
+                                                context: context,
+                                                title: "Thành công",
+                                                message: state.msg,
+                                                contentType: ContentType.success);
+                                            Navigator.of(context).pop();
+                                            getData();
+                                          }
+                                        },
+                                        builder: (context, state) {
+                                          if (state is DeleteTaskInitial) {
+                                            return AlertDialog(
+                                              title: const Text("Xác nhận"),
+                                              content: const Text(
+                                                  "Bạn có xác nhận xoá công việc này không ?"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                                DeleteTaskBloc>(
+                                                            context)
+                                                        .add(DeleteTask(int.parse(
+                                                            congViec.maCV
+                                                                .toString())));
+                                                  },
+                                                  child: const Text(
+                                                    "Xác nhận",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .deepOrangeAccent,
+                                                        fontSize: 16),
+                                                  ),
                                                 ),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text(
-                                                  "Huỷ",
-                                                  style: TextStyle(
-                                                      color: Colors
-                                                          .deepOrangeAccent,
-                                                      fontSize: 16),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text(
+                                                    "Huỷ",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .deepOrangeAccent,
+                                                        fontSize: 16),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return Container();
-                                        }
-                                      },
+                                              ],
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),

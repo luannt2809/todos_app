@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:todos_app/models/cong_viec.dart';
@@ -6,6 +5,7 @@ import 'package:todos_app/services/repositories/cong_viec_respository.dart';
 import 'package:equatable/equatable.dart';
 
 part 'home_page_event.dart';
+
 part 'home_page_state.dart';
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
@@ -16,8 +16,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       CongViecRepository congViecRepository = CongViecRepository();
       try {
         emit(HomePageLoading());
-        taskList = await congViecRepository
-            .getAllCongViecByMaND(event.startDate.toString());
+        taskList = await congViecRepository.getAllCongViecByMaND(
+            event.startDate.toString());
         if (taskList.isNotEmpty) {
           emit(HomePageLoaded(taskList: taskList));
         } else {

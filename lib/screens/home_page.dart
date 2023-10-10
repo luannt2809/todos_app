@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:todos_app/bloc/home_page/home_page_bloc.dart';
 import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/bloc/task/delete_task/delete_task_bloc.dart';
@@ -28,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _selectStartDate = DateTime.now();
+  // String inputTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   TextEditingController ngayBDCtrl = TextEditingController();
   final HomePageBloc homePageBloc = HomePageBloc();
 
@@ -80,6 +82,7 @@ class _HomePageState extends State<HomePage> {
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
                             CongViec congViec = state.taskList[index];
+
                             return itemListCV(context, congViec);
                           },
                           itemCount: state.taskList.length,
@@ -237,8 +240,7 @@ class _HomePageState extends State<HomePage> {
     //         ?.whenComplete(() {}) ??
     //     []; sửa thành ->
     homePageBloc.add(GetTaskList(
-        startDate:
-            DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
+        startDate: DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
   }
 
   // List<CongViec> list = [];
@@ -305,7 +307,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Slidable(
           endActionPane: ActionPane(
-            motion: const ScrollMotion(),
+            motion: const DrawerMotion(),
             children: [
               SlidableAction(
                 // An action can be bigger than the others.
@@ -325,17 +327,16 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.amber,
                 foregroundColor: Colors.white,
                 icon: Icons.edit,
-                label: 'Cập nhật',
               ),
               Visibility(
                 visible: congViec.maNguoiGiao == null &&
                         widget.nguoiDung.maPB != 2 ||
-                    widget.nguoiDung.maPB == 2,
+                    widget.nguoiDung.maPB == 2 ||
+                    congViec.maNguoiGiao == widget.nguoiDung.maND,
                 child: SlidableAction(
                   backgroundColor: Colors.redAccent,
                   foregroundColor: Colors.white,
                   icon: Icons.delete_rounded,
-                  label: 'Xóa',
                   onPressed: (BuildContext context) {
                     showDialog(
                       context: context,
@@ -418,7 +419,9 @@ class _HomePageState extends State<HomePage> {
                       congViec.tieuDe.toString(),
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     )),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       congViec.trangThai.toString(),
                       style: const TextStyle(

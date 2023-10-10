@@ -27,7 +27,8 @@ class UpdateTaskPageBloc
               event.gioKT,
               event.trangThai,
               event.tienDo,
-              event.ghiChu);
+              event.ghiChu,
+          event.maNguoiLam);
           if (response.statusCode == 200) {
             emit(UpdateTaskPageLoaded(response.data.toString()));
           }
@@ -52,7 +53,9 @@ class UpdateTaskPageBloc
               event.trangThai,
               event.tienDo,
               event.ghiChu,
-              event.maNguoiLam);
+              event.maNguoiLam,
+              event.maNguoiGiao,
+              event.kieu);
           if (response.statusCode == 200) {
             emit(UpdateTaskPageLoaded(response.data.toString()));
           }

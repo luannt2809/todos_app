@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/themes/styles.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class UserDetailsPage extends StatefulWidget {
   final NguoiDung nguoiDung;
@@ -62,7 +65,34 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 width: 80,
                 height: 80,
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          Uri uri =
+                              Uri.parse('tel:${widget.nguoiDung.soDienThoai}');
+                          launcher.launchUrl(uri);
+                        },
+                        child: iconAction(Icons.call)),
+                    GestureDetector(
+                        onTap: () {
+                          Uri uri =
+                              Uri.parse('mailto:${widget.nguoiDung.email}');
+                          launcher.launchUrl(uri);
+                        },
+                        child: iconAction(Icons.email))
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 decoration: Styles.boxDecoration,
                 padding: const EdgeInsets.all(16),
@@ -140,5 +170,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             ],
           ),
         ));
+  }
+
+  Widget iconAction(IconData iconData) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.deepOrangeAccent,
+        borderRadius: BorderRadius.all(
+          Radius.circular(50),
+        ),
+      ),
+      padding: EdgeInsets.all(10),
+      child: Icon(
+        iconData,
+        size: 25,
+        color: Colors.white,
+      ),
+    );
   }
 }

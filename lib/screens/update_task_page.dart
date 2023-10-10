@@ -60,7 +60,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         .format(DateTime.parse(widget.congViec.gioBatDau.toString()))
         .toString();
     gioKTCtrl.text = DateFormat("hh:mm a")
-        .format(DateTime.parse(widget.congViec.gioBatDau.toString()))
+        .format(DateTime.parse(widget.congViec.gioKetThuc.toString()))
         .toString();
     trangThaiCtrl.text = widget.congViec.trangThai.toString();
     tienDoCtrl.text = widget.congViec.tienDo.toString();
@@ -78,6 +78,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     });
 
     print("No NG:${widget.congViec.maNguoiGiao}");
+    print(selectMaNL);
+
+    print(widget.congViec.maNguoiGiao.toString());
+    print(
+        "${widget.congViec.maNguoiGiao != widget.nguoiDung.maND ? int.parse(widget.congViec.maNguoiLam.toString()) : int.parse(selectMaNL.toString())}");
   }
 
   @override
@@ -168,7 +173,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                     Visibility(
                                       visible: widget.nguoiDung.maPB == 2 &&
                                               widget.congViec.maNguoiGiao !=
-                                                  null
+                                                  null || widget.congViec.maNguoiGiao == widget.nguoiDung.maND
                                           ? true
                                           : false,
                                       child: MyTextFormField(
@@ -225,7 +230,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       visible:
                                           widget.congViec.maNguoiGiao == null &&
                                                   widget.nguoiDung.maPB != 2 ||
-                                              widget.nguoiDung.maPB == 2,
+                                              widget.nguoiDung.maPB == 2 ||
+                                              widget.congViec.maNguoiGiao ==
+                                                  widget.nguoiDung.maND,
                                       child: MyTextFormField(
                                         obscureText: false,
                                         controller: ngayBDCtrl,
@@ -244,9 +251,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                     ),
                                     Visibility(
                                       visible:
-                                      widget.congViec.maNguoiGiao == null &&
-                                          widget.nguoiDung.maPB != 2 ||
-                                          widget.nguoiDung.maPB == 2,
+                                          widget.congViec.maNguoiGiao == null &&
+                                                  widget.nguoiDung.maPB != 2 ||
+                                              widget.nguoiDung.maPB == 2 ||
+                                              widget.congViec.maNguoiGiao ==
+                                                  widget.nguoiDung.maND,
                                       child: MyTextFormField(
                                         obscureText: false,
                                         controller: ngayKTCtrl,
@@ -255,7 +264,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                             .format(_selectEndDate),
                                         widget: IconButton(
                                           onPressed: () {
-                                            _getDateFromUser(isStartDate: false);
+                                            _getDateFromUser(
+                                                isStartDate: false);
                                           },
                                           icon: const Icon(
                                               Icons.calendar_month_outlined),
@@ -265,9 +275,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                     ),
                                     Visibility(
                                       visible:
-                                      widget.congViec.maNguoiGiao == null &&
-                                          widget.nguoiDung.maPB != 2 ||
-                                          widget.nguoiDung.maPB == 2,
+                                          widget.congViec.maNguoiGiao == null &&
+                                                  widget.nguoiDung.maPB != 2 ||
+                                              widget.nguoiDung.maPB == 2 ||
+                                              widget.congViec.maNguoiGiao ==
+                                                  widget.nguoiDung.maND,
                                       child: Row(
                                         children: <Widget>[
                                           Expanded(
@@ -277,8 +289,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                               text: "Giờ bắt đầu",
                                               hintText: _startTime,
                                               widget: IconButton(
-                                                icon:
-                                                    const Icon(Icons.access_time),
+                                                icon: const Icon(
+                                                    Icons.access_time),
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
@@ -297,8 +309,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                               text: "Giờ kết thúc",
                                               hintText: _endTime,
                                               widget: IconButton(
-                                                icon:
-                                                    const Icon(Icons.access_time),
+                                                icon: const Icon(
+                                                    Icons.access_time),
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
@@ -385,75 +397,78 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                     contentType:
                                                         ContentType.warning);
                                               } else if (double.parse(
-                                                  tienDoCtrl.text) <
-                                                  0 ||
-                                                  double.parse(tienDoCtrl.text) >
+                                                          tienDoCtrl.text) <
+                                                      0 ||
+                                                  double.parse(
+                                                          tienDoCtrl.text) >
                                                       100) {
                                                 customToast(
                                                     context: context,
                                                     title: "Thông báo",
                                                     message:
-                                                    "Vui lòng nhập tiến độ 0 - 100",
+                                                        "Vui lòng nhập tiến độ 0 - 100",
                                                     contentType:
-                                                    ContentType.warning);
+                                                        ContentType.warning);
                                               } else {
-                                                widget.nguoiDung.maPB != 2 ||
-                                                        widget.congViec
-                                                                .maNguoiGiao ==
-                                                            null
-                                                    ? BlocProvider.of<
-                                                                UpdateTaskPageBloc>(
-                                                            context)
-                                                        .add(UpdateTask(
+                                                widget.nguoiDung.maPB != 2 &&
+                                                        widget.congViec.maNguoiGiao ==
+                                                            null || widget.nguoiDung.maND != widget.congViec.maNguoiGiao
+                                                    ? BlocProvider.of<UpdateTaskPageBloc>(context)
+                                                        .add(
+                                                        UpdateTask(
+                                                          maCV: int.parse(widget
+                                                              .congViec.maCV
+                                                              .toString()),
+                                                          tieuDe:
+                                                              tieuDeCtrl.text,
+                                                          noiDung:
+                                                              noiDungCtrl.text,
+                                                          ngayBD: DateFormat(
+                                                                  "yyyy-MM-dd")
+                                                              .format(DateFormat(
+                                                                      'dd-MM-yyyy')
+                                                                  .parse(
+                                                                      ngayBDCtrl
+                                                                          .text)),
+                                                          ngayKT: DateFormat(
+                                                                  "yyyy-MM-dd")
+                                                              .format(DateFormat(
+                                                                      'dd-MM-yyyy')
+                                                                  .parse(
+                                                                      ngayKTCtrl
+                                                                          .text)),
+                                                          gioBD: gioBDCtrl.text,
+                                                          gioKT: gioKTCtrl.text,
+                                                          trangThai:
+                                                              trangThaiCtrl
+                                                                  .text,
+                                                          tienDo:
+                                                              tienDoCtrl.text,
+                                                          ghiChu:
+                                                              ghiChuCtrl.text,
+                                                          maNguoiLam: int.parse(selectMaNL.toString()),
+                                                        ),
+                                                      )
+                                                    : BlocProvider.of<UpdateTaskPageBloc>(context).add(AdminUpdateTask(
                                                         maCV: int.parse(widget
                                                             .congViec.maCV
                                                             .toString()),
                                                         tieuDe: tieuDeCtrl.text,
                                                         noiDung:
                                                             noiDungCtrl.text,
-                                                        ngayBD: DateFormat(
-                                                                "yyyy-MM-dd")
-                                                            .format(
-                                                                _selectStartDate),
-                                                        ngayKT: DateFormat(
-                                                                "yyyy-MM-dd")
-                                                            .format(
-                                                                _selectEndDate),
+                                                        ngayBD: DateFormat("yyyy-MM-dd")
+                                                            .format(DateFormat(
+                                                                    'dd-MM-yyyy')
+                                                                .parse(ngayBDCtrl.text)),
+                                                        ngayKT: DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(ngayKTCtrl.text)),
                                                         gioBD: gioBDCtrl.text,
                                                         gioKT: gioKTCtrl.text,
-                                                        trangThai:
-                                                            trangThaiCtrl.text,
+                                                        trangThai: trangThaiCtrl.text,
                                                         tienDo: tienDoCtrl.text,
                                                         ghiChu: ghiChuCtrl.text,
-                                                      ))
-                                                    : BlocProvider.of<
-                                                                UpdateTaskPageBloc>(
-                                                            context)
-                                                        .add(AdminUpdateTask(
-                                                        maCV: int.parse(widget
-                                                            .congViec.maCV
-                                                            .toString()),
-                                                        tieuDe: tieuDeCtrl.text,
-                                                        noiDung:
-                                                            noiDungCtrl.text,
-                                                        ngayBD: DateFormat(
-                                                                "yyyy-MM-dd")
-                                                            .format(
-                                                                _selectStartDate),
-                                                        ngayKT: DateFormat(
-                                                                "yyyy-MM-dd")
-                                                            .format(
-                                                                _selectEndDate),
-                                                        gioBD: gioBDCtrl.text,
-                                                        gioKT: gioKTCtrl.text,
-                                                        trangThai:
-                                                            trangThaiCtrl.text,
-                                                        tienDo: tienDoCtrl.text,
-                                                        ghiChu: ghiChuCtrl.text,
-                                                        maNguoiLam: int.parse(
-                                                            selectMaNL
-                                                                .toString()),
-                                                      ));
+                                                        maNguoiLam: int.parse(selectMaNL.toString()),
+                                                        maNguoiGiao: widget.congViec.maNguoiGiao,
+                                                        kieu: widget.congViec.kieu));
                                               }
                                             },
                                             style: ButtonStyle(

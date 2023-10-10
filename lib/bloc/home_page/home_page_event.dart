@@ -8,6 +8,14 @@ abstract class HomePageEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// class GetTaskList extends HomePageEvent {
+//   final String startDate;
+//   final String inputTime;
+//
+//   const GetTaskList({required this.startDate, required this.inputTime});
+//
+// }
+
 class GetTaskList extends HomePageEvent {
   final String startDate;
 

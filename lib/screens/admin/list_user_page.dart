@@ -103,7 +103,7 @@ class _ListUserPageState extends State<ListUserPage> {
                       padding: const EdgeInsets.only(top: 16),
                       child: Slidable(
                         endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
+                          motion: const DrawerMotion(),
                           children: [
                             SlidableAction(
                               onPressed: (context) {
@@ -116,7 +116,7 @@ class _ListUserPageState extends State<ListUserPage> {
                               backgroundColor: Colors.amber,
                               foregroundColor: Colors.white,
                               icon: Icons.edit,
-                              label: 'Cập nhật',
+                              
                             )
                           ],
                         ),

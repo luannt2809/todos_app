@@ -53,9 +53,10 @@ class CongViecRepository {
       String gioKT,
       String trangThai,
       String tienDo,
-      String ghiChu) async {
+      String ghiChu,
+      int maNguoiLam) async {
     return congViecProvider.updateTask(maCV, tieuDe, noiDung, ngayBD, ngayKT,
-        gioBD, gioKT, trangThai, tienDo, ghiChu);
+        gioBD, gioKT, trangThai, tienDo, ghiChu, maNguoiLam);
   }
 
   Future<Response> adminUpdateTask(

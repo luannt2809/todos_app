@@ -19,6 +19,7 @@ class UpdateTask extends UpdateTaskPageEvent {
   final String trangThai;
   final String tienDo;
   final String ghiChu;
+  final int maNguoiLam;
 
   const UpdateTask(
       {required this.maCV,
@@ -30,7 +31,8 @@ class UpdateTask extends UpdateTaskPageEvent {
       required this.gioKT,
       required this.trangThai,
       required this.tienDo,
-      required this.ghiChu});
+      required this.ghiChu,
+      required this.maNguoiLam});
 }
 
 class AdminUpdateTask extends UpdateTaskPageEvent {
@@ -45,6 +47,8 @@ class AdminUpdateTask extends UpdateTaskPageEvent {
   final String tienDo;
   final String ghiChu;
   final int maNguoiLam;
+  final int? maNguoiGiao;
+  final int? kieu;
 
   const AdminUpdateTask(
       {required this.maCV,
@@ -57,5 +61,7 @@ class AdminUpdateTask extends UpdateTaskPageEvent {
       required this.trangThai,
       required this.tienDo,
       required this.ghiChu,
-      required this.maNguoiLam});
+      required this.maNguoiLam,
+      required this.maNguoiGiao,
+      this.kieu});
 }
