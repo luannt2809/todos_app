@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todos_app/screens/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:todos_app/screens/splash_screen.dart';
 import 'package:todos_app/services/config/firebase_api.dart';
 
 void main() async {

@@ -89,6 +89,10 @@ class CongViecRepository {
   Future<List<CongViec>> getAllTransferTask(int? maCV) {
     return congViecProvider.getAllTransferTask(maCV);
   }
+
+  Future<List<CongViec>> getAllTaskWithStatus(String trangThai){
+    return congViecProvider.getAllTaskWithStatus(trangThai);
+  }
 }
 
 class NetworkError extends Error {}

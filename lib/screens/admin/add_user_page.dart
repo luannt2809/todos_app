@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:todos_app/bloc/user/add_user_page/add_user_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
@@ -165,6 +166,12 @@ class _AddUserPageState extends State<AddUserPage> {
                             text: "Số điện thoại",
                             hintText: "Số điện thoại",
                             enabled: true,
+                            inputType: TextInputType.phone,
+                            formatters: [
+                              PhoneInputFormatter(
+                                  allowEndlessPhone: false,
+                                  defaultCountryCode: 'VN')
+                            ],
                           ),
                           MyTextFormField(
                             obscureText: false,

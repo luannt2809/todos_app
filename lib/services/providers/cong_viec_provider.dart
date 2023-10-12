@@ -41,6 +41,25 @@ class CongViecProvider {
   //   }
   // }
 
+  // lấy danh sách công việc theo mã người dùng (mã người làm) và status của công việc
+  Future<List<CongViec>> getAllTaskWithStatus(String trangThai) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maND = prefs.getInt("maND");
+
+    try {
+      Response response = await ApiConfig.dio.get(
+          "${ApiConfig.BASE_URL}/congviec/list-task-status?MaNguoiLam=$maND&TrangThai=$trangThai");
+
+      List<dynamic> value = response.data;
+      return value.map((e) => CongViec.fromJson(e)).toList();
+    } catch (e) {
+      if (e.toString().contains("SocketException")) {
+        return [CongViec.withError("Check Internet Connection")];
+      }
+      return [CongViec.withError(e.toString())];
+    }
+  }
+
   // add task
   Future<Response> addTask(
       String tieuDe,
