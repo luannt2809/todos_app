@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class MyTextFormField extends StatelessWidget {
@@ -9,6 +10,7 @@ class MyTextFormField extends StatelessWidget {
   final TextInputType? inputType;
   final bool? enabled;
   final bool obscureText;
+  final List<TextInputFormatter>? formatters;
 
   const MyTextFormField(
       {super.key,
@@ -18,6 +20,7 @@ class MyTextFormField extends StatelessWidget {
       this.widget,
       this.inputType,
       this.enabled,
+      this.formatters,
       required this.obscureText});
 
   @override
@@ -51,6 +54,7 @@ class MyTextFormField extends StatelessWidget {
                     cursorColor: Colors.grey,
                     controller: controller,
                     keyboardType: inputType,
+                    inputFormatters: formatters,
                     decoration: InputDecoration(
                       hintText: hintText,
                       focusedBorder: const UnderlineInputBorder(

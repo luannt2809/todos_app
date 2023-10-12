@@ -1,37 +1,31 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
-
 import 'package:todos_app/screens/admin/admin_screen.dart';
 import 'package:todos_app/screens/user_screen.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwdController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController passwdController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final double w = MediaQuery.of(context).size.width;
     final double h = MediaQuery.of(context).size.height;
 
-    return BlocProvider(
-      create: (context) => LoginPageBloc(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SizedBox(
-            width: w,
-            height: h,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SizedBox(
+          width: w,
+          height: h,
+          child: BlocProvider(
+            create: (context) => LoginPageBloc(),
             child: BlocListener<LoginPageBloc, LoginPageState>(
               listener: (context, state) {
                 if (state is LoginPageError) {

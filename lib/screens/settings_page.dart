@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
-
 import 'package:todos_app/screens/login_page.dart';
 import 'package:todos_app/screens/profile_page.dart';
+import 'package:todos_app/screens/statistical_page/statistical_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -107,6 +107,39 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: const Row(
                   children: [
                     Icon(
+                      Icons.stacked_bar_chart_rounded,
+                      size: 25,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Thống kê",
+                      style: TextStyle(fontSize: 15),
+                    )
+                  ],
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (builder) {
+                  return StatisticalPage(
+                    nguoiDung: widget.nguoiDung,
+                  );
+                }));
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(top: 10),
+                decoration: Styles.boxDecoration,
+                child: const Row(
+                  children: [
+                    Icon(
                       Icons.logout,
                       size: 25,
                       color: Colors.red,
@@ -128,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) {
-                        return const LoginPage();
+                        return LoginPage();
                       },
                     ),
                   );

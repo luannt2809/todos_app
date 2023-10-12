@@ -51,17 +51,23 @@ dependencies:
   timezone:
   firebase_messaging:
   firebase_core:
-  flutter_native_splash:
+  flutter_native_splash: ^2.3.3
   flutter_sticky_header:
   awesome_snackbar_content: ^0.1.3
   url_launcher:
   share_plus: 7.1.0
   fl_chart:
+  workmanager:
+  flutter_multi_formatter:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/logo.png
 
 flutter_launcher_icons:
   android: "launcher_icon"

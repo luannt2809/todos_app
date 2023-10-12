@@ -76,13 +76,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     }).catchError((onError) {
       throw Exception(onError);
     });
-
-    print("No NG:${widget.congViec.maNguoiGiao}");
-    print(selectMaNL);
-
-    print(widget.congViec.maNguoiGiao.toString());
-    print(
-        "${widget.congViec.maNguoiGiao != widget.nguoiDung.maND ? int.parse(widget.congViec.maNguoiLam.toString()) : int.parse(selectMaNL.toString())}");
   }
 
   @override
@@ -104,7 +97,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     'Chờ nhận',
     'Đã nhận',
     'Đang thực hiện',
-    'Hoàn thành'
+    'Hoàn thành',
+    'Quá hạn'
   ];
 
   @override
@@ -172,8 +166,10 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                   children: <Widget>[
                                     Visibility(
                                       visible: widget.nguoiDung.maPB == 2 &&
-                                              widget.congViec.maNguoiGiao !=
-                                                  null || widget.congViec.maNguoiGiao == widget.nguoiDung.maND
+                                                  widget.congViec.maNguoiGiao !=
+                                                      null ||
+                                              widget.congViec.maNguoiGiao ==
+                                                  widget.nguoiDung.maND
                                           ? true
                                           : false,
                                       child: MyTextFormField(
@@ -411,8 +407,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                         ContentType.warning);
                                               } else {
                                                 widget.nguoiDung.maPB != 2 &&
-                                                        widget.congViec.maNguoiGiao ==
-                                                            null || widget.nguoiDung.maND != widget.congViec.maNguoiGiao
+                                                            widget.congViec.maNguoiGiao ==
+                                                                null ||
+                                                        widget.nguoiDung.maND !=
+                                                            widget.congViec
+                                                                .maNguoiGiao
                                                     ? BlocProvider.of<UpdateTaskPageBloc>(context)
                                                         .add(
                                                         UpdateTask(
@@ -446,7 +445,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                               tienDoCtrl.text,
                                                           ghiChu:
                                                               ghiChuCtrl.text,
-                                                          maNguoiLam: int.parse(selectMaNL.toString()),
+                                                          maNguoiLam: int.parse(
+                                                              selectMaNL
+                                                                  .toString()),
                                                         ),
                                                       )
                                                     : BlocProvider.of<UpdateTaskPageBloc>(context).add(AdminUpdateTask(
@@ -457,9 +458,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                         noiDung:
                                                             noiDungCtrl.text,
                                                         ngayBD: DateFormat("yyyy-MM-dd")
-                                                            .format(DateFormat(
-                                                                    'dd-MM-yyyy')
-                                                                .parse(ngayBDCtrl.text)),
+                                                            .format(DateFormat('dd-MM-yyyy').parse(ngayBDCtrl.text)),
                                                         ngayKT: DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(ngayKTCtrl.text)),
                                                         gioBD: gioBDCtrl.text,
                                                         gioKT: gioKTCtrl.text,
@@ -572,9 +571,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     return showTimePicker(
       initialEntryMode: TimePickerEntryMode.dial,
       context: context,
-      // initialTime: TimeOfDay(
-      //     hour: int.parse(_startTime.split(":")[0]),
-      //     minute: int.parse(_startTime.split(":")[1].split(" ")[0])),
       initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(
