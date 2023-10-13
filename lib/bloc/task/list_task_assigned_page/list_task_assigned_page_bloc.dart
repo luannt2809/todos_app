@@ -18,7 +18,7 @@ class ListTaskAssignedPageBloc extends Bloc<ListTaskAssignedPageEvent, ListTaskA
       if(event is GetListTaskAssigned){
         emit(ListTaskAssignedPageLoading());
         try {
-          listTaskAssigned = await congViecRepository.getAllTaskAssigned();
+          listTaskAssigned = await congViecRepository.getAllTaskAssigned(event.trangThai);
           if(listTaskAssigned.isNotEmpty){
             emit(ListTaskAssignedPageLoaded(listTaskAssigned: listTaskAssigned));
           } else {

@@ -28,8 +28,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _selectStartDate = DateTime.now();
-
-  // String inputTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   TextEditingController ngayBDCtrl = TextEditingController();
   final HomePageBloc homePageBloc = HomePageBloc();
 
@@ -41,183 +39,188 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final double h = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
+      body: BlocProvider(
+          create: (context) => homePageBloc,
+          child: SafeArea(
+            child: SizedBox(
+              height: h,
               child: Column(
-                children: [
-                  Row(
-                    children: <Widget>[
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TimeDisplayWidget(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Hôm nay",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 16),
-                            ),
-                          ],
-                        ),
+                children: <Widget>[
+                  headerHomePage(),
+                  Expanded(
+                    child: BlocListener<HomePageBloc, HomePageState>(
+                      listener: (context, state) {
+                        if (state is HomePageError) {
+                          customToast(
+                              context: context,
+                              title: "Lỗi",
+                              message: state.error.toString(),
+                              contentType: ContentType.failure);
+                        }
+                      },
+                      child: BlocBuilder<HomePageBloc, HomePageState>(
+                        builder: (context, state) {
+                          if (state is HomePageLoading) {
+                            return circularProgressIndicator();
+                          } else if (state is GetListTaskEmpty) {
+                            return const Center(
+                              child: Text("Không có dữ liệu"),
+                            );
+                          } else if (state is HomePageLoaded) {
+                            return ListView.builder(
+                              itemBuilder: (BuildContext context, int index) {
+                                CongViec congViec = state.taskList[index];
+                                return itemListCV(context, congViec);
+                              },
+                              itemCount: state.taskList.length,
+                              physics: const BouncingScrollPhysics(),
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, bottom: 16),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       ),
-                      SizedBox(
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (widget.nguoiDung.maPB == 2) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return const AdminAddTaskPage();
-                                }),
-                              ).then((value) {
-                                getData();
-                              });
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) => AddTaskPageBloc(),
-                                    child: const AddTaskPage(),
-                                  ),
-                                ),
-                              ).then((value) {
-                                // if (value != null && value[0] == 'Reload') {
-                                /// to do something
-                                getData();
-                                // }
-                              });
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.deepOrangeAccent),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                          child: const Text(
-                            "Thêm +",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    padding: const EdgeInsets.only(left: 14),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFeeeeee),
-                      border: Border.all(color: Colors.white, width: 1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: TextFormField(
-                            autofocus: false,
-                            cursorColor: Colors.grey,
-                            decoration: InputDecoration(
-                              hintText: DateFormat('dd/MM/yyyy')
-                                  .format(_selectStartDate),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            // _getDateStartFromUser();
-                            _getDateFromUser();
-                          },
-                          icon: const Icon(Icons.calendar_month_outlined),
-                          color: Colors.grey,
-                        ),
-                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: BlocProvider(
-                create: (context) => homePageBloc,
-                child: BlocListener<HomePageBloc, HomePageState>(
-                  listener: (context, state) {
-                    if (state is HomePageError) {
-                      customToast(
-                          context: context,
-                          title: "Lỗi",
-                          message: state.error.toString(),
-                          contentType: ContentType.failure);
+          )),
+    );
+  }
+
+  Widget headerHomePage() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: <Widget>[
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TimeDisplayWidget(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Hôm nay",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (widget.nguoiDung.maPB == 2) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const AdminAddTaskPage();
+                        }),
+                      ).then((value) {
+                        getData();
+                      });
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => AddTaskPageBloc(),
+                            child: const AddTaskPage(),
+                          ),
+                        ),
+                      ).then((value) {
+                        // if (value != null && value[0] == 'Reload') {
+                        /// to do something
+                        getData();
+                        // }
+                      });
                     }
                   },
-                  child: BlocBuilder<HomePageBloc, HomePageState>(
-                    builder: (context, state) {
-                      if (state is HomePageLoading) {
-                        return circularProgressIndicator();
-                      } else if (state is GetListTaskEmpty) {
-                        return const Center(
-                          child: Text("Không có dữ liệu"),
-                        );
-                      } else if (state is HomePageLoaded) {
-                        return ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            CongViec congViec = state.taskList[index];
-
-                            return itemListCV(context, congViec);
-                          },
-                          itemCount: state.taskList.length,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, bottom: 16),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepOrangeAccent),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    "Thêm +",
+                    style: TextStyle(fontSize: 14),
                   ),
                 ),
               ),
-            )
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(left: 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFeeeeee),
+              border: Border.all(color: Colors.white, width: 1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextFormField(
+                    autofocus: false,
+                    cursorColor: Colors.grey,
+                    decoration: InputDecoration(
+                      hintText:
+                          DateFormat('dd/MM/yyyy').format(_selectStartDate),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    // _getDateStartFromUser();
+                    _getDateFromUser();
+                  },
+                  icon: const Icon(Icons.calendar_month_outlined),
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -296,7 +299,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Slidable(
           endActionPane: ActionPane(
-            motion: const DrawerMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                 // An action can be bigger than the others.
@@ -316,16 +319,17 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.amber,
                 foregroundColor: Colors.white,
                 icon: Icons.edit,
+                label: 'Cập nhật',
               ),
               Visibility(
                 visible: congViec.maNguoiGiao == null &&
                         widget.nguoiDung.maPB != 2 ||
-                    widget.nguoiDung.maPB == 2 ||
-                    congViec.maNguoiGiao == widget.nguoiDung.maND,
+                    widget.nguoiDung.maPB == 2,
                 child: SlidableAction(
                   backgroundColor: Colors.redAccent,
                   foregroundColor: Colors.white,
                   icon: Icons.delete_rounded,
+                  label: 'Xóa',
                   onPressed: (BuildContext context) {
                     showDialog(
                       context: context,

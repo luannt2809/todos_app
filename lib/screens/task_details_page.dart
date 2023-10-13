@@ -8,18 +8,13 @@ import 'package:todos_app/screens/list_log_task_page.dart';
 import 'package:todos_app/screens/list_transfer_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
-class TaskDetailsPage extends StatefulWidget {
+class TaskDetailsPage extends StatelessWidget {
   final NguoiDung nguoiDung;
   final CongViec congViec;
 
   const TaskDetailsPage(
       {super.key, required this.congViec, required this.nguoiDung});
 
-  @override
-  State<TaskDetailsPage> createState() => _TaskDetailsPageState();
-}
-
-class _TaskDetailsPageState extends State<TaskDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -50,9 +45,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               child: GestureDetector(
                 onTap: () {
                   Share.share(
-                      "Tiêu đề: ${widget.congViec.tieuDe}\nNội dung: ${widget.congViec.noiDung}"
-                      "\nTiến độ: ${widget.congViec.tienDo}%\n Trạng thái: ${widget.congViec.trangThai}",
-                      subject: widget.congViec.tieuDe);
+                      "Tiêu đề: ${congViec.tieuDe}\nNội dung: ${congViec.noiDung}"
+                      "\nTiến độ: ${congViec.tienDo}%\n Trạng thái: ${congViec.trangThai}",
+                      subject: congViec.tieuDe);
                 },
                 child: Icon(
                   Icons.share,
@@ -83,14 +78,22 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child:
-                                        Text(widget.congViec.tieuDe.toString()),
+                                    child: Text(
+                                      congViec.tieuDe.toString(),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
+                                  const SizedBox(width: 10,),
                                   Text(
-                                    widget.congViec.trangThai.toString(),
-                                    style: const TextStyle(
+                                    congViec.trangThai.toString(),
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.green,
+                                        color: congViec.trangThai !=
+                                                "Quá hạn"
+                                            ? Colors.green
+                                            : Colors.red,
                                         fontSize: 15),
                                   ),
                                 ],
@@ -104,15 +107,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                     child: RowItem(
                                       icon: Icons.access_time,
                                       text:
-                                          "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioBatDau.toString()))} - "
-                                          "${DateFormat.jm().format(DateTime.parse(widget.congViec.gioKetThuc.toString()))}",
+                                          "${DateFormat.jm().format(DateTime.parse(congViec.gioBatDau.toString()))} - "
+                                          "${DateFormat.jm().format(DateTime.parse(congViec.gioKetThuc.toString()))}",
                                     ),
                                   ),
                                   Text(
-                                    "${widget.congViec.tienDo}%",
+                                    "${congViec.tienDo}%",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.deepOrange,
+                                        color: Colors.green,
                                         fontSize: 15),
                                   ),
                                 ],
@@ -123,23 +126,23 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               RowItem(
                                 icon: Icons.calendar_month_outlined,
                                 text:
-                                    "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayBatDau.toString()))} - "
-                                    "${DateFormat('dd/MM/y').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()))}",
+                                    "${DateFormat('dd/MM/y').format(DateTime.parse(congViec.ngayBatDau.toString()))} - "
+                                    "${DateFormat('dd/MM/y').format(DateTime.parse(congViec.ngayKetThuc.toString()))}",
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
                               RowItem(
                                 icon: Icons.person_outline_outlined,
-                                text: widget.congViec.hoTenNguoiLam ??
-                                    widget.nguoiDung.hoTen.toString(),
+                                text: congViec.hoTenNguoiLam ??
+                                    nguoiDung.hoTen.toString(),
                               ),
                             ],
                           ),
                           Visibility(
                             visible:
-                                widget.congViec.trangThai == "Hoàn thành" &&
-                                    widget.congViec.tienDo == 100,
+                                congViec.trangThai == "Hoàn thành" &&
+                                    congViec.tienDo == 100,
                             child: Positioned(
                               right: 0,
                               bottom: 0,
@@ -148,8 +151,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (_) => AssignedTaskToOther(
-                                        congViec: widget.congViec,
-                                        nguoiDung: widget.nguoiDung,
+                                        congViec: congViec,
+                                        nguoiDung: nguoiDung,
                                       ),
                                     ),
                                   );
@@ -194,7 +197,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       margin:
                           const EdgeInsets.only(left: 20, top: 10, right: 20),
                       child: Text(
-                        widget.congViec.noiDung.toString(),
+                        congViec.noiDung.toString(),
                         softWrap: true,
                       ),
                     ),
@@ -222,9 +225,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       margin:
                           const EdgeInsets.only(left: 20, top: 10, right: 20),
                       child: Text(
-                        widget.congViec.ghiChu.toString() == "null"
+                        congViec.ghiChu.toString() == "null"
                             ? "Không có ghi chú"
-                            : widget.congViec.ghiChu.toString(),
+                            : congViec.ghiChu.toString(),
                         softWrap: true,
                       ),
                     ),
@@ -257,44 +260,10 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           body: TabBarView(
             physics: const BouncingScrollPhysics(),
             children: [
-              // Nội dung của Tab 1
-              // FutureBuilder<List<dynamic>>(
-              //   future: getListLogCV(),
-              //   builder: (BuildContext context,
-              //       AsyncSnapshot<List<dynamic>> snapshot) {
-              //     if (snapshot.hasData) {
-              //       return ListView.builder(
-              //         itemBuilder: (BuildContext context, int index) {
-              //           // item
-              //           return itemListLogCV(
-              //               snapshot.data![index]['TieuDe'].toString(),
-              //               snapshot.data![index]['ThoiGian'].toString(),
-              //               snapshot.data![index]['HoTen'].toString(),
-              //               snapshot.data![index]['TrangThai'].toString(),
-              //               snapshot.data![index]['TienDo'].toDouble(),
-              //               snapshot.data![index]['MoTa'].toString(),
-              //               context);
-              //         },
-              //         itemCount: snapshot.data!.length,
-              //         physics: const BouncingScrollPhysics(),
-              //         padding: const EdgeInsets.only(
-              //           left: 16,
-              //           right: 16,
-              //           bottom: 16,
-              //         ),
-              //       );
-              //     } else {
-              //       return const Center(
-              //         child: Text("Chưa có dữ liệu"),
-              //       );
-              //     }
-              //   },
-              // ),
-              // Nội dung của Tab 2
-              ListLogTaskPage(congViec: widget.congViec),
+              ListLogTaskPage(congViec: congViec),
               ListTransferTaskPage(
-                congViec: widget.congViec,
-                nguoiDung: widget.nguoiDung,
+                congViec: congViec,
+                nguoiDung: nguoiDung,
               ),
             ],
           ),
@@ -358,77 +327,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
   }
-}
-
-Widget itemListLogCV(String tieuDe, String thoiGian, String hoTenNguoiLam,
-    String trangThai, double tienDo, String moTa, BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 16.0),
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: Styles.boxDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                  child: Text(
-                tieuDe,
-                softWrap: true,
-              )),
-              Text(
-                DateFormat('dd-MM-yyyy   hh:mm a')
-                    .format(DateTime.parse(thoiGian))
-                    .toString(),
-                softWrap: true,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          RowItem(icon: Icons.person_outline_outlined, text: hoTenNguoiLam),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                trangThai,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                    fontSize: 15),
-              ),
-              Text(
-                "$tienDo%",
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                    fontSize: 15),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          RichText(
-            text: TextSpan(
-              text: 'Mô tả: ',
-              style: DefaultTextStyle.of(context).style,
-              children: <TextSpan>[
-                TextSpan(
-                  text: moTa,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    ),
-  );
 }
 
 class RowItem extends StatelessWidget {

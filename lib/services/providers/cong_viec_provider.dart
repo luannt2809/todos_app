@@ -209,13 +209,17 @@ class CongViecProvider {
     return response;
   }
 
-  Future<List<CongViec>> getAllTaskAssigned() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final int? maNguoiGiao = prefs.getInt("maND");
+  Future<List<CongViec>> getAllTaskAssigned(String trangThai) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maND = prefs.getInt("maND");
 
+    try {
       Response response = await ApiConfig.dio.get(
-          "${ApiConfig.BASE_URL}/congviec/list-task-assigned/${maNguoiGiao}");
+          "${ApiConfig.BASE_URL}/congviec/list-task-assigned",
+          queryParameters: {
+            'MaNguoiGiao': maND,
+            'TrangThai': trangThai
+          });
 
       List<dynamic> value = response.data;
       return value.map((e) => CongViec.fromJson(e)).toList();

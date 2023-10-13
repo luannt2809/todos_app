@@ -38,6 +38,12 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     fillDataCongViec();
   }
 
+  @override
+  void didChangeDependencies() {
+    Navigator.of(context);
+    super.didChangeDependencies();
+  }
+
   TextEditingController nguoiLamCtrl = TextEditingController();
   TextEditingController tieuDeCtrl = TextEditingController();
   TextEditingController noiDungCtrl = TextEditingController();
@@ -103,7 +109,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.congViec.maNguoiGiao != null) {}
     return BlocProvider(
       create: (context) => UpdateTaskPageBloc(),
       child: GestureDetector(

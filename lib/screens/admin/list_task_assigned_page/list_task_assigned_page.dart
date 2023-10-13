@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app/bloc/task/delete_task/delete_task_bloc.dart';
-import 'package:todos_app/bloc/task/list_transfer_task_page/list_transfer_task_page_bloc.dart';
+import 'package:todos_app/bloc/task/list_task_assigned_page/list_task_assigned_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/models/cong_viec.dart';
@@ -13,29 +13,24 @@ import 'package:todos_app/screens/task_details_page.dart';
 import 'package:todos_app/screens/update_task_page.dart';
 import 'package:todos_app/themes/styles.dart';
 
-class ListTransferTaskPage extends StatelessWidget {
-  final CongViec congViec;
+class ListTaskAssignedPage extends StatelessWidget {
   final NguoiDung nguoiDung;
+  final String trangThai;
 
-  const ListTransferTaskPage(
-      {super.key, required this.congViec, required this.nguoiDung});
+  const ListTaskAssignedPage(
+      {super.key, required this.nguoiDung, required this.trangThai});
 
   @override
   Widget build(BuildContext context) {
-    final ListTransferTaskPageBloc listTransferTaskPageBloc =
-        ListTransferTaskPageBloc();
-
-    getData() {
-      listTransferTaskPageBloc
-        ..add(GetListTransferTaskEvent(maCV: congViec.maCV));
-    }
+    final ListTaskAssignedPageBloc listTaskAssignedPageBloc =
+        ListTaskAssignedPageBloc();
 
     return BlocProvider(
-      create: (_) => listTransferTaskPageBloc
-        ..add(GetListTransferTaskEvent(maCV: congViec.maCV)),
-      child: BlocListener<ListTransferTaskPageBloc, ListTransferTaskPageState>(
+      create: (context) => listTaskAssignedPageBloc
+        ..add(GetListTaskAssigned(trangThai: trangThai)),
+      child: BlocListener<ListTaskAssignedPageBloc, ListTaskAssignedPageState>(
         listener: (context, state) {
-          if (state is ListTransferTaskPageError) {
+          if (state is ListTaskAssignedPageError) {
             customToast(
                 context: context,
                 title: "Lỗi",
@@ -43,18 +38,18 @@ class ListTransferTaskPage extends StatelessWidget {
                 contentType: ContentType.failure);
           }
         },
-        child: BlocBuilder<ListTransferTaskPageBloc, ListTransferTaskPageState>(
+        child: BlocBuilder<ListTaskAssignedPageBloc, ListTaskAssignedPageState>(
           builder: (context, state) {
-            if (state is ListTransferTaskPageLoading) {
+            if (state is ListTaskAssignedPageLoading) {
               return circularProgressIndicator();
-            } else if (state is GetListTransferTaskEmpty) {
+            } else if (state is ListTaskAssignedPageEmpty) {
               return const Center(
                 child: Text("Không có dữ liệu"),
               );
-            } else if (state is ListTransferTaskPageLoaded) {
+            } else if (state is ListTaskAssignedPageLoaded) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  CongViec congViec = state.listTransferTask[index];
+                  CongViec congViec = state.listTaskAssigned[index];
                   return Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: GestureDetector(
@@ -66,9 +61,10 @@ class ListTransferTaskPage extends StatelessWidget {
                                     nguoiDung: nguoiDung,
                                     congViec: congViec,
                                   )),
-                        ).then((value) async {
+                        ).then((value) {
                           if (value != null && value[0] == 'Reload') {
-                            getData();
+                            listTaskAssignedPageBloc
+                                .add(GetListTaskAssigned(trangThai: trangThai));
                           }
                         });
                       },
@@ -78,7 +74,7 @@ class ListTransferTaskPage extends StatelessWidget {
                           children: [
                             SlidableAction(
                               // An action can be bigger than the others.
-                              onPressed: (BuildContext context) {
+                              onPressed: (context) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -89,7 +85,9 @@ class ListTransferTaskPage extends StatelessWidget {
                                   ),
                                 ).then((value) {
                                   if (value != null && value[0] == 'Reload') {
-                                    getData();
+                                    listTaskAssignedPageBloc.add(
+                                        GetListTaskAssigned(
+                                            trangThai: trangThai));
                                   }
                                 });
                               },
@@ -97,91 +95,85 @@ class ListTransferTaskPage extends StatelessWidget {
                               foregroundColor: Colors.white,
                               icon: Icons.edit,
                             ),
-                            Visibility(
-                              visible: congViec.maNguoiGiao == null &&
-                                      nguoiDung.maPB != 2 ||
-                                  nguoiDung.maPB == 2 ||
-                                  congViec.maNguoiGiao == nguoiDung.maND,
-                              child: SlidableAction(
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete_rounded,
-                                onPressed: (BuildContext context) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        BlocProvider(
-                                      create: (context) => DeleteTaskBloc(),
-                                      child: BlocConsumer<DeleteTaskBloc,
-                                          DeleteTaskState>(
-                                        listener: (context, state) {
-                                          if (state is DeleteTaskError) {
-                                            customToast(
-                                                context: context,
-                                                title: "Lỗi",
-                                                message: state.error.toString(),
-                                                contentType:
-                                                    ContentType.failure);
-                                            Navigator.of(context).pop();
-                                          } else if (state is DeletedTask) {
-                                            customToast(
-                                                context: context,
-                                                title: "Thành công",
-                                                message: state.msg,
-                                                contentType:
-                                                    ContentType.success);
-                                            Navigator.of(context).pop();
-                                            getData();
-                                          }
-                                        },
-                                        builder: (context, state) {
-                                          if (state is DeleteTaskInitial) {
-                                            return AlertDialog(
-                                              title: const Text("Xác nhận"),
-                                              content: const Text(
-                                                  "Bạn có xác nhận xoá công việc này không ?"),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () {
-                                                    BlocProvider.of<
-                                                                DeleteTaskBloc>(
-                                                            context)
-                                                        .add(DeleteTask(
-                                                            int.parse(congViec
-                                                                .maCV
-                                                                .toString())));
-                                                  },
-                                                  child: const Text(
-                                                    "Xác nhận",
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .deepOrangeAccent,
-                                                        fontSize: 16),
-                                                  ),
+                            SlidableAction(
+                              backgroundColor: Colors.redAccent,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete_rounded,
+                              onPressed: (BuildContext context) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      BlocProvider(
+                                    create: (context) => DeleteTaskBloc(),
+                                    child: BlocConsumer<DeleteTaskBloc,
+                                        DeleteTaskState>(
+                                      listener: (context, state) {
+                                        if (state is DeleteTaskError) {
+                                          customToast(
+                                              context: context,
+                                              title: "Lỗi",
+                                              message: state.error.toString(),
+                                              contentType: ContentType.failure);
+                                          Navigator.of(context).pop();
+                                        } else if (state is DeletedTask) {
+                                          customToast(
+                                              context: context,
+                                              title: "Thành công",
+                                              message: state.msg,
+                                              contentType: ContentType.success);
+                                          Navigator.of(context).pop();
+                                          BlocProvider.of<
+                                              ListTaskAssignedPageBloc>(context)
+                                            ..add(GetListTaskAssigned(
+                                                trangThai: trangThai));
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        if (state is DeleteTaskInitial) {
+                                          return AlertDialog(
+                                            title: const Text("Xác nhận"),
+                                            content: const Text(
+                                                "Bạn có xác nhận xoá công việc này không ?"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  BlocProvider.of<
+                                                              DeleteTaskBloc>(
+                                                          context)
+                                                      .add(DeleteTask(int.parse(
+                                                          congViec.maCV
+                                                              .toString())));
+                                                },
+                                                child: const Text(
+                                                  "Xác nhận",
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .deepOrangeAccent,
+                                                      fontSize: 16),
                                                 ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text(
-                                                    "Huỷ",
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .deepOrangeAccent,
-                                                        fontSize: 16),
-                                                  ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text(
+                                                  "Huỷ",
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .deepOrangeAccent,
+                                                      fontSize: 16),
                                                 ),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                      ),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -270,12 +262,14 @@ class ListTransferTaskPage extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: state.listTransferTask.length,
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                itemCount: state.listTaskAssigned.length,
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               );
             } else {
-              return Container();
+              return const Center(
+                child: Text("Không có dữ liệu"),
+              );
             }
           },
         ),
