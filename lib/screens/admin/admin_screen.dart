@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/admin/list_department_page.dart';
-import 'package:todos_app/screens/admin/list_task_assigned_page.dart';
+import 'package:todos_app/screens/admin/list_task_assigned_page/task_assigned_page.dart';
 import 'package:todos_app/screens/admin/list_user_page.dart';
 import 'package:todos_app/screens/home_page.dart';
 import 'package:todos_app/screens/notify_page.dart';
@@ -36,7 +36,7 @@ class _AdminScreenState extends State<AdminScreen> {
       HomePage(nguoiDung: widget.nguoiDung),
       Visibility(
         visible: showItem,
-        child: ListTaskAssignedPage(
+        child: TaskAssignedPage(
           nguoiDung: widget.nguoiDung,
         ),
       ),

@@ -9,29 +9,17 @@ import 'package:todos_app/models/cong_viec.dart';
 import 'package:todos_app/models/log_cong_viec.dart';
 import 'package:todos_app/themes/styles.dart';
 
-class ListLogTaskPage extends StatefulWidget {
+class ListLogTaskPage extends StatelessWidget {
   final CongViec congViec;
 
   const ListLogTaskPage({super.key, required this.congViec});
 
   @override
-  State<ListLogTaskPage> createState() => _ListLogTaskPageState();
-}
-
-class _ListLogTaskPageState extends State<ListLogTaskPage> {
-  ListLogTaskPageBloc listLogTaskPageBloc = ListLogTaskPageBloc();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    listLogTaskPageBloc.add(GetListLogTaskEvent(maCV: widget.congViec.maCV));
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final ListLogTaskPageBloc listLogTaskPageBloc = ListLogTaskPageBloc();
+
     return BlocProvider(
-      create: (_) => listLogTaskPageBloc,
+      create: (_) => listLogTaskPageBloc..add(GetListLogTaskEvent(maCV: congViec.maCV)),
       child: BlocListener<ListLogTaskPageBloc, ListLogTaskPageState>(
         listener: (context, state) {
           if (state is ListLogTaskPageError) {
@@ -68,12 +56,14 @@ class _ListLogTaskPageState extends State<ListLogTaskPage> {
                                   child: Text(
                                 logCongViec.tieuDe.toString(),
                                 softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
                               )),
                               SizedBox(
                                 width: 10,
                               ),
                               Text(
-                                DateFormat('dd/MM/yyyy   hh:mm a')
+                                DateFormat('dd/MM/yyyy - hh:mm a')
                                     .format(DateTime.parse(
                                         logCongViec.thoiGian.toString()))
                                     .toString(),
@@ -95,14 +85,16 @@ class _ListLogTaskPageState extends State<ListLogTaskPage> {
                             children: [
                               Text(
                                 logCongViec.trangThai.toString(),
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.green,
+                                    color: logCongViec.trangThai != "Quá hạn"
+                                        ? Colors.green
+                                        : Colors.red,
                                     fontSize: 15),
                               ),
                               Text(
                                 "${logCongViec.tienDo}%",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.green,
                                     fontSize: 15),

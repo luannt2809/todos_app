@@ -82,8 +82,8 @@ class CongViecRepository {
     return congViecProvider.deleteTask(maCV);
   }
 
-  Future<List<CongViec>> getAllTaskAssigned() {
-    return congViecProvider.getAllTaskAssigned();
+  Future<List<CongViec>> getAllTaskAssigned(String trangThai) {
+    return congViecProvider.getAllTaskAssigned(trangThai);
   }
 
   Future<List<CongViec>> getAllTransferTask(int? maCV) {

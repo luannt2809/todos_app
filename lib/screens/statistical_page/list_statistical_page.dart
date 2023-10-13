@@ -14,7 +14,7 @@ class ListStatisticalPage extends StatelessWidget {
   final String trangThai;
   final NguoiDung nguoiDung;
 
-  ListStatisticalPage(
+  const ListStatisticalPage(
       {super.key, required this.trangThai, required this.nguoiDung});
 
   @override
@@ -71,16 +71,20 @@ class ListStatisticalPage extends StatelessWidget {
                                     child: Text(
                                   congViec.tieuDe.toString(),
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15),
                                 )),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Text(
                                   congViec.trangThai.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                      color: congViec.trangThai != "Quá hạn"
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15),
                                 )
                               ],
                             ),

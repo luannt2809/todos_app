@@ -7,4 +7,8 @@ abstract class ListTaskAssignedPageEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetListTaskAssigned extends ListTaskAssignedPageEvent {}
+class GetListTaskAssigned extends ListTaskAssignedPageEvent {
+  final String trangThai;
+
+  GetListTaskAssigned({required this.trangThai});
+}
