@@ -6,16 +6,6 @@ import 'package:todos_app/bloc/task/add_task_page/add_task_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
-import 'package:workmanager/workmanager.dart';
-
-void callbackDispatcher() {
-  Workmanager().executeTask((taskName, inputData) {
-    if (taskName != "Hoàn thành") {
-      print("Quá hạn");
-    }
-    return Future.value(true);
-  });
-}
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -61,13 +51,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     'Đang thực hiện',
     'Hoàn thành'
   ];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -318,11 +301,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                               .text.isEmpty
                                                           ? "Không có ghi chú"
                                                           : ghiChuCtrl.text));
-                                              Workmanager().registerOneOffTask(
-                                                  tieuDeCtrl.text,
-                                                  trangThaiCtrl.text,
-                                                  initialDelay:
-                                                      Duration(minutes: 2));
                                             }
                                           },
                                           style: ButtonStyle(

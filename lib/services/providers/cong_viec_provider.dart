@@ -104,15 +104,6 @@ class CongViecProvider {
       int maNguoiLam,
       int? maNguoiGiao,
       int? kieu) async {
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final int? maNguoiGiao = prefs.getInt("maND");
-
-    final SharedPreferences registrationTokenPrefs =
-        await SharedPreferences.getInstance();
-
-    // để sau
-    final String? registrationToken =
-        registrationTokenPrefs.getString("registrationToken");
 
     Response response = await ApiConfig.dio
         .post("${ApiConfig.BASE_URL}/congviec/insert", data: {

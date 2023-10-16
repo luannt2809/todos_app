@@ -410,15 +410,18 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                         child: Text(
                       congViec.tieuDe.toString(),
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      style: const TextStyle(fontWeight: FontWeight.w500),
                     )),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
                       congViec.trangThai.toString(),
-                      style: const TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: congViec.trangThai != "Quá hạn"
+                              ? Colors.green
+                              : Colors.red,
+                          fontWeight: FontWeight.w500),
                     )
                   ],
                 ),

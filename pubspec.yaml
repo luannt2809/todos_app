@@ -57,7 +57,6 @@ dependencies:
   url_launcher:
   share_plus: 7.1.0
   fl_chart:
-  workmanager:
   flutter_multi_formatter:
 
 dev_dependencies:

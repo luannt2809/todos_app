@@ -5,6 +5,7 @@ import 'package:todos_app/bloc/login_page/login_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/screens/admin/admin_screen.dart';
+import 'package:todos_app/screens/forgot_passwd_page.dart';
 import 'package:todos_app/screens/user_screen.dart';
 
 class LoginPage extends StatelessWidget {
@@ -115,7 +116,13 @@ class LoginPage extends StatelessWidget {
                                   height: 10,
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                ForgotPasswdPage()));
+                                  },
                                   style: TextButton.styleFrom(
                                       foregroundColor: Colors.orange),
                                   child: const Text(
