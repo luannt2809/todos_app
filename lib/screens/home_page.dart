@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Slidable(
           endActionPane: ActionPane(
-            motion: const ScrollMotion(),
+            motion: const DrawerMotion(),
             children: [
               SlidableAction(
                 // An action can be bigger than the others.
