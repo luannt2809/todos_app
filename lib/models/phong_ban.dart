@@ -14,11 +14,11 @@ class PhongBan {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MaPB'] = this.maPB;
-    data['TenPhongBan'] = this.tenPhongBan;
-    data['ArrMaVT'] = this.arrMaVT;
-    data['DanhSachVaiTro'] = this.danhSachVaiTro;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MaPB'] = maPB;
+    data['TenPhongBan'] = tenPhongBan;
+    data['ArrMaVT'] = arrMaVT;
+    data['DanhSachVaiTro'] = danhSachVaiTro;
     return data;
   }
 }

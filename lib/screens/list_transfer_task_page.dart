@@ -27,7 +27,7 @@ class ListTransferTaskPage extends StatelessWidget {
 
     getData() {
       listTransferTaskPageBloc
-        ..add(GetListTransferTaskEvent(maCV: congViec.maCV));
+        .add(GetListTransferTaskEvent(maCV: congViec.maCV));
     }
 
     return BlocProvider(
@@ -271,8 +271,8 @@ class ListTransferTaskPage extends StatelessWidget {
                   );
                 },
                 itemCount: state.listTransferTask.length,
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               );
             } else {
               return Container();

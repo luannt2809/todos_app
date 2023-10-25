@@ -67,7 +67,7 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       maNguoiGiao = prefs.getInt("maND");
-      print(maNguoiGiao);
+      // print(maNguoiGiao);
     });
   }
 
@@ -155,7 +155,7 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
                                           int.parse(newValue!.maND.toString());
                                       nguoiLamCtrl.text =
                                           newValue.hoTen.toString();
-                                      print(selectMaNL);
+                                      // print(selectMaNL);
                                     });
                                   },
                                 ),
@@ -386,25 +386,26 @@ class _TabGiaoViecState extends State<TabGiaoViec> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
-    String _formatedTime = pickerTime.format(context);
+    if(!context.mounted) return;
+    String formatedTime = pickerTime.format(context);
     if (pickerTime == null) {
       print("Time canceled");
     } else if (isStartTime == true) {
       setState(() {
-        _startTime = _formatedTime;
-        gioBDCtrl.text = _formatedTime;
+        _startTime = formatedTime;
+        gioBDCtrl.text = formatedTime;
       });
     } else if (isStartTime == false) {
       setState(() {
-        _endTime = _formatedTime;
-        gioKTCtrl.text = _formatedTime;
+        _endTime = formatedTime;
+        gioKTCtrl.text = formatedTime;
       });
     }
   }
 
   _getDateFromUser({required bool isStartDate}) async {
     DateTime? pickerDate = await _showDatePicker();
-    print(pickerDate.toString());
+    // print(pickerDate.toString());
     if (pickerDate == null) {
       print("Date cancel");
     } else if (isStartDate == true) {

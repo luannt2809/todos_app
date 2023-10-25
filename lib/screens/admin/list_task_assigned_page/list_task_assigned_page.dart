@@ -124,7 +124,7 @@ class ListTaskAssignedPage extends StatelessWidget {
                                           Navigator.of(context).pop();
                                           BlocProvider.of<
                                               ListTaskAssignedPageBloc>(context)
-                                            ..add(GetListTaskAssigned(
+                                            .add(GetListTaskAssigned(
                                                 trangThai: trangThai));
                                         }
                                       },

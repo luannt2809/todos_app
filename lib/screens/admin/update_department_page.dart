@@ -167,7 +167,7 @@ class _UpdateDepartmentPageState extends State<UpdateDepartmentPage> {
             } else {
               selectedValue.remove(value);
             }
-            print(selectedValue);
+            // print(selectedValue);
           });
         });
   }

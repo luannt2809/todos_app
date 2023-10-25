@@ -27,7 +27,7 @@ class _UserScreenState extends State<UserScreen> {
       SettingsPage(nguoiDung: widget.nguoiDung)
     ];
 
-    void _onItemTapped(int index) {
+    void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
       });
@@ -41,7 +41,7 @@ class _UserScreenState extends State<UserScreen> {
         showUnselectedLabels: false,
         selectedItemColor: Colors.deepOrangeAccent,
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: onItemTapped,
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
           MyBottomNavigationBarItem(

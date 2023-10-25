@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -209,7 +210,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                   newValue!.maND.toString());
                                               nguoiLamCtrl.text =
                                                   newValue.hoTen.toString();
-                                              print(selectMaNL);
+                                              // print(selectMaNL);
                                             });
                                           },
                                         ),
@@ -295,7 +296,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
-                                                      isStartTime: true);
+                                                    isStartTime: true,
+                                                  );
                                                 },
                                               ),
                                             ),
@@ -315,7 +317,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
-                                                      isStartTime: false);
+                                                    isStartTime: false,
+                                                  );
                                                 },
                                               ),
                                             ),
@@ -517,27 +520,32 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
-    String _formatedTime = pickerTime.format(context);
+    if(!context.mounted) return;
+    String formattedTime = pickerTime.format(context);
     if (pickerTime == null) {
-      print("Time canceled");
+      if (kDebugMode) {
+        print("Time canceled");
+      }
     } else if (isStartTime == true) {
       setState(() {
-        _startTime = _formatedTime;
-        gioBDCtrl.text = _formatedTime;
+        _startTime = formattedTime;
+        gioBDCtrl.text = formattedTime;
       });
     } else if (isStartTime == false) {
       setState(() {
-        _endTime = _formatedTime;
-        gioKTCtrl.text = _formatedTime;
+        _endTime = formattedTime;
+        gioKTCtrl.text = formattedTime;
       });
     }
   }
 
   _getDateFromUser({required bool isStartDate}) async {
     DateTime? pickerDate = await _showDatePicker();
-    print(pickerDate.toString());
+    // print(pickerDate.toString());
     if (pickerDate == null) {
-      print("Date cancel");
+      if (kDebugMode) {
+        print("Date cancel");
+      }
     } else if (isStartDate == true) {
       setState(() {
         _selectStartDate = pickerDate;

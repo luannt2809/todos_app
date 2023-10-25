@@ -12,8 +12,8 @@ class AddUserPageBloc extends Bloc<AddUserPageEvent, AddUserPageState> {
   AddUserPageBloc() : super(AddUserPageInitial()) {
     on<AddUserPageEvent>((event, emit) async {
       // TODO: implement event handler
+      NguoiDungRepository nguoiDungRepository = NguoiDungRepository();
       if (event is AddUserEvent) {
-        NguoiDungRepository nguoiDungRepository = NguoiDungRepository();
         emit(AddUserLoading());
         try {
           Response response = await nguoiDungRepository.insertUser(
@@ -28,7 +28,31 @@ class AddUserPageBloc extends Bloc<AddUserPageEvent, AddUserPageState> {
             emit(AddUserLoaded(msg: response.data.toString()));
           }
         } on DioException catch (e) {
-          if(e.type == DioExceptionType.badResponse){
+          if (e.type == DioExceptionType.badResponse) {
+            emit(AddUserError(error: "Error: ${e.response?.data}"));
+          } else {
+            emit(AddUserError(error: e.toString()));
+          }
+        }
+      }
+
+      if (event is AddUserWithImageEvent) {
+        emit(AddUserLoading());
+        try {
+          Response response = await nguoiDungRepository.insertUserWithImage(
+              event.userName,
+              event.passWd,
+              event.email,
+              event.fullName,
+              event.phone,
+              event.maPB,
+              event.status,
+              event.anh);
+          if (response.statusCode == 200) {
+            emit(AddUserLoaded(msg: response.data.toString()));
+          }
+        } on DioException catch (e) {
+          if (e.type == DioExceptionType.badResponse) {
             emit(AddUserError(error: "Error: ${e.response?.data}"));
           } else {
             emit(AddUserError(error: e.toString()));

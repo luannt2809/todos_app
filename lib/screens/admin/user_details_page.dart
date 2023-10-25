@@ -1,4 +1,4 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/themes/styles.dart';
@@ -15,6 +15,8 @@ class UserDetailsPage extends StatefulWidget {
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
   String trangThai = "";
+  final ImageProvider imageProvider =
+      const AssetImage("assets/images/officer.png");
 
   @override
   void initState() {
@@ -59,10 +61,44 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                "assets/images/officer.png",
-                width: 80,
-                height: 80,
+              Container(
+                width: 90,
+                height: 90,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  // borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: widget.nguoiDung.anh.toString() == "null"
+                    ? Image.asset("assets/images/officer.png")
+                    : CachedNetworkImage(
+                        fit: BoxFit.contain,
+                        imageUrl:
+                            "http://192.168.1.32:3000/${widget.nguoiDung.anh}",
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover)),
+                        ),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
               ),
               const SizedBox(
                 height: 20,
@@ -89,7 +125,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -155,7 +191,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                       children: [
                         const Expanded(child: Text("Trạng thái")),
                         Text(
-                          "${trangThai}",
+                          trangThai,
                           style: TextStyle(
                               color: widget.nguoiDung.trangThai ?? false
                                   ? Colors.green
@@ -173,13 +209,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Widget iconAction(IconData iconData) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.deepOrangeAccent,
         borderRadius: BorderRadius.all(
           Radius.circular(50),
         ),
       ),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Icon(
         iconData,
         size: 25,

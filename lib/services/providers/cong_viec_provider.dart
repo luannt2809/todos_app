@@ -225,7 +225,7 @@ class CongViecProvider {
   Future<List<CongViec>> getAllTransferTask(int? maCV) async {
     try {
       Response response = await ApiConfig.dio
-          .get("${ApiConfig.BASE_URL}/congviec/list-task-transfer/${maCV}");
+          .get("${ApiConfig.BASE_URL}/congviec/list-task-transfer/$maCV");
 
       List<dynamic> value = response.data;
 

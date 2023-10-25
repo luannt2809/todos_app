@@ -1,16 +1,21 @@
+import 'dart:io';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:todos_app/bloc/profile_page/profile_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
 import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
+import 'package:path/path.dart' as path;
 
 class ProfilePage extends StatefulWidget {
-  final String hoTen;
+  final NguoiDung nguoiDung;
 
-  const ProfilePage({super.key, required this.hoTen});
+  const ProfilePage({super.key, required this.nguoiDung});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -25,6 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController roleCtrl = TextEditingController();
   TextEditingController departmentCtrl = TextEditingController(); // phòng ban
   TextEditingController statusCtrl = TextEditingController();
+  String? anh;
+  File? _imageFile;
+  final ImageProvider imageProvider =
+      const AssetImage("assets/images/officer.png");
 
   getData() async {
     profilePageBloc.add(GetInfoEvent());
@@ -37,13 +46,30 @@ class _ProfilePageState extends State<ProfilePage> {
     getData();
   }
 
+  void showImagePicker() async {
+    final ImagePicker imagePicker = ImagePicker();
+    final XFile? file =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      setState(() {
+        _imageFile = File(file.path);
+        anh = file.path;
+      });
+      // print(path.basename(_imageFile!.path));
+    } else {
+      if (kDebugMode) {
+        print("No image selected");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context, ["Reload", fullNameCtrl.text]);
+            Navigator.pop(context);
           },
           child: const Icon(
             Icons.arrow_back_ios_new,
@@ -80,6 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
               statusCtrl.text = nguoiDung.trangThai == true
                   ? "Đang hoạt động"
                   : "Không hoạt động";
+              anh = nguoiDung.anh.toString();
             } else if (state is ChangeInfoError) {
               customToast(
                   context: context,
@@ -92,6 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: "Thành công",
                   message: state.msg,
                   contentType: ContentType.success);
+              widget.nguoiDung.hoTen = fullNameCtrl.text;
+              widget.nguoiDung.anh =
+                  '/uploads/${path.basename(_imageFile?.path ?? anh.toString())}';
             }
           },
           child: BlocBuilder<ProfilePageBloc, ProfilePageState>(
@@ -108,24 +138,67 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         Center(
-                          child: Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              // borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
+                          child: Stack(children: [
+                            Container(
+                              width: 90,
+                              height: 90,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                                image: _imageFile != null
+                                    ? DecorationImage(
+                                    image: FileImage(_imageFile!),
+                                    fit: BoxFit.cover)
+                                    : DecorationImage(
+                                    image: anh != 'null'
+                                        ? NetworkImage(
+                                        "http://192.168.1.32:3000/$anh")
+                                        : imageProvider,
+                                    fit: BoxFit.cover),
+                              ),
+                              // child: _imageFile != null
+                              //     ? Image.file(_imageFile!, fit: BoxFit.cover)
+                              //     : CachedNetworkImage(
+                              //         imageUrl: "http://192.168.1.32:3000/$anh",
+                              //         imageBuilder: (context, imageProvider) =>
+                              //             Container(
+                              //           decoration: BoxDecoration(
+                              //               shape: BoxShape.circle,
+                              //               image: DecorationImage(
+                              //                   image: imageProvider,
+                              //                   fit: BoxFit.cover)),
+                              //         ),
+                              //         progressIndicatorBuilder:
+                              //             (context, url, downloadProgress) =>
+                              //                 CircularProgressIndicator(
+                              //           value: downloadProgress.progress,
+                              //           color: Colors.deepOrangeAccent,
+                              //         ),
+                              //         errorWidget: (context, url, error) =>
+                              //             const Icon(Icons.error),
+                              //       ),
                             ),
-                            child: Image.asset("assets/images/officer.png"),
-                          ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: showImagePicker,
+                                child: const Icon(
+                                  Icons.add_a_photo_rounded,
+                                  color: Colors.deepOrange,
+                                ),
+                              ),
+                            )
+                          ]),
                         ),
                         MyTextFormField(
                           obscureText: false,
@@ -186,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 45,
                               width: 200,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (userNameCtrl.text.isEmpty ||
                                       emailCtrl.text.isEmpty ||
                                       fullNameCtrl.text.isEmpty ||
@@ -201,12 +274,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                             "Vui lòng nhập đủ thông tin người dùng",
                                         contentType: ContentType.warning);
                                   } else {
-                                    BlocProvider.of<ProfilePageBloc>(context)
-                                        .add(ChangeInfoEvent(
+                                    _imageFile == null
+                                        ? BlocProvider.of<ProfilePageBloc>(
+                                                context)
+                                            .add(ChangeInfoNoImageEvent(
                                             userName: userNameCtrl.text,
                                             email: emailCtrl.text,
                                             fullName: fullNameCtrl.text,
-                                            phone: phoneCtrl.text));
+                                            phone: phoneCtrl.text,
+                                          ))
+                                        : BlocProvider.of<ProfilePageBloc>(
+                                                context)
+                                            .add(ChangeInfoEvent(
+                                                userName: userNameCtrl.text,
+                                                email: emailCtrl.text,
+                                                fullName: fullNameCtrl.text,
+                                                phone: phoneCtrl.text,
+                                                anh: _imageFile?.path ??
+                                                    anh.toString()));
                                   }
                                 },
                                 style: ButtonStyle(

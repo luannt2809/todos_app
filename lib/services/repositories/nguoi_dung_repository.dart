@@ -24,9 +24,18 @@ class NguoiDungRepository {
         userName, passwd, email, fullName, phone, maPB, status);
   }
 
+  Future<Response> insertUserWithImage(String userName, String passwd, String email,
+      String fullName, String phone, String maPB, int status, String anh) async {
+    return nguoiDungProvider.insertUserWithImage(userName, passwd, email, fullName, phone, maPB, status, anh);
+  }
+
   Future<Response> updateInfo(
-      String userName, String email, String fullName, String phone) {
-    return nguoiDungProvider.updateInfo(userName, email, fullName, phone);
+      String userName, String email, String fullName, String phone, String anh) {
+    return nguoiDungProvider.updateInfo(userName, email, fullName, phone, anh);
+  }
+
+  Future<Response> updateInfoNoImage(String userName, String email, String fullName, String phone){
+    return nguoiDungProvider.updateInfoNoImage(userName, email, fullName, phone);
   }
 
   Future<Response> updateUser(
@@ -41,5 +50,20 @@ class NguoiDungRepository {
   ) {
     return nguoiDungProvider.updateUser(
         maND, userName, passWd, email, fullName, phone, maPB, status);
+  }
+
+  Future<Response> updateUserWithImage(int maND,
+      String userName,
+      String passWd,
+      String email,
+      String fullName,
+      String phone,
+      String maPB,
+      int status, String anh) {
+    return nguoiDungProvider.updateUserWithImage(maND, userName, passWd, email, fullName, phone, maPB, status, anh);
+  }
+
+  Future<Response> forgotPasswd(String tenND, String matKhau) async {
+    return nguoiDungProvider.forgotPasswd(tenND, matKhau);
   }
 }

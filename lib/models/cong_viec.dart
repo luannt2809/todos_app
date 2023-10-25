@@ -55,22 +55,22 @@ class CongViec {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MaCV'] = this.maCV;
-    data['TieuDe'] = this.tieuDe;
-    data['NoiDung'] = this.noiDung;
-    data['GioBatDau'] = this.gioBatDau;
-    data['GioKetThuc'] = this.gioKetThuc;
-    data['NgayBatDau'] = this.ngayBatDau;
-    data['NgayKetThuc'] = this.ngayKetThuc;
-    data['TrangThai'] = this.trangThai;
-    data['TienDo'] = this.tienDo;
-    data['GhiChu'] = this.ghiChu;
-    data['MaNguoiLam'] = this.maNguoiLam;
-    data['MaNguoiGiao'] = this.maNguoiGiao;
-    data['Kieu'] = this.kieu;
-    data['HoTenNguoiLam'] = this.hoTenNguoiLam;
-    data['HoTenNguoiGiao'] = this.hoTenNguoiGiao;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MaCV'] = maCV;
+    data['TieuDe'] = tieuDe;
+    data['NoiDung'] = noiDung;
+    data['GioBatDau'] = gioBatDau;
+    data['GioKetThuc'] = gioKetThuc;
+    data['NgayBatDau'] = ngayBatDau;
+    data['NgayKetThuc'] = ngayKetThuc;
+    data['TrangThai'] = trangThai;
+    data['TienDo'] = tienDo;
+    data['GhiChu'] = ghiChu;
+    data['MaNguoiLam'] = maNguoiLam;
+    data['MaNguoiGiao'] = maNguoiGiao;
+    data['Kieu'] = kieu;
+    data['HoTenNguoiLam'] = hoTenNguoiLam;
+    data['HoTenNguoiGiao'] = hoTenNguoiGiao;
     return data;
   }
 
