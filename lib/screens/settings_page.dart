@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/screens/login_page.dart';
@@ -15,6 +16,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final ImageProvider imageProvider =
+      const AssetImage("assets/images/officer.png");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,20 +40,41 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Container(
                 width: 90,
                 height: 90,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                   // borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withOpacity(0.3),
                       spreadRadius: 5,
                       blurRadius: 7,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Image.asset("assets/images/officer.png"),
+                child: widget.nguoiDung.anh.toString() == "null"
+                    ? Image.asset("assets/images/officer.png")
+                    : CachedNetworkImage(
+                        fit: BoxFit.contain,
+                        imageUrl:
+                            "http://192.168.1.32:3000/${widget.nguoiDung.anh}",
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover)),
+                        ),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
               ),
             ),
             const SizedBox(
@@ -86,14 +111,10 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (builder) {
-                  return ProfilePage(hoTen: widget.nguoiDung.hoTen!);
-                })).then((value) {
-                  if (value != null && value[1] != null) {
-                    setState(() {
-                      widget.nguoiDung.hoTen = value[1];
-                    });
-                  }
-                });
+                  return ProfilePage(
+                    nguoiDung: widget.nguoiDung,
+                  );
+                }));
               },
             ),
             const SizedBox(

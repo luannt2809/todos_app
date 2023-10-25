@@ -49,7 +49,7 @@ class _AdminScreenState extends State<AdminScreen> {
       SettingsPage(nguoiDung: widget.nguoiDung)
     ];
 
-    void _onItemTapped(int index) {
+    void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
       });
@@ -64,7 +64,7 @@ class _AdminScreenState extends State<AdminScreen> {
         unselectedItemColor: Colors.black54,
         selectedItemColor: Colors.deepOrangeAccent,
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: onItemTapped,
         items: <BottomNavigationBarItem>[
           MyBottomNavigationBarItem(icon: Icons.home, label: "Trang chủ"),
           MyBottomNavigationBarItem(

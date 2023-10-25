@@ -49,7 +49,7 @@ class TaskDetailsPage extends StatelessWidget {
                       "\nTiến độ: ${congViec.tienDo}%\n Trạng thái: ${congViec.trangThai}",
                       subject: congViec.tieuDe);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.share,
                   size: 20,
                   color: Colors.orangeAccent,
@@ -80,7 +80,7 @@ class TaskDetailsPage extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       congViec.tieuDe.toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -161,7 +161,7 @@ class TaskDetailsPage extends StatelessWidget {
                                   width: 35,
                                   height: 35,
                                   decoration: Styles.boxDecoration,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.navigate_next,
                                     size: 20,
                                     color: Colors.blueAccent,

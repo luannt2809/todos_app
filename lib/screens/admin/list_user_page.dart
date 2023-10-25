@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +23,10 @@ class ListUserPage extends StatefulWidget {
 
 class _ListUserPageState extends State<ListUserPage> {
   final ListUserPageBloc listUserPageBloc = ListUserPageBloc();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool fabVisible = true;
+  final ImageProvider imageProvider =
+      const AssetImage("assets/images/officer.png");
 
   @override
   void initState() {
@@ -116,7 +119,6 @@ class _ListUserPageState extends State<ListUserPage> {
                               backgroundColor: Colors.amber,
                               foregroundColor: Colors.white,
                               icon: Icons.edit,
-                              
                             )
                           ],
                         ),
@@ -134,10 +136,46 @@ class _ListUserPageState extends State<ListUserPage> {
                             decoration: Styles.boxDecoration,
                             child: Row(
                               children: [
-                                Image.asset(
-                                  'assets/images/officer.png',
-                                  width: 50,
-                                  height: 50,
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    // borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: nguoiDung.anh.toString() == "null"
+                                      ? Image.asset("assets/images/officer.png")
+                                      : CachedNetworkImage(
+                                          imageUrl:
+                                              "http://192.168.1.32:3000/${nguoiDung.anh}",
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover)),
+                                          ),
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              CircularProgressIndicator(
+                                            value: downloadProgress.progress,
+                                            color: Colors.deepOrangeAccent,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
                                 ),
                                 const SizedBox(
                                   width: 16,
@@ -147,7 +185,11 @@ class _ListUserPageState extends State<ListUserPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(nguoiDung.hoTen.toString(), style: TextStyle(fontWeight: FontWeight.w600),),
+                                      Text(
+                                        nguoiDung.hoTen.toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                       const SizedBox(
                                         height: 10,
                                       ),

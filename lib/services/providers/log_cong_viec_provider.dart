@@ -5,7 +5,7 @@ import 'package:todos_app/services/config/api_config.dart';
 class LogCongViecProvider {
   Future<List<LogCongViec>> getListLogCongViec (int? maCV) async {
     try {
-      Response response = await ApiConfig.dio.get("${ApiConfig.BASE_URL}/logcongviec/${maCV}");
+      Response response = await ApiConfig.dio.get("${ApiConfig.BASE_URL}/logcongviec/$maCV");
 
       List<dynamic> value = response.data;
 

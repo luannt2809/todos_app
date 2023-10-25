@@ -74,7 +74,7 @@ class ListStatisticalPage extends StatelessWidget {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 15),
                                 )),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Text(
@@ -132,7 +132,7 @@ class ListStatisticalPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               );
             } else if (state is ListStatisticalEmpty) {
-              return Center(
+              return const Center(
                 child: Text("Không có dữ liệu"),
               );
             } else {

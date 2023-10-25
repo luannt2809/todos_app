@@ -22,7 +22,7 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
           userList = await nguoiDungRepository.getInfoUser();
           emit(GetInfoLoaded(userList: userList));
         } on DioException catch (e) {
-          if(e.type == DioExceptionType.badResponse){
+          if (e.type == DioExceptionType.badResponse) {
             emit(GetInfoError("Error: ${e.response?.data}"));
           } else {
             emit(GetInfoError(e.toString()));
@@ -34,12 +34,33 @@ class ProfilePageBloc extends Bloc<ProfilePageEvent, ProfilePageState> {
         try {
           emit(ChangingInfo());
           Response response = await nguoiDungRepository.updateInfo(
+              event.userName,
+              event.email,
+              event.fullName,
+              event.phone,
+              event.anh);
+          if (response.statusCode == 200) {
+            emit(ChangeInfoSuccess(response.data.toString()));
+          }
+        } on DioException catch (e) {
+          if (e.type == DioExceptionType.badResponse) {
+            emit(ChangeInfoError(error: "Error: ${e.response?.data}"));
+          } else {
+            emit(ChangeInfoError(error: e.toString()));
+          }
+        }
+      }
+
+      if (event is ChangeInfoNoImageEvent) {
+        try {
+          emit(ChangingInfo());
+          Response response = await nguoiDungRepository.updateInfoNoImage(
               event.userName, event.email, event.fullName, event.phone);
           if (response.statusCode == 200) {
             emit(ChangeInfoSuccess(response.data.toString()));
           }
         } on DioException catch (e) {
-          if(e.type == DioExceptionType.badResponse){
+          if (e.type == DioExceptionType.badResponse) {
             emit(ChangeInfoError(error: "Error: ${e.response?.data}"));
           } else {
             emit(ChangeInfoError(error: e.toString()));

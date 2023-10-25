@@ -64,7 +64,46 @@ class NguoiDungProvider {
     return response;
   }
 
-  Future<Response> updateInfo(
+  Future<Response> insertUserWithImage(String userName, String passwd, String email,
+      String fullName, String phone, String maPB, int status, String imageFile) async {
+    final formData = FormData.fromMap({
+      'TenNguoiDung': userName,
+      'MatKhau': passwd,
+      'Email': email,
+      'HoTen': fullName,
+      'SoDienThoai': phone,
+      'MaPB': maPB,
+      'TrangThai': status,
+      'image': await MultipartFile.fromFile(imageFile)
+    });
+
+    Response response = await ApiConfig.dio.post("${ApiConfig.BASE_URL}/nguoidung/register", data: formData);
+
+    return response;
+  }
+
+  Future<Response> updateInfo(String userName, String email, String fullName,
+      String phone, String imagePath) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? maND = prefs.getInt("maND");
+
+    final formData = FormData.fromMap({
+      'TenNguoiDung': userName,
+      'Email': email,
+      'HoTen': fullName,
+      'SoDienThoai': phone,
+      'image': await MultipartFile.fromFile(imagePath)
+    });
+
+    Response response = await ApiConfig.dio.put(
+        "${ApiConfig.BASE_URL}/nguoidung/update/$maND",
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+
+    return response;
+  }
+
+  Future<Response> updateInfoNoImage(
       String userName, String email, String fullName, String phone) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? maND = prefs.getInt("maND");
@@ -99,6 +138,44 @@ class NguoiDungProvider {
       'SoDienThoai': phone,
       'MaPB': maPB,
       'TrangThai': status,
+    });
+
+    return response;
+  }
+
+  Future<Response> updateUserWithImage(
+      int maND,
+      String userName,
+      String passWd,
+      String email,
+      String fullName,
+      String phone,
+      String maPB,
+      int status,
+      String imagePath) async {
+    final formData = FormData.fromMap({
+      'TenNguoiDung': userName,
+      'MatKhau': passWd,
+      'Email': email,
+      'HoTen': fullName,
+      'SoDienThoai': phone,
+      'MaPB': maPB,
+      'TrangThai': status,
+      'image': await MultipartFile.fromFile(imagePath)
+    });
+
+    Response response = await ApiConfig.dio.put(
+        "${ApiConfig.BASE_URL}/nguoidung/update/$maND",
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+
+    return response;
+  }
+
+  Future<Response> forgotPasswd(String tenND, String matKhau) async {
+    Response response = await ApiConfig.dio
+        .put("${ApiConfig.BASE_URL}/nguoidung/forgot-passwd/$tenND", data: {
+      'MatKhau': matKhau,
     });
 
     return response;

@@ -56,10 +56,10 @@ class ListLogTaskPage extends StatelessWidget {
                                   child: Text(
                                 logCongViec.tieuDe.toString(),
                                 softWrap: true,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w500),
                               )),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
@@ -94,7 +94,7 @@ class ListLogTaskPage extends StatelessWidget {
                               ),
                               Text(
                                 "${logCongViec.tienDo}%",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.green,
                                     fontSize: 15),
@@ -121,8 +121,8 @@ class ListLogTaskPage extends StatelessWidget {
                   );
                 },
                 itemCount: state.listLogCongViec.length,
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               );
             } else {
               return Container();

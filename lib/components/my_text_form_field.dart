@@ -63,6 +63,9 @@ class MyTextFormField extends StatelessWidget {
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
+                      disabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide.none
+                      )
                     ),
                   ),
                 ),

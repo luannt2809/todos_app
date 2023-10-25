@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:todos_app/bloc/user/update_user_page/update_user_page_bloc.dart';
 import 'package:todos_app/components/custom_toast.dart';
 import 'package:todos_app/components/my_text_form_field.dart';
@@ -8,6 +11,7 @@ import 'package:todos_app/components/process_indicator.dart';
 import 'package:todos_app/models/nguoi_dung.dart';
 import 'package:todos_app/models/phong_ban.dart';
 import 'package:todos_app/services/repositories/phong_ban_repository.dart';
+import 'package:path/path.dart' as path;
 
 class UpdateUserPage extends StatefulWidget {
   final NguoiDung nguoiDung;
@@ -26,10 +30,13 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   TextEditingController phoneCtrl = TextEditingController();
   TextEditingController departmentCtrl = TextEditingController(); // phòng ban
   TextEditingController statusCtrl = TextEditingController();
+  String? anh;
+  File? _imageFile;
+  ImageProvider imageProvider = const AssetImage("assets/images/officer.png");
 
   List<PhongBan> listPhongBan = [];
   int selectedMaPB = 1;
-  String _selectTenPhongBan = 'Phòng ban';
+  final String _selectTenPhongBan = 'Phòng ban';
 
   List<String> listStatus = ['Hoạt động', "Không hoạt động"];
   String _selectedTrangThai = 'Hoạt động';
@@ -43,6 +50,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     phoneCtrl.text = widget.nguoiDung.soDienThoai.toString();
     selectedMaPB = int.parse(widget.nguoiDung.maPB.toString());
     departmentCtrl.text = widget.nguoiDung.tenPhongBan.toString();
+    anh = widget.nguoiDung.anh.toString();
     if (widget.nguoiDung.trangThai == true) {
       statusCtrl.text = "Hoạt động";
     } else {
@@ -69,6 +77,21 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   bool isPhoneNumber(String phoneNumber) {
     final phoneNumberRegex = RegExp(r'^(?:\+84|0[0-9]{9})$');
     return phoneNumberRegex.hasMatch(phoneNumber);
+  }
+
+  void showImagePicker() async {
+    final ImagePicker imagePicker = ImagePicker();
+    final XFile? file =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      setState(() {
+        _imageFile = File(file.path);
+        anh = file.path;
+      });
+      print(path.basename(_imageFile!.path));
+    } else {
+      print("No image selected");
+    }
   }
 
   @override
@@ -127,23 +150,46 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       child: Column(
                         children: [
                           Center(
-                            child: Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                                // borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 2),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 90,
+                                  height: 90,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                      image: _imageFile != null
+                                          ? DecorationImage(
+                                              image: FileImage(_imageFile!),
+                                              fit: BoxFit.contain)
+                                          : DecorationImage(
+                                              image: anh != 'null'
+                                                  ? NetworkImage(
+                                                      "http://192.168.1.32:3000/$anh")
+                                                  : imageProvider,
+                                              fit: BoxFit.contain)),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: showImagePicker,
+                                    child: const Icon(
+                                      Icons.add_a_photo_rounded,
+                                      color: Colors.deepOrange,
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: Image.asset("assets/images/officer.png"),
+                                )
+                              ],
                             ),
                           ),
                           MyTextFormField(
@@ -212,7 +258,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                       int.parse(newValue!.maPB.toString());
                                   departmentCtrl.text =
                                       newValue.tenPhongBan.toString();
-                                  print(selectedMaPB);
+                                  // print(selectedMaPB);
                                 });
                               },
                             ),
@@ -282,19 +328,34 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                         status = 0;
                                       }
 
-                                      BlocProvider.of<UpdateUserPageBloc>(
-                                              context)
-                                          .add(UpdateUserEvent(
-                                              maND: int.parse(widget
-                                                  .nguoiDung.maND
-                                                  .toString()),
-                                              userName: userNameCtrl.text,
-                                              passWd: passWdCtrl.text,
-                                              email: emailCtrl.text,
-                                              fullName: fullNameCtrl.text,
-                                              phone: phoneCtrl.text,
-                                              maPB: selectedMaPB.toString(),
-                                              status: status!));
+                                      _imageFile == null
+                                          ? BlocProvider.of<UpdateUserPageBloc>(context)
+                                              .add(UpdateUserEvent(
+                                                  maND: int.parse(widget
+                                                      .nguoiDung.maND
+                                                      .toString()),
+                                                  userName: userNameCtrl.text,
+                                                  passWd: passWdCtrl.text,
+                                                  email: emailCtrl.text,
+                                                  fullName: fullNameCtrl.text,
+                                                  phone: phoneCtrl.text,
+                                                  maPB: selectedMaPB.toString(),
+                                                  status: status!))
+                                          : BlocProvider.of<UpdateUserPageBloc>(
+                                                  context)
+                                              .add(UpdateUserWithImageEvent(
+                                                  maND: int.parse(widget
+                                                      .nguoiDung.maND
+                                                      .toString()),
+                                                  userName: userNameCtrl.text,
+                                                  passWd: passWdCtrl.text,
+                                                  email: emailCtrl.text,
+                                                  fullName: fullNameCtrl.text,
+                                                  phone: phoneCtrl.text,
+                                                  maPB: selectedMaPB.toString(),
+                                                  status: status!,
+                                                  anh: _imageFile?.path ??
+                                                      anh.toString()));
                                     }
                                   },
                                   style: ButtonStyle(

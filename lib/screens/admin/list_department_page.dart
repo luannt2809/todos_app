@@ -21,7 +21,7 @@ class ListDepartmentPage extends StatefulWidget {
 
 class _ListDepartmentPageState extends State<ListDepartmentPage> {
   late ListDepartmentPageBloc listDepartmentPageBloc;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool fabVisible = true;
 
   @override

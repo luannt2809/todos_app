@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -238,7 +239,7 @@ class _HomePageState extends State<HomePage> {
   // List<CongViec> list = [];
 
   _getDateFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
+    DateTime? pickerDate = await showDatePicker(
       context: context,
       initialDate: _selectStartDate,
       firstDate: DateTime(2020),
@@ -255,14 +256,16 @@ class _HomePageState extends State<HomePage> {
             child: child!);
       },
     );
-    if (_pickerDate != null) {
+    if (pickerDate != null) {
       setState(() {
-        _selectStartDate = _pickerDate;
+        _selectStartDate = pickerDate;
         ngayBDCtrl.text = _selectStartDate.toString();
       });
       getData();
     } else {
-      print("Có lỗi xảy ra");
+      if (kDebugMode) {
+        print("Có lỗi xảy ra");
+      }
     }
   }
 
@@ -412,7 +415,7 @@ class _HomePageState extends State<HomePage> {
                       congViec.tieuDe.toString(),
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     )),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(

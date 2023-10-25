@@ -16,12 +16,12 @@ class ThongBao {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MaTB'] = this.maTB;
-    data['TieuDe'] = this.tieuDe;
-    data['NoiDung'] = this.noiDung;
-    data['MaCV'] = this.maCV;
-    data['MaND'] = this.maND;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MaTB'] = maTB;
+    data['TieuDe'] = tieuDe;
+    data['NoiDung'] = noiDung;
+    data['MaCV'] = maCV;
+    data['MaND'] = maND;
     return data;
   }
 }

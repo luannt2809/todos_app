@@ -21,7 +21,7 @@ class TaskAssignedPage extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
           centerTitle: true,
-          bottom: TabBar(
+          bottom: const TabBar(
             unselectedLabelColor: Colors.black26,
             labelColor: Colors.deepOrange,
             indicatorColor: Colors.white,

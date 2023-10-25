@@ -26,7 +26,7 @@ class FirebaseApi {
   }
 
   void initLocalNotification() async {
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
     InitializationSettings(
       android: AndroidInitializationSettings("@drawable/logo"),
     );

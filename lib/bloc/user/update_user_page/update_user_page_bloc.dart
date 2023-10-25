@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -26,6 +25,32 @@ class UpdateUserPageBloc
               event.phone,
               event.maPB,
               event.status);
+
+          if (response.statusCode == 200) {
+            emit(UpdatedUser(response.data.toString()));
+          }
+        } on DioException catch (e) {
+          if (e.type == DioExceptionType.badResponse) {
+            emit(UpdateUserError(e.response?.data));
+          } else {
+            emit(UpdateUserError(e.toString()));
+          }
+        }
+      }
+
+      if (event is UpdateUserWithImageEvent) {
+        emit(UpdatingUser());
+        try {
+          Response response = await nguoiDungRepository.updateUserWithImage(
+              event.maND,
+              event.userName,
+              event.passWd,
+              event.email,
+              event.fullName,
+              event.phone,
+              event.maPB,
+              event.status,
+              event.anh);
 
           if (response.statusCode == 200) {
             emit(UpdatedUser(response.data.toString()));

@@ -20,22 +20,23 @@ class LogCongViec {
 
   LogCongViec(
       {this.maLogCV,
-        this.maCV,
-        this.tieuDe,
-        this.noiDung,
-        this.gioBatDau,
-        this.gioKetThuc,
-        this.ngayBatDau,
-        this.ngayKetThuc,
-        this.trangThai,
-        this.tienDo,
-        this.ghiChu,
-        this.maNguoiLam,
-        this.maNguoiGiao,
-        this.kieu,
-        this.moTa,
-        this.thoiGian,
-        this.hoTen, this.error});
+      this.maCV,
+      this.tieuDe,
+      this.noiDung,
+      this.gioBatDau,
+      this.gioKetThuc,
+      this.ngayBatDau,
+      this.ngayKetThuc,
+      this.trangThai,
+      this.tienDo,
+      this.ghiChu,
+      this.maNguoiLam,
+      this.maNguoiGiao,
+      this.kieu,
+      this.moTa,
+      this.thoiGian,
+      this.hoTen,
+      this.error});
 
   LogCongViec.fromJson(Map<String, dynamic> json) {
     maLogCV = json['MaLogCV'];
@@ -55,28 +56,28 @@ class LogCongViec {
     moTa = json['MoTa'];
     thoiGian = json['ThoiGian'];
     hoTen = json['HoTen'];
-    error: json['error'];
+    json['error'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MaLogCV'] = this.maLogCV;
-    data['MaCV'] = this.maCV;
-    data['TieuDe'] = this.tieuDe;
-    data['NoiDung'] = this.noiDung;
-    data['GioBatDau'] = this.gioBatDau;
-    data['GioKetThuc'] = this.gioKetThuc;
-    data['NgayBatDau'] = this.ngayBatDau;
-    data['NgayKetThuc'] = this.ngayKetThuc;
-    data['TrangThai'] = this.trangThai;
-    data['TienDo'] = this.tienDo;
-    data['GhiChu'] = this.ghiChu;
-    data['MaNguoiLam'] = this.maNguoiLam;
-    data['MaNguoiGiao'] = this.maNguoiGiao;
-    data['Kieu'] = this.kieu;
-    data['MoTa'] = this.moTa;
-    data['ThoiGian'] = this.thoiGian;
-    data['HoTen'] = this.hoTen;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MaLogCV'] = maLogCV;
+    data['MaCV'] = maCV;
+    data['TieuDe'] = tieuDe;
+    data['NoiDung'] = noiDung;
+    data['GioBatDau'] = gioBatDau;
+    data['GioKetThuc'] = gioKetThuc;
+    data['NgayBatDau'] = ngayBatDau;
+    data['NgayKetThuc'] = ngayKetThuc;
+    data['TrangThai'] = trangThai;
+    data['TienDo'] = tienDo;
+    data['GhiChu'] = ghiChu;
+    data['MaNguoiLam'] = maNguoiLam;
+    data['MaNguoiGiao'] = maNguoiGiao;
+    data['Kieu'] = kieu;
+    data['MoTa'] = moTa;
+    data['ThoiGian'] = thoiGian;
+    data['HoTen'] = hoTen;
     return data;
   }
 

@@ -41,7 +41,7 @@ class NotifyPage extends StatelessWidget {
               if (state is NotifyPageLoading) {
                 return circularProgressIndicator();
               } else if (state is GetListNotifyEmpty) {
-                return Center(
+                return const Center(
                   child: Text("Không có thông báo"),
                 );
               } else if (state is NotifyPageLoaded) {
@@ -49,9 +49,9 @@ class NotifyPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     ThongBao thongBao = state.notifyList[index];
                     return Padding(
-                      padding: EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top: 16),
                       child: Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: Styles.boxDecoration,
                         child: Row(
                           children: [
@@ -59,18 +59,18 @@ class NotifyPage extends StatelessWidget {
                               'assets/images/notification_bell.png',
                               height: 50,
                             ),
-                            SizedBox(width: 16,),
+                            const SizedBox(width: 16,),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     thongBao.tieuDe.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Text(thongBao.noiDung.toString())
@@ -88,7 +88,7 @@ class NotifyPage extends StatelessWidget {
                       const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 );
               } else {
-                return Center(
+                return const Center(
                   child: Text("Không có thông báo"),
                 );
               }
