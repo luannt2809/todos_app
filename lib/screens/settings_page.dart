@@ -16,8 +16,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final ImageProvider imageProvider =
-      const AssetImage("assets/images/officer.png");
+  final ImageProvider imageProvider = const AssetImage("assets/images/officer.png");
 
   @override
   Widget build(BuildContext context) {
@@ -58,22 +57,16 @@ class _SettingsPageState extends State<SettingsPage> {
                     ? Image.asset("assets/images/officer.png")
                     : CachedNetworkImage(
                         fit: BoxFit.contain,
-                        imageUrl:
-                            "http://192.168.1.32:3000/${widget.nguoiDung.anh}",
+                        imageUrl: "http://192.168.1.30:3000/${widget.nguoiDung.anh}",
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover)),
+                              shape: BoxShape.circle, image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
                         ),
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
+                        progressIndicatorBuilder: (context, url, downloadProgress) => CircularProgressIndicator(
                           value: downloadProgress.progress,
                           color: Colors.deepOrangeAccent,
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
               ),
             ),
@@ -92,8 +85,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(top: 10),
                 decoration: Styles.boxDecoration,
-                child: const Row(
-                  children: [
+                child: Row(
+                  children: const [
                     Icon(
                       Icons.account_circle_rounded,
                       size: 25,
@@ -109,8 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (builder) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (builder) {
                   return ProfilePage(
                     nguoiDung: widget.nguoiDung,
                   );
@@ -125,8 +117,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(top: 10),
                 decoration: Styles.boxDecoration,
-                child: const Row(
-                  children: [
+                child: Row(
+                  children: const [
                     Icon(
                       Icons.stacked_bar_chart_rounded,
                       size: 25,
@@ -142,8 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (builder) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (builder) {
                   return StatisticalPage(
                     nguoiDung: widget.nguoiDung,
                   );
@@ -158,8 +149,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(top: 10),
                 decoration: Styles.boxDecoration,
-                child: const Row(
-                  children: [
+                child: Row(
+                  children: const [
                     Icon(
                       Icons.logout,
                       size: 25,

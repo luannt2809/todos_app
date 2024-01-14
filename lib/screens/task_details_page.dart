@@ -12,8 +12,7 @@ class TaskDetailsPage extends StatelessWidget {
   final NguoiDung nguoiDung;
   final CongViec congViec;
 
-  const TaskDetailsPage(
-      {super.key, required this.congViec, required this.nguoiDung});
+  const TaskDetailsPage({super.key, required this.congViec, required this.nguoiDung});
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +66,7 @@ class TaskDetailsPage extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       padding: const EdgeInsets.all(16),
-                      margin:
-                          const EdgeInsets.only(top: 10, left: 16, right: 16),
+                      margin: const EdgeInsets.only(top: 10, left: 16, right: 16),
                       decoration: Styles.boxDecoration,
                       child: Stack(
                         children: [
@@ -80,20 +78,17 @@ class TaskDetailsPage extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       congViec.tieuDe.toString(),
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                                     ),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   Text(
                                     congViec.trangThai.toString(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: congViec.trangThai !=
-                                                "Quá hạn"
-                                            ? Colors.green
-                                            : Colors.red,
+                                        color: congViec.trangThai != "Quá hạn" ? Colors.green : Colors.red,
                                         fontSize: 15),
                                   ),
                                 ],
@@ -113,10 +108,8 @@ class TaskDetailsPage extends StatelessWidget {
                                   ),
                                   Text(
                                     "${congViec.tienDo}%",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green,
-                                        fontSize: 15),
+                                    style:
+                                        const TextStyle(fontWeight: FontWeight.w500, color: Colors.green, fontSize: 15),
                                   ),
                                 ],
                               ),
@@ -134,15 +127,12 @@ class TaskDetailsPage extends StatelessWidget {
                               ),
                               RowItem(
                                 icon: Icons.person_outline_outlined,
-                                text: congViec.hoTenNguoiLam ??
-                                    nguoiDung.hoTen.toString(),
+                                text: congViec.hoTenNguoiLam ?? nguoiDung.hoTen.toString(),
                               ),
                             ],
                           ),
                           Visibility(
-                            visible:
-                                congViec.trangThai == "Hoàn thành" &&
-                                    congViec.tienDo == 100,
+                            visible: congViec.trangThai == "Hoàn thành" && congViec.tienDo == 100,
                             child: Positioned(
                               right: 0,
                               bottom: 0,
@@ -174,10 +164,9 @@ class TaskDetailsPage extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(top: 20, left: 16, right: 16),
-                      child: const Row(
-                        children: <Widget>[
+                      margin: const EdgeInsets.only(top: 20, left: 16, right: 16),
+                      child: Row(
+                        children: const <Widget>[
                           Icon(
                             Icons.description,
                             color: Colors.grey,
@@ -187,25 +176,22 @@ class TaskDetailsPage extends StatelessWidget {
                           ),
                           Text(
                             "Nội dung",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 20, top: 10, right: 20),
+                      margin: const EdgeInsets.only(left: 20, top: 10, right: 20),
                       child: Text(
                         congViec.noiDung.toString(),
                         softWrap: true,
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(top: 20, left: 16, right: 16),
-                      child: const Row(
-                        children: <Widget>[
+                      margin: const EdgeInsets.only(top: 20, left: 16, right: 16),
+                      child: Row(
+                        children: const <Widget>[
                           Icon(
                             Icons.notes,
                             color: Colors.grey,
@@ -215,19 +201,15 @@ class TaskDetailsPage extends StatelessWidget {
                           ),
                           Text(
                             "Ghi chú",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 20, top: 10, right: 20),
+                      margin: const EdgeInsets.only(left: 20, top: 10, right: 20),
                       child: Text(
-                        congViec.ghiChu.toString() == "null"
-                            ? "Không có ghi chú"
-                            : congViec.ghiChu.toString(),
+                        congViec.ghiChu.toString() == "null" ? "Không có ghi chú" : congViec.ghiChu.toString(),
                         softWrap: true,
                       ),
                     ),
@@ -245,8 +227,7 @@ class TaskDetailsPage extends StatelessWidget {
                     indicatorColor: Colors.orangeAccent,
                     labelColor: Colors.deepOrangeAccent,
                     unselectedLabelColor: Colors.grey,
-                    indicator: CircleTabIndicator(
-                        color: Colors.deepOrangeAccent, radius: 4),
+                    indicator: CircleTabIndicator(color: Colors.deepOrangeAccent, radius: 4),
                     tabs: [
                       Tab(text: 'Nhật ký'),
                       Tab(text: 'Công việc khác'),
@@ -296,8 +277,7 @@ class _CirclePainter extends BoxPainter {
     late Paint paint;
     paint = Paint()..color = color;
     paint = paint..isAntiAlias = true;
-    final Offset circleOffset =
-        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius);
+    final Offset circleOffset = offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius);
     canvas.drawCircle(circleOffset, radius, paint);
   }
 }
@@ -314,8 +294,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(bottom: 5),

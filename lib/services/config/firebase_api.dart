@@ -27,7 +27,7 @@ class FirebaseApi {
 
   void initLocalNotification() async {
     const InitializationSettings initializationSettings =
-    InitializationSettings(
+        InitializationSettings(
       android: AndroidInitializationSettings("@drawable/logo"),
     );
     await flutterLocalNotificationsPlugin.initialize(
@@ -47,7 +47,7 @@ class FirebaseApi {
       'high_importance_channel', // id
       'High Importance Notifications', // title
       description:
-      'This channel is used for important notifications.', // description
+          'This channel is used for important notifications.', // description
       importance: Importance.high,
     );
 
@@ -59,7 +59,7 @@ class FirebaseApi {
     /// default FCM channel to enable heads up notifications.
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     /// Update the iOS foreground notification presentation options to allow
@@ -81,6 +81,8 @@ class FirebaseApi {
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
+
+    FirebaseMessaging.instance.subscribeToTopic('order');
   }
 
   void showFlutterNotification(RemoteMessage message) {

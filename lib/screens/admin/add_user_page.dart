@@ -64,8 +64,7 @@ class _AddUserPageState extends State<AddUserPage> {
 
   void showImagePicker() async {
     final ImagePicker imagePicker = ImagePicker();
-    final XFile? file =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file != null) {
       setState(() {
         _imageFile = File(file.path);
@@ -109,16 +108,10 @@ class _AddUserPageState extends State<AddUserPage> {
             listener: (context, state) {
               if (state is AddUserError) {
                 customToast(
-                    context: context,
-                    title: "Lỗi",
-                    message: state.error.toString(),
-                    contentType: ContentType.failure);
+                    context: context, title: "Lỗi", message: state.error.toString(), contentType: ContentType.failure);
               } else if (state is AddUserLoaded) {
                 customToast(
-                    context: context,
-                    title: "Thành công",
-                    message: state.msg,
-                    contentType: ContentType.success);
+                    context: context, title: "Thành công", message: state.msg, contentType: ContentType.success);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
@@ -151,9 +144,7 @@ class _AddUserPageState extends State<AddUserPage> {
                                   ),
                                 ],
                                 image: DecorationImage(
-                                    image: _imageFile != null
-                                        ? FileImage(_imageFile!)
-                                        : imageProvider,
+                                    image: _imageFile != null ? FileImage(_imageFile!) : imageProvider,
                                     fit: BoxFit.contain),
                               ),
                             ),
@@ -221,10 +212,8 @@ class _AddUserPageState extends State<AddUserPage> {
                               underline: Container(
                                 height: 0,
                               ),
-                              padding: const EdgeInsets.only(right: 8),
-                              items: listPhongBan
-                                  .map<DropdownMenuItem<PhongBan>>(
-                                      (PhongBan item) {
+                              // padding: const EdgeInsets.only(right: 8),
+                              items: listPhongBan.map<DropdownMenuItem<PhongBan>>((PhongBan item) {
                                 return DropdownMenuItem<PhongBan>(
                                   value: item,
                                   child: Text(item.tenPhongBan.toString()),
@@ -232,10 +221,8 @@ class _AddUserPageState extends State<AddUserPage> {
                               }).toList(),
                               onChanged: (PhongBan? newValue) {
                                 setState(() {
-                                  selectedMaPB =
-                                      int.parse(newValue!.maPB.toString());
-                                  departmentCtrl.text =
-                                      newValue.tenPhongBan.toString();
+                                  selectedMaPB = int.parse(newValue!.maPB.toString());
+                                  departmentCtrl.text = newValue.tenPhongBan.toString();
                                   // print(selectedMaPB);
                                 });
                               },
@@ -257,7 +244,7 @@ class _AddUserPageState extends State<AddUserPage> {
                               underline: Container(
                                 height: 0,
                               ),
-                              padding: const EdgeInsets.only(right: 8),
+                              // padding: const EdgeInsets.only(right: 8),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   _selectedTrangThai = newValue!;
@@ -294,16 +281,13 @@ class _AddUserPageState extends State<AddUserPage> {
                                       customToast(
                                           context: context,
                                           title: "Thông báo",
-                                          message:
-                                              "Vui lòng nhập đủ thông tin người dùng",
+                                          message: "Vui lòng nhập đủ thông tin người dùng",
                                           contentType: ContentType.warning);
-                                    } else if (!isEmail(emailCtrl.text) &&
-                                        !isPhoneNumber(phoneCtrl.text)) {
+                                    } else if (!isEmail(emailCtrl.text) && !isPhoneNumber(phoneCtrl.text)) {
                                       customToast(
                                           context: context,
                                           title: "Thông báo",
-                                          message:
-                                              "Email và số điện thoại không đúng định dạng",
+                                          message: "Email và số điện thoại không đúng định dạng",
                                           contentType: ContentType.warning);
                                     } else if (!isEmail(emailCtrl.text)) {
                                       customToast(
@@ -315,46 +299,38 @@ class _AddUserPageState extends State<AddUserPage> {
                                       customToast(
                                           context: context,
                                           title: "Thông báo",
-                                          message:
-                                              "Số điện thoại không đúng định dạng",
+                                          message: "Số điện thoại không đúng định dạng",
                                           contentType: ContentType.warning);
                                     } else {
                                       int status = 1;
                                       if (statusCtrl.text == "Hoạt động") {
                                         status = 1;
-                                      } else if (statusCtrl.text ==
-                                          "Không hoạt động") {
+                                      } else if (statusCtrl.text == "Không hoạt động") {
                                         status = 0;
                                       }
 
                                       _imageFile == null
-                                          ? BlocProvider.of<AddUserPageBloc>(
-                                                  context)
-                                              .add(AddUserEvent(
-                                                  userName: userNameCtrl.text,
-                                                  passWd: passWdCtrl.text,
-                                                  email: emailCtrl.text,
-                                                  fullName: fullNameCtrl.text,
-                                                  phone: phoneCtrl.text,
-                                                  maPB: selectedMaPB.toString(),
-                                                  status: status))
-                                          : BlocProvider.of<AddUserPageBloc>(
-                                                  context)
-                                              .add(AddUserWithImageEvent(
-                                                  userName: userNameCtrl.text,
-                                                  passWd: passWdCtrl.text,
-                                                  email: emailCtrl.text,
-                                                  fullName: fullNameCtrl.text,
-                                                  phone: phoneCtrl.text,
-                                                  maPB: selectedMaPB.toString(),
-                                                  status: status,
-                                                  anh: _imageFile?.path ??
-                                                      anh.toString()));
+                                          ? BlocProvider.of<AddUserPageBloc>(context).add(AddUserEvent(
+                                              userName: userNameCtrl.text,
+                                              passWd: passWdCtrl.text,
+                                              email: emailCtrl.text,
+                                              fullName: fullNameCtrl.text,
+                                              phone: phoneCtrl.text,
+                                              maPB: selectedMaPB.toString(),
+                                              status: status))
+                                          : BlocProvider.of<AddUserPageBloc>(context).add(AddUserWithImageEvent(
+                                              userName: userNameCtrl.text,
+                                              passWd: passWdCtrl.text,
+                                              email: emailCtrl.text,
+                                              fullName: fullNameCtrl.text,
+                                              phone: phoneCtrl.text,
+                                              maPB: selectedMaPB.toString(),
+                                              status: status,
+                                              anh: _imageFile?.path ?? anh.toString()));
                                     }
                                   },
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.deepOrangeAccent),
+                                    backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                                     shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),

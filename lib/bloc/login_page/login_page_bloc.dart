@@ -19,16 +19,14 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
       if (event is LoginEvent) {
         emit(LoginPageLoading());
         try {
-          Response response =
-              await loginRepository.login(event.username, event.passwd);
+          Response response = await loginRepository.login(event.username, event.passwd);
           if (response.statusCode == 200) {
             // cách lấy object từ sv gửi về
             var value = response.data["nguoiDung"];
             NguoiDung nguoiDung = NguoiDung.fromJson(value);
 
             // chuyển sang trạng thái thành công
-            emit(LoginPageSuccess(
-                msg: response.data['msg'].toString(), nguoiDung: nguoiDung));
+            emit(LoginPageSuccess(msg: response.data['msg'].toString(), nguoiDung: nguoiDung));
             await prefs.setInt("maND", nguoiDung.maND!);
           }
         } on DioException catch (e) {

@@ -83,7 +83,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     : CachedNetworkImage(
                         fit: BoxFit.contain,
                         imageUrl:
-                            "http://192.168.1.32:3000/${widget.nguoiDung.anh}",
+                            "http://192.168.1.30:3000/${widget.nguoiDung.anh}",
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,

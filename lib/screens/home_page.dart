@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final double h = MediaQuery.of(context).size.height;
+    print(widget.nguoiDung.maPB);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -79,8 +80,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               itemCount: state.taskList.length,
                               physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 16),
+                              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                             );
                           } else {
                             return Container();
@@ -118,18 +118,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             children: <Widget>[
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     TimeDisplayWidget(),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
                       "Hôm nay",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ],
                 ),
@@ -165,8 +164,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.deepOrangeAccent),
+                    backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -199,8 +197,7 @@ class _HomePageState extends State<HomePage> {
                     autofocus: false,
                     cursorColor: Colors.grey,
                     decoration: InputDecoration(
-                      hintText:
-                          DateFormat('dd/MM/yyyy').format(_selectStartDate),
+                      hintText: DateFormat('dd/MM/yyyy').format(_selectStartDate),
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
@@ -231,9 +228,7 @@ class _HomePageState extends State<HomePage> {
     //             DateFormat('yyyy-MM-dd').format(_selectStartDate))
     //         ?.whenComplete(() {}) ??
     //     []; sửa thành ->
-    homePageBloc.add(GetTaskList(
-        startDate:
-            DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
+    homePageBloc.add(GetTaskList(startDate: DateFormat('yyyy-MM-dd').format(_selectStartDate).toString()));
   }
 
   // List<CongViec> list = [];
@@ -248,10 +243,8 @@ class _HomePageState extends State<HomePage> {
         return Theme(
             data: ThemeData.light().copyWith(
               primaryColor: Colors.deepOrangeAccent,
-              colorScheme:
-                  const ColorScheme.light(primary: Colors.deepOrangeAccent),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              colorScheme: const ColorScheme.light(primary: Colors.deepOrangeAccent),
+              buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
             ),
             child: child!);
       },
@@ -291,8 +284,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TaskDetailsPage(
-                  nguoiDung: widget.nguoiDung, congViec: congViec),
+              builder: (context) => TaskDetailsPage(nguoiDung: widget.nguoiDung, congViec: congViec),
             ),
           ).then((value) async {
             if (value != null && value[0] == 'Reload') {
@@ -302,7 +294,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Slidable(
           endActionPane: ActionPane(
-            motion: const DrawerMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                 // An action can be bigger than the others.
@@ -310,8 +302,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UpdateTaskPage(
-                          nguoiDung: widget.nguoiDung, congViec: congViec),
+                      builder: (context) => UpdateTaskPage(nguoiDung: widget.nguoiDung, congViec: congViec),
                     ),
                   ).then((value) {
                     if (value != null && value[0] == 'Reload') {
@@ -325,9 +316,7 @@ class _HomePageState extends State<HomePage> {
                 label: 'Cập nhật',
               ),
               Visibility(
-                visible: congViec.maNguoiGiao == null &&
-                        widget.nguoiDung.maPB != 2 ||
-                    widget.nguoiDung.maPB == 2,
+                visible: congViec.maNguoiGiao == null && widget.nguoiDung.maPB != 2 || widget.nguoiDung.maPB == 2,
                 child: SlidableAction(
                   backgroundColor: Colors.redAccent,
                   foregroundColor: Colors.white,
@@ -361,20 +350,16 @@ class _HomePageState extends State<HomePage> {
                             if (state is DeleteTaskInitial) {
                               return AlertDialog(
                                 title: const Text("Xác nhận"),
-                                content: const Text(
-                                    "Bạn có xác nhận xoá công việc này không ?"),
+                                content: const Text("Bạn có xác nhận xoá công việc này không ?"),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
                                       BlocProvider.of<DeleteTaskBloc>(context)
-                                          .add(DeleteTask(int.parse(
-                                              congViec.maCV.toString())));
+                                          .add(DeleteTask(int.parse(congViec.maCV.toString())));
                                     },
                                     child: const Text(
                                       "Xác nhận",
-                                      style: TextStyle(
-                                          color: Colors.deepOrangeAccent,
-                                          fontSize: 16),
+                                      style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16),
                                     ),
                                   ),
                                   TextButton(
@@ -383,9 +368,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: const Text(
                                       "Huỷ",
-                                      style: TextStyle(
-                                          color: Colors.deepOrangeAccent,
-                                          fontSize: 16),
+                                      style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16),
                                     ),
                                   ),
                                 ],
@@ -421,9 +404,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       congViec.trangThai.toString(),
                       style: TextStyle(
-                          color: congViec.trangThai != "Quá hạn"
-                              ? Colors.green
-                              : Colors.red,
+                          color: congViec.trangThai != "Quá hạn" ? Colors.green : Colors.red,
                           fontWeight: FontWeight.w500),
                     )
                   ],
@@ -477,8 +458,7 @@ class TimeDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting("vi_VN", null);
 
-    String formattedDate =
-        DateFormat('MMMM dd, y', 'vi').format(DateTime.now());
+    String formattedDate = DateFormat('MMMM dd, y', 'vi').format(DateTime.now());
 
     return Text(
       formattedDate.toUpperCase(),

@@ -167,7 +167,7 @@ class NguoiDungProvider {
     Response response = await ApiConfig.dio.put(
         "${ApiConfig.BASE_URL}/nguoidung/update/$maND",
         data: formData,
-        options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+        options: Options(headers: {'Content-Type': 'multipart/form-data; boundary=${formData.boundary}'}));
 
     return response;
   }

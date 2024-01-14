@@ -141,10 +141,20 @@ class LoginPage extends StatelessWidget {
                                         backgroundColor:
                                             Colors.deepOrangeAccent),
                                     onPressed: () {
-                                      BlocProvider.of<LoginPageBloc>(context)
-                                          .add(LoginEvent(
-                                              username: userNameController.text,
-                                              passwd: passwdController.text));
+                                      if (userNameController.text.isEmpty ||
+                                          passwdController.text.isEmpty) {
+                                        customToast(
+                                            context: context,
+                                            title: "Thông báo",
+                                            message:
+                                                "Vui lòng nhập đủ thông tin đăng nhập",
+                                            contentType: ContentType.warning);
+                                      } else {
+                                        BlocProvider.of<LoginPageBloc>(context)
+                                            .add(LoginEvent(
+                                            username: userNameController.text,
+                                            passwd: passwdController.text));
+                                      }
                                     },
                                     child: const Text(
                                       "Đăng nhập",

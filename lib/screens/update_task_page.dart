@@ -15,8 +15,7 @@ class UpdateTaskPage extends StatefulWidget {
   final CongViec congViec;
   final NguoiDung nguoiDung;
 
-  const UpdateTaskPage(
-      {super.key, required this.congViec, required this.nguoiDung});
+  const UpdateTaskPage({super.key, required this.congViec, required this.nguoiDung});
 
   @override
   State<UpdateTaskPage> createState() => _UpdateTaskPageState();
@@ -59,21 +58,14 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   fillDataCongViec() {
     tieuDeCtrl.text = widget.congViec.tieuDe.toString();
     noiDungCtrl.text = widget.congViec.noiDung.toString();
-    ngayBDCtrl.text = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(widget.congViec.ngayBatDau.toString()));
-    ngayKTCtrl.text = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(widget.congViec.ngayKetThuc.toString()));
-    gioBDCtrl.text = DateFormat("hh:mm a")
-        .format(DateTime.parse(widget.congViec.gioBatDau.toString()))
-        .toString();
-    gioKTCtrl.text = DateFormat("hh:mm a")
-        .format(DateTime.parse(widget.congViec.gioKetThuc.toString()))
-        .toString();
+    ngayBDCtrl.text = DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.congViec.ngayBatDau.toString()));
+    ngayKTCtrl.text = DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.congViec.ngayKetThuc.toString()));
+    gioBDCtrl.text = DateFormat("hh:mm a").format(DateTime.parse(widget.congViec.gioBatDau.toString())).toString();
+    gioKTCtrl.text = DateFormat("hh:mm a").format(DateTime.parse(widget.congViec.gioKetThuc.toString())).toString();
     trangThaiCtrl.text = widget.congViec.trangThai.toString();
     tienDoCtrl.text = widget.congViec.tienDo.toString();
-    ghiChuCtrl.text = widget.congViec.ghiChu.toString() == "null"
-        ? "Không có ghi chú"
-        : widget.congViec.ghiChu.toString();
+    ghiChuCtrl.text =
+        widget.congViec.ghiChu.toString() == "null" ? "Không có ghi chú" : widget.congViec.ghiChu.toString();
     selectMaNL = widget.congViec.maNguoiLam;
     nguoiLamCtrl.text = widget.congViec.hoTenNguoiLam.toString();
     NguoiDungRepository().getListOthers().then((value) {
@@ -100,13 +92,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     super.dispose();
   }
 
-  List<String> listTrangThai = [
-    'Chờ nhận',
-    'Đã nhận',
-    'Đang thực hiện',
-    'Hoàn thành',
-    'Quá hạn'
-  ];
+  List<String> listTrangThai = ['Chờ nhận', 'Đã nhận', 'Đang thực hiện', 'Hoàn thành', 'Quá hạn'];
 
   @override
   Widget build(BuildContext context) {
@@ -139,17 +125,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
             listener: (context, state) {
               if (state is UpdateTaskPageLoaded) {
                 customToast(
-                    context: context,
-                    title: "Thành công",
-                    message: state.msg,
-                    contentType: ContentType.success);
+                    context: context, title: "Thành công", message: state.msg, contentType: ContentType.success);
                 Navigator.pop(context, ["Reload"]);
               } else if (state is UpdateTaskPageError) {
                 customToast(
-                    context: context,
-                    title: "Lỗi",
-                    message: state.error.toString(),
-                    contentType: ContentType.failure);
+                    context: context, title: "Lỗi", message: state.error.toString(), contentType: ContentType.failure);
               }
             },
             builder: (context, state) {
@@ -171,11 +151,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Visibility(
-                                      visible: widget.nguoiDung.maPB == 2 &&
-                                                  widget.congViec.maNguoiGiao !=
-                                                      null ||
-                                              widget.congViec.maNguoiGiao ==
-                                                  widget.nguoiDung.maND
+                                      visible: widget.nguoiDung.maPB == 2 && widget.congViec.maNguoiGiao != null ||
+                                              widget.congViec.maNguoiGiao == widget.nguoiDung.maND
                                           ? true
                                           : false,
                                       child: MyTextFormField(
@@ -193,23 +170,16 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                           underline: Container(
                                             height: 0,
                                           ),
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
-                                          items: listNguoiLam
-                                              .map<DropdownMenuItem<NguoiDung>>(
-                                                  (NguoiDung item) {
+                                          items: listNguoiLam.map<DropdownMenuItem<NguoiDung>>((NguoiDung item) {
                                             return DropdownMenuItem<NguoiDung>(
                                               value: item,
-                                              child:
-                                                  Text(item.hoTen.toString()),
+                                              child: Text(item.hoTen.toString()),
                                             );
                                           }).toList(),
                                           onChanged: (NguoiDung? newValue) {
                                             setState(() {
-                                              selectMaNL = int.parse(
-                                                  newValue!.maND.toString());
-                                              nguoiLamCtrl.text =
-                                                  newValue.hoTen.toString();
+                                              selectMaNL = int.parse(newValue!.maND.toString());
+                                              nguoiLamCtrl.text = newValue.hoTen.toString();
                                               // print(selectMaNL);
                                             });
                                           },
@@ -229,59 +199,45 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       controller: noiDungCtrl,
                                     ),
                                     Visibility(
-                                      visible:
-                                          widget.congViec.maNguoiGiao == null &&
-                                                  widget.nguoiDung.maPB != 2 ||
-                                              widget.nguoiDung.maPB == 2 ||
-                                              widget.congViec.maNguoiGiao ==
-                                                  widget.nguoiDung.maND,
+                                      visible: widget.congViec.maNguoiGiao == null && widget.nguoiDung.maPB != 2 ||
+                                          widget.nguoiDung.maPB == 2 ||
+                                          widget.congViec.maNguoiGiao == widget.nguoiDung.maND,
                                       child: MyTextFormField(
                                         obscureText: false,
                                         controller: ngayBDCtrl,
                                         text: "Ngày bắt đầu",
-                                        hintText: DateFormat.yMd()
-                                            .format(_selectStartDate),
+                                        hintText: DateFormat.yMd().format(_selectStartDate),
                                         widget: IconButton(
                                           onPressed: () {
                                             _getDateFromUser(isStartDate: true);
                                           },
-                                          icon: const Icon(
-                                              Icons.calendar_month_outlined),
+                                          icon: const Icon(Icons.calendar_month_outlined),
                                           color: Colors.grey,
                                         ),
                                       ),
                                     ),
                                     Visibility(
-                                      visible:
-                                          widget.congViec.maNguoiGiao == null &&
-                                                  widget.nguoiDung.maPB != 2 ||
-                                              widget.nguoiDung.maPB == 2 ||
-                                              widget.congViec.maNguoiGiao ==
-                                                  widget.nguoiDung.maND,
+                                      visible: widget.congViec.maNguoiGiao == null && widget.nguoiDung.maPB != 2 ||
+                                          widget.nguoiDung.maPB == 2 ||
+                                          widget.congViec.maNguoiGiao == widget.nguoiDung.maND,
                                       child: MyTextFormField(
                                         obscureText: false,
                                         controller: ngayKTCtrl,
                                         text: "Ngày kết thúc",
-                                        hintText: DateFormat.yMd()
-                                            .format(_selectEndDate),
+                                        hintText: DateFormat.yMd().format(_selectEndDate),
                                         widget: IconButton(
                                           onPressed: () {
-                                            _getDateFromUser(
-                                                isStartDate: false);
+                                            _getDateFromUser(isStartDate: false);
                                           },
-                                          icon: const Icon(
-                                              Icons.calendar_month_outlined),
+                                          icon: const Icon(Icons.calendar_month_outlined),
                                           color: Colors.grey,
                                         ),
                                       ),
                                     ),
                                     Visibility(
-                                      visible:
-                                          widget.congViec.maNguoiGiao == null &&
-                                                  widget.nguoiDung.maPB != 2 ||
-                                              widget.nguoiDung.maPB == 2 ||
-                                              widget.congViec.maNguoiGiao ==
-                                                  widget.nguoiDung.maND,
+                                      visible: widget.congViec.maNguoiGiao == null && widget.nguoiDung.maPB != 2 ||
+                                          widget.nguoiDung.maPB == 2 ||
+                                          widget.congViec.maNguoiGiao == widget.nguoiDung.maND,
                                       child: Row(
                                         children: <Widget>[
                                           Expanded(
@@ -291,8 +247,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                               text: "Giờ bắt đầu",
                                               hintText: _startTime,
                                               widget: IconButton(
-                                                icon: const Icon(
-                                                    Icons.access_time),
+                                                icon: const Icon(Icons.access_time),
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
@@ -312,8 +267,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                               text: "Giờ kết thúc",
                                               hintText: _endTime,
                                               widget: IconButton(
-                                                icon: const Icon(
-                                                    Icons.access_time),
+                                                icon: const Icon(Icons.access_time),
                                                 color: Colors.grey,
                                                 onPressed: () {
                                                   _getTimeFromUser(
@@ -341,16 +295,13 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                         underline: Container(
                                           height: 0,
                                         ),
-                                        padding:
-                                            const EdgeInsets.only(right: 8),
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             _selectedTrangThai = newValue!;
                                             trangThaiCtrl.text = newValue;
                                           });
                                         },
-                                        items: listTrangThai
-                                            .map<DropdownMenuItem<String>>(
+                                        items: listTrangThai.map<DropdownMenuItem<String>>(
                                           (String value) {
                                             return DropdownMenuItem<String>(
                                               value: value,
@@ -377,8 +328,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       height: 20,
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           height: 45,
@@ -396,78 +346,43 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                                 customToast(
                                                     context: context,
                                                     title: "Thông báo",
-                                                    message:
-                                                        "Vui lòng nhập đủ thông tin công việc",
-                                                    contentType:
-                                                        ContentType.warning);
-                                              } else if (double.parse(
-                                                          tienDoCtrl.text) <
-                                                      0 ||
-                                                  double.parse(
-                                                          tienDoCtrl.text) >
-                                                      100) {
+                                                    message: "Vui lòng nhập đủ thông tin công việc",
+                                                    contentType: ContentType.warning);
+                                              } else if (double.parse(tienDoCtrl.text) < 0 ||
+                                                  double.parse(tienDoCtrl.text) > 100) {
                                                 customToast(
                                                     context: context,
                                                     title: "Thông báo",
-                                                    message:
-                                                        "Vui lòng nhập tiến độ 0 - 100",
-                                                    contentType:
-                                                        ContentType.warning);
+                                                    message: "Vui lòng nhập tiến độ 0 - 100",
+                                                    contentType: ContentType.warning);
                                               } else {
-                                                widget.nguoiDung.maPB != 2 &&
-                                                            widget.congViec.maNguoiGiao ==
-                                                                null ||
-                                                        widget.nguoiDung.maND !=
-                                                            widget.congViec
-                                                                .maNguoiGiao
-                                                    ? BlocProvider.of<UpdateTaskPageBloc>(context)
-                                                        .add(
+                                                widget.nguoiDung.maPB != 2 && widget.congViec.maNguoiGiao == null ||
+                                                        widget.nguoiDung.maND != widget.congViec.maNguoiGiao
+                                                    ? BlocProvider.of<UpdateTaskPageBloc>(context).add(
                                                         UpdateTask(
-                                                          maCV: int.parse(widget
-                                                              .congViec.maCV
-                                                              .toString()),
-                                                          tieuDe:
-                                                              tieuDeCtrl.text,
-                                                          noiDung:
-                                                              noiDungCtrl.text,
-                                                          ngayBD: DateFormat(
-                                                                  "yyyy-MM-dd")
-                                                              .format(DateFormat(
-                                                                      'dd-MM-yyyy')
-                                                                  .parse(
-                                                                      ngayBDCtrl
-                                                                          .text)),
-                                                          ngayKT: DateFormat(
-                                                                  "yyyy-MM-dd")
-                                                              .format(DateFormat(
-                                                                      'dd-MM-yyyy')
-                                                                  .parse(
-                                                                      ngayKTCtrl
-                                                                          .text)),
+                                                          maCV: int.parse(widget.congViec.maCV.toString()),
+                                                          tieuDe: tieuDeCtrl.text,
+                                                          noiDung: noiDungCtrl.text,
+                                                          ngayBD: DateFormat("yyyy-MM-dd")
+                                                              .format(DateFormat('dd-MM-yyyy').parse(ngayBDCtrl.text)),
+                                                          ngayKT: DateFormat("yyyy-MM-dd")
+                                                              .format(DateFormat('dd-MM-yyyy').parse(ngayKTCtrl.text)),
                                                           gioBD: gioBDCtrl.text,
                                                           gioKT: gioKTCtrl.text,
-                                                          trangThai:
-                                                              trangThaiCtrl
-                                                                  .text,
-                                                          tienDo:
-                                                              tienDoCtrl.text,
-                                                          ghiChu:
-                                                              ghiChuCtrl.text,
-                                                          maNguoiLam: int.parse(
-                                                              selectMaNL
-                                                                  .toString()),
+                                                          trangThai: trangThaiCtrl.text,
+                                                          tienDo: tienDoCtrl.text,
+                                                          ghiChu: ghiChuCtrl.text,
+                                                          maNguoiLam: int.parse(selectMaNL.toString()),
                                                         ),
                                                       )
                                                     : BlocProvider.of<UpdateTaskPageBloc>(context).add(AdminUpdateTask(
-                                                        maCV: int.parse(widget
-                                                            .congViec.maCV
-                                                            .toString()),
+                                                        maCV: int.parse(widget.congViec.maCV.toString()),
                                                         tieuDe: tieuDeCtrl.text,
-                                                        noiDung:
-                                                            noiDungCtrl.text,
+                                                        noiDung: noiDungCtrl.text,
                                                         ngayBD: DateFormat("yyyy-MM-dd")
                                                             .format(DateFormat('dd-MM-yyyy').parse(ngayBDCtrl.text)),
-                                                        ngayKT: DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(ngayKTCtrl.text)),
+                                                        ngayKT: DateFormat("yyyy-MM-dd")
+                                                            .format(DateFormat('dd-MM-yyyy').parse(ngayKTCtrl.text)),
                                                         gioBD: gioBDCtrl.text,
                                                         gioKT: gioKTCtrl.text,
                                                         trangThai: trangThaiCtrl.text,
@@ -479,13 +394,10 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                               }
                                             },
                                             style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.deepOrangeAccent),
+                                              backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                                               shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
+                                                  borderRadius: BorderRadius.circular(10),
                                                 ),
                                               ),
                                             ),
@@ -520,7 +432,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
-    if(!context.mounted) return;
+    if (!context.mounted) return;
     String formattedTime = pickerTime.format(context);
     if (pickerTime == null) {
       if (kDebugMode) {
@@ -571,10 +483,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
           return Theme(
               data: ThemeData.light().copyWith(
                 primaryColor: Colors.deepOrangeAccent,
-                colorScheme:
-                    const ColorScheme.light(primary: Colors.deepOrangeAccent),
-                buttonTheme:
-                    const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                colorScheme: const ColorScheme.light(primary: Colors.deepOrangeAccent),
+                buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
               ),
               child: child!);
         });
@@ -589,10 +499,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         return Theme(
             data: ThemeData.light().copyWith(
               primaryColor: Colors.deepOrangeAccent,
-              colorScheme:
-                  const ColorScheme.light(primary: Colors.deepOrangeAccent),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              colorScheme: const ColorScheme.light(primary: Colors.deepOrangeAccent),
+              buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
             ),
             child: child!);
       },

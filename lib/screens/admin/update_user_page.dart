@@ -81,8 +81,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
 
   void showImagePicker() async {
     final ImagePicker imagePicker = ImagePicker();
-    final XFile? file =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file != null) {
       setState(() {
         _imageFile = File(file.path);
@@ -125,16 +124,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
             listener: (context, state) {
               if (state is UpdateUserError) {
                 customToast(
-                    context: context,
-                    title: "Lỗi",
-                    message: state.error.toString(),
-                    contentType: ContentType.failure);
+                    context: context, title: "Lỗi", message: state.error.toString(), contentType: ContentType.failure);
               } else if (state is UpdatedUser) {
                 customToast(
-                    context: context,
-                    title: "Thành công",
-                    message: state.msg,
-                    contentType: ContentType.success);
+                    context: context, title: "Thành công", message: state.msg, contentType: ContentType.success);
                 Navigator.of(context).pop(["Reload"]);
               }
             },
@@ -168,13 +161,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                         ),
                                       ],
                                       image: _imageFile != null
-                                          ? DecorationImage(
-                                              image: FileImage(_imageFile!),
-                                              fit: BoxFit.contain)
+                                          ? DecorationImage(image: FileImage(_imageFile!), fit: BoxFit.contain)
                                           : DecorationImage(
                                               image: anh != 'null'
-                                                  ? NetworkImage(
-                                                      "http://192.168.1.32:3000/$anh")
+                                                  ? NetworkImage("http://192.168.1.30:3000/$anh")
                                                   : imageProvider,
                                               fit: BoxFit.contain)),
                                 ),
@@ -243,10 +233,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                               underline: Container(
                                 height: 0,
                               ),
-                              padding: const EdgeInsets.only(right: 8),
-                              items: listPhongBan
-                                  .map<DropdownMenuItem<PhongBan>>(
-                                      (PhongBan item) {
+                              // padding: const EdgeInsets.only(right: 8),
+                              items: listPhongBan.map<DropdownMenuItem<PhongBan>>((PhongBan item) {
                                 return DropdownMenuItem<PhongBan>(
                                   value: item,
                                   child: Text(item.tenPhongBan.toString()),
@@ -254,10 +242,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                               }).toList(),
                               onChanged: (PhongBan? newValue) {
                                 setState(() {
-                                  selectedMaPB =
-                                      int.parse(newValue!.maPB.toString());
-                                  departmentCtrl.text =
-                                      newValue.tenPhongBan.toString();
+                                  selectedMaPB = int.parse(newValue!.maPB.toString());
+                                  departmentCtrl.text = newValue.tenPhongBan.toString();
                                   // print(selectedMaPB);
                                 });
                               },
@@ -279,7 +265,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                               underline: Container(
                                 height: 0,
                               ),
-                              padding: const EdgeInsets.only(right: 8),
+                              // padding: const EdgeInsets.only(right: 8),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   _selectedTrangThai = newValue!;
@@ -316,51 +302,40 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                       customToast(
                                           context: context,
                                           title: "Thông báo",
-                                          message:
-                                              "Vui lòng nhập đủ thông tin người dùng",
+                                          message: "Vui lòng nhập đủ thông tin người dùng",
                                           contentType: ContentType.warning);
                                     } else {
                                       int? status;
                                       if (statusCtrl.text == "Hoạt động") {
                                         status = 1;
-                                      } else if (statusCtrl.text ==
-                                          "Không hoạt động") {
+                                      } else if (statusCtrl.text == "Không hoạt động") {
                                         status = 0;
                                       }
 
                                       _imageFile == null
-                                          ? BlocProvider.of<UpdateUserPageBloc>(context)
-                                              .add(UpdateUserEvent(
-                                                  maND: int.parse(widget
-                                                      .nguoiDung.maND
-                                                      .toString()),
-                                                  userName: userNameCtrl.text,
-                                                  passWd: passWdCtrl.text,
-                                                  email: emailCtrl.text,
-                                                  fullName: fullNameCtrl.text,
-                                                  phone: phoneCtrl.text,
-                                                  maPB: selectedMaPB.toString(),
-                                                  status: status!))
-                                          : BlocProvider.of<UpdateUserPageBloc>(
-                                                  context)
-                                              .add(UpdateUserWithImageEvent(
-                                                  maND: int.parse(widget
-                                                      .nguoiDung.maND
-                                                      .toString()),
-                                                  userName: userNameCtrl.text,
-                                                  passWd: passWdCtrl.text,
-                                                  email: emailCtrl.text,
-                                                  fullName: fullNameCtrl.text,
-                                                  phone: phoneCtrl.text,
-                                                  maPB: selectedMaPB.toString(),
-                                                  status: status!,
-                                                  anh: _imageFile?.path ??
-                                                      anh.toString()));
+                                          ? BlocProvider.of<UpdateUserPageBloc>(context).add(UpdateUserEvent(
+                                              maND: int.parse(widget.nguoiDung.maND.toString()),
+                                              userName: userNameCtrl.text,
+                                              passWd: passWdCtrl.text,
+                                              email: emailCtrl.text,
+                                              fullName: fullNameCtrl.text,
+                                              phone: phoneCtrl.text,
+                                              maPB: selectedMaPB.toString(),
+                                              status: status!))
+                                          : BlocProvider.of<UpdateUserPageBloc>(context).add(UpdateUserWithImageEvent(
+                                              maND: int.parse(widget.nguoiDung.maND.toString()),
+                                              userName: userNameCtrl.text,
+                                              passWd: passWdCtrl.text,
+                                              email: emailCtrl.text,
+                                              fullName: fullNameCtrl.text,
+                                              phone: phoneCtrl.text,
+                                              maPB: selectedMaPB.toString(),
+                                              status: status!,
+                                              anh: _imageFile?.path ?? anh.toString()));
                                     }
                                   },
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.deepOrangeAccent),
+                                    backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                                     shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),

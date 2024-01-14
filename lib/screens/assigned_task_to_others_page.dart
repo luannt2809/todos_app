@@ -15,8 +15,7 @@ class AssignedTaskToOther extends StatefulWidget {
   final CongViec congViec;
   final NguoiDung nguoiDung;
 
-  const AssignedTaskToOther(
-      {super.key, required this.congViec, required this.nguoiDung});
+  const AssignedTaskToOther({super.key, required this.congViec, required this.nguoiDung});
 
   @override
   State<AssignedTaskToOther> createState() => _AssignedTaskToOtherState();
@@ -59,12 +58,7 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
     super.dispose();
   }
 
-  List<String> listTrangThai = [
-    'Chờ nhận',
-    'Đã nhận',
-    'Đang thực hiện',
-    'Hoàn thành'
-  ];
+  List<String> listTrangThai = ['Chờ nhận', 'Đã nhận', 'Đang thực hiện', 'Hoàn thành'];
 
   @override
   void initState() {
@@ -113,17 +107,11 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
             listener: (context, state) {
               if (state is AdminAddTaskPageLoaded) {
                 customToast(
-                    context: context,
-                    title: "Thành công",
-                    message: state.msg,
-                    contentType: ContentType.success);
+                    context: context, title: "Thành công", message: state.msg, contentType: ContentType.success);
                 Navigator.of(context).pop();
               } else if (state is AdminAddTaskPageError) {
                 customToast(
-                    context: context,
-                    title: "Lỗi",
-                    message: state.error.toString(),
-                    contentType: ContentType.failure);
+                    context: context, title: "Lỗi", message: state.error.toString(), contentType: ContentType.failure);
               }
             },
             child: BlocBuilder<AdminAddTaskPageBloc, AdminAddTaskPageState>(
@@ -157,10 +145,8 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                     underline: Container(
                                       height: 0,
                                     ),
-                                    padding: const EdgeInsets.only(right: 8),
-                                    items: listNguoiLam
-                                        .map<DropdownMenuItem<NguoiDung>>(
-                                            (NguoiDung item) {
+                                    // padding: const EdgeInsets.only(right: 8),
+                                    items: listNguoiLam.map<DropdownMenuItem<NguoiDung>>((NguoiDung item) {
                                       return DropdownMenuItem<NguoiDung>(
                                         value: item,
                                         child: Text(item.hoTen.toString()),
@@ -168,10 +154,8 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                     }).toList(),
                                     onChanged: (NguoiDung? newValue) {
                                       setState(() {
-                                        selectMaNL = int.parse(
-                                            newValue!.maND.toString());
-                                        nguoiLamCtrl.text =
-                                            newValue.hoTen.toString();
+                                        selectMaNL = int.parse(newValue!.maND.toString());
+                                        nguoiLamCtrl.text = newValue.hoTen.toString();
                                         // print(selectMaNL);
                                       });
                                     },
@@ -193,15 +177,13 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                   obscureText: false,
                                   controller: ngayBDCtrl,
                                   text: "Ngày bắt đầu",
-                                  hintText: DateFormat('dd-MM-yyyy')
-                                      .format(_selectStartDate),
+                                  hintText: DateFormat('dd-MM-yyyy').format(_selectStartDate),
                                   widget: IconButton(
                                     onPressed: () {
                                       // _getDateStartFromUser();
                                       _getDateFromUser(isStartDate: true);
                                     },
-                                    icon: const Icon(
-                                        Icons.calendar_month_outlined),
+                                    icon: const Icon(Icons.calendar_month_outlined),
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -209,14 +191,12 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                   obscureText: false,
                                   controller: ngayKTCtrl,
                                   text: "Ngày kết thúc",
-                                  hintText: DateFormat('dd-MM-yyyy')
-                                      .format(_selectEndDate),
+                                  hintText: DateFormat('dd-MM-yyyy').format(_selectEndDate),
                                   widget: IconButton(
                                     onPressed: () {
                                       _getDateFromUser(isStartDate: false);
                                     },
-                                    icon: const Icon(
-                                        Icons.calendar_month_outlined),
+                                    icon: const Icon(Icons.calendar_month_outlined),
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -250,8 +230,7 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                           icon: const Icon(Icons.access_time),
                                           color: Colors.grey,
                                           onPressed: () {
-                                            _getTimeFromUser(
-                                                isStartTime: false);
+                                            _getTimeFromUser(isStartTime: false);
                                           },
                                         ),
                                       ),
@@ -273,15 +252,14 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                     underline: Container(
                                       height: 0,
                                     ),
-                                    padding: const EdgeInsets.only(right: 8),
+                                    // padding: const EdgeInsets.only(right: 8),
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         _selectedTrangThai = newValue!;
                                         trangThaiCtrl.text = newValue;
                                       });
                                     },
-                                    items: listTrangThai
-                                        .map<DropdownMenuItem<String>>(
+                                    items: listTrangThai.map<DropdownMenuItem<String>>(
                                       (String value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
@@ -326,65 +304,39 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
                                             customToast(
                                                 context: context,
                                                 title: "Thông báo",
-                                                message:
-                                                    "Vui lòng nhập đủ thông tin công việc",
-                                                contentType:
-                                                    ContentType.warning);
-                                          } else if (double.parse(
-                                                      tienDoCtrl.text) <
-                                                  0 ||
-                                              double.parse(tienDoCtrl.text) >
-                                                  100) {
+                                                message: "Vui lòng nhập đủ thông tin công việc",
+                                                contentType: ContentType.warning);
+                                          } else if (double.parse(tienDoCtrl.text) < 0 ||
+                                              double.parse(tienDoCtrl.text) > 100) {
                                             customToast(
                                                 context: context,
                                                 title: "Thông báo",
-                                                message:
-                                                    "Vui lòng nhập tiến độ 0 - 100",
-                                                contentType:
-                                                    ContentType.warning);
+                                                message: "Vui lòng nhập tiến độ 0 - 100",
+                                                contentType: ContentType.warning);
                                           } else {
                                             // them cong viec ơ day
-                                            BlocProvider.of<AdminAddTaskPageBloc>(
-                                                    context)
-                                                .add(AdminAddTaskEvent(
-                                                    tieuDe: tieuDeCtrl.text,
-                                                    noiDung: noiDungCtrl.text,
-                                                    ngayBD: DateFormat(
-                                                            "yyyy-MM-dd")
-                                                        .format(
-                                                            _selectStartDate),
-                                                    ngayKT: DateFormat("yyyy-MM-dd")
-                                                        .format(_selectEndDate),
-                                                    gioBD: gioBDCtrl.text,
-                                                    gioKT: gioKTCtrl.text,
-                                                    trangThai:
-                                                        trangThaiCtrl.text,
-                                                    tienDo: tienDoCtrl.text,
-                                                    ghiChu:
-                                                        ghiChuCtrl.text.isEmpty
-                                                            ? "Không có ghi chú"
-                                                            : ghiChuCtrl.text,
-                                                    maNguoiLam: selectMaNL,
-                                                    maNguoiGiao: widget
-                                                                .nguoiDung
-                                                                .maPB ==
-                                                            2
-                                                        ? widget.congViec
-                                                            .maNguoiGiao
-                                                        : widget.congViec
-                                                            .maNguoiLam,
-                                                    kieu:
-                                                        widget.congViec.maCV));
+                                            BlocProvider.of<AdminAddTaskPageBloc>(context).add(AdminAddTaskEvent(
+                                                tieuDe: tieuDeCtrl.text,
+                                                noiDung: noiDungCtrl.text,
+                                                ngayBD: DateFormat("yyyy-MM-dd").format(_selectStartDate),
+                                                ngayKT: DateFormat("yyyy-MM-dd").format(_selectEndDate),
+                                                gioBD: gioBDCtrl.text,
+                                                gioKT: gioKTCtrl.text,
+                                                trangThai: trangThaiCtrl.text,
+                                                tienDo: tienDoCtrl.text,
+                                                ghiChu: ghiChuCtrl.text.isEmpty ? "Không có ghi chú" : ghiChuCtrl.text,
+                                                maNguoiLam: selectMaNL,
+                                                maNguoiGiao: widget.nguoiDung.maPB == 2
+                                                    ? widget.congViec.maNguoiGiao
+                                                    : widget.congViec.maNguoiLam,
+                                                kieu: widget.congViec.maCV));
                                           }
                                         },
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.deepOrangeAccent),
+                                          backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                                           shape: MaterialStateProperty.all(
                                             RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                             ),
                                           ),
                                         ),
@@ -417,7 +369,7 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickerTime = await _showTimePicker();
-    if(!context.mounted) return;
+    if (!context.mounted) return;
     String formatedTime = pickerTime.format(context);
     if (pickerTime == null) {
       if (kDebugMode) {
@@ -467,10 +419,8 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
           return Theme(
               data: ThemeData.light().copyWith(
                 primaryColor: Colors.deepOrangeAccent,
-                colorScheme:
-                    const ColorScheme.light(primary: Colors.deepOrangeAccent),
-                buttonTheme:
-                    const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                colorScheme: const ColorScheme.light(primary: Colors.deepOrangeAccent),
+                buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
               ),
               child: child!);
         });
@@ -488,10 +438,8 @@ class _AssignedTaskToOtherState extends State<AssignedTaskToOther> {
         return Theme(
             data: ThemeData.light().copyWith(
               primaryColor: Colors.deepOrangeAccent,
-              colorScheme:
-                  const ColorScheme.light(primary: Colors.deepOrangeAccent),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              colorScheme: const ColorScheme.light(primary: Colors.deepOrangeAccent),
+              buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
             ),
             child: child!);
       },

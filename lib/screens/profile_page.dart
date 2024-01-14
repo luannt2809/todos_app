@@ -161,14 +161,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                     : DecorationImage(
                                     image: anh != 'null'
                                         ? NetworkImage(
-                                        "http://192.168.1.32:3000/$anh")
+                                        "http://192.168.1.30:3000/$anh")
                                         : imageProvider,
                                     fit: BoxFit.cover),
                               ),
                               // child: _imageFile != null
                               //     ? Image.file(_imageFile!, fit: BoxFit.cover)
                               //     : CachedNetworkImage(
-                              //         imageUrl: "http://192.168.1.32:3000/$anh",
+                              //         imageUrl: "http://192.168.1.30:3000/$anh",
                               //         imageBuilder: (context, imageProvider) =>
                               //             Container(
                               //           decoration: BoxDecoration(

@@ -157,7 +157,7 @@ class _ListUserPageState extends State<ListUserPage> {
                                       ? Image.asset("assets/images/officer.png")
                                       : CachedNetworkImage(
                                           imageUrl:
-                                              "http://192.168.1.32:3000/${nguoiDung.anh}",
+                                              "http://192.168.1.30:3000/${nguoiDung.anh}",
                                           imageBuilder:
                                               (context, imageProvider) =>
                                                   Container(

@@ -122,10 +122,13 @@ class ListTaskAssignedPage extends StatelessWidget {
                                               message: state.msg,
                                               contentType: ContentType.success);
                                           Navigator.of(context).pop();
-                                          BlocProvider.of<
-                                              ListTaskAssignedPageBloc>(context)
-                                            .add(GetListTaskAssigned(
-                                                trangThai: trangThai));
+                                          // BlocProvider.of<
+                                          //     ListTaskAssignedPageBloc>(context)
+                                          //   .add(GetListTaskAssigned(
+                                          //       trangThai: trangThai));
+                                          listTaskAssignedPageBloc.add(
+                                              GetListTaskAssigned(
+                                                  trangThai: trangThai));
                                         }
                                       },
                                       builder: (context, state) {
